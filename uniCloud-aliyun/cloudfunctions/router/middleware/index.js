@@ -1,19 +1,23 @@
 // 加载模块 - 中间件 请勿改动此文件-----------------------------------
-const modulesPath = __dirname+"/modules";
+const modulesPath = __dirname + "/modules";
 const fs = require('fs');
 const fileList = fs.readdirSync(modulesPath);
 var moduleList = [];
 var modulesNames = [];
 
 fileList.map((file, index) => {
-	if(file.indexOf(".js") > -1){
-		modulesNames.push(file.substring(0,file.length-3));
+	if (file.indexOf(".js") > -1) {
+		modulesNames.push(file.substring(0, file.length - 3));
 	}
 });
 
 modulesNames.map((modulesName, index) => {
 	try {
-		moduleList.push(require(modulesPath+"/"+modulesName));
+		let moduleItem = require(modulesPath + "/" + modulesName);
+		moduleItem.map((item) => {
+			item.modulesName = modulesName;
+		});
+		moduleList.push(moduleItem);
 	} catch (err) {
 		console.error(`【异常】加载中间件【${modulesName}】异常，请检查！↓↓↓请查看下方的错误提示↓↓↓`);
 		console.error(err);
