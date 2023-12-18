@@ -6,7 +6,7 @@ var counterNum = 0;
 
 /**
  * 上传至阿里云oss
-vk.callFunctionUtil.uploadFile({
+vk.uploadFile({
 	filePath:tempFilePath,
 	fileType:"image",
 	provider:"aliyun",

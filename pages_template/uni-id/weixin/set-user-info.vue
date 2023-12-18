@@ -63,7 +63,7 @@
 				// 上传图片到云储存
 				let dataJson = {};
 				if (this.userInfo.avatar) {
-					let uploadFileRes = await vk.callFunctionUtil.uploadFile({
+					let uploadFileRes = await vk.uploadFile({
 						filePath: this.userInfo.avatar,
 						fileType: "image"
 					});

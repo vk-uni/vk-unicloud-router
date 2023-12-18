@@ -460,7 +460,7 @@ class CallFunctionUtil {
 		 * @param {Function} success								上传成功时，执行的回调函数
 		 * @param {Function} fail  	 								上传失败时，执行的回调函数
 		 * @param {Function} complete 							无论上传成功与否，都会执行的回调函数
-		 * vk.callFunctionUtil.uploadFile
+		 * vk.uploadFile
 		 */
 		this.uploadFile = (obj = {}) => {
 			let that = this;
