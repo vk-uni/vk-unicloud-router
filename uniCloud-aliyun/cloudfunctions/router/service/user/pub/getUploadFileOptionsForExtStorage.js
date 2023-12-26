@@ -25,6 +25,9 @@ module.exports = {
 		if (cloudPath.indexOf("public/") !== 0) {
 			return { code: -1, msg: "仅能上传到public目录" };
 		}
+		if (typeof uniCloud.getExtStorageManager === "undefined") {
+			return { code: -1, msg: "请右键云函数-管理依赖-添加扩展库uni-cloud-ext-storage（需要HBX版本>=3.99）添加后需重启项目" };
+		}
 		// 然后获取 extStorageManager 对象实例
 		const extStorageManager = uniCloud.getExtStorageManager({
 			provider,
