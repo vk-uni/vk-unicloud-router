@@ -99,12 +99,16 @@ util.timeFormat = function(date, fmt = 'yyyy-MM-dd hh:mm:ss', targetTimezone) {
 			"S": nowDate.getMilliseconds(), //毫秒
 			"Z": `${targetTimezone >= 0 ? '+' : '-'}${Math.abs(targetTimezone).toString().padStart(2, '0')}:00` // 时区
 		};
-		if (/(y+)/.test(fmt)) {
-			fmt = fmt.replace(RegExp.$1, (nowDate.getFullYear() + "").substr(4 - RegExp.$1.length));
+		let regex = new RegExp("(y+)");
+		if (regex.test(fmt)) {
+			let fmtMatch = fmt.match(regex);
+			fmt = fmt.replace(fmtMatch[1], (nowDate.getFullYear() + "").substr(4 - fmtMatch[1].length));
 		}
 		for (let k in opt) {
-			if (new RegExp("(" + k + ")").test(fmt)) {
-				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (opt[k]) : (("00" + opt[k]).substr(("" + opt[k]).length)));
+			let regex = new RegExp("(" + k + ")");
+			if (regex.test(fmt)) {
+				let fmtMatch = fmt.match(regex);
+				fmt = fmt.replace(fmtMatch[1], (fmtMatch[1].length == 1) ? (opt[k]) : (("00" + opt[k]).substr(("" + opt[k]).length)));
 			}
 		}
 		return fmt;

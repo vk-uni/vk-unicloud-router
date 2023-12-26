@@ -2,6 +2,9 @@ var vk = {};
 var counterNum = 0;
 var uniCloudEnvs = {}; // uniCloud 环境列表
 var lastToLoginTime = 0;
+
+import cloudStorage from '../../libs/cloud-storage/index.js'
+
 class CallFunctionUtil {
 	constructor() {
 		this.config = {
@@ -441,159 +444,148 @@ class CallFunctionUtil {
 			vk = obj.vk;
 		}
 		/**
-		 * 云函数上传图片
+		 * 上传文件 vk.uploadFile
+		 * 文档地址: https://vkdoc.fsq.pub/client/pages/uploadFile.html
 		 * @param {String} 	title										上传时的loading提示语
 		 * @param {String} 	file										要上传的文件对象，file与filePath二选一即可
 		 * @param {String} 	filePath								要上传的文件路径，file与filePath二选一即可	
-		 * @param {String} 	suffix									指定上传后的文件后缀，如果传了file 参数，则此参数可不传
-		 * @param {String} 	provider								云存储供应商，支持：unicloud、aliyun	
+		 * @param {String} 	provider								云存储供应商，支持：unicloud、aliyun、qiniu
 		 * @param {String} 	cloudPath								指定上传后的云端文件路径（不指定会自动生成）cloudPath优先级大于cloudDirectory
-		 * @param {String} 	cloudDirectory					指定上传后的云端文件目录（不指定会自动生成）
+		 * @param {String} 	cloudDirectory					指定上传后的云端文件目录
 		 * @param {String} 	needSave								是否需要将图片信息保存到admin素材库
 		 * @param {String} 	category_id							素材库分类id，当needSave为true时生效	
-		 * @param {String} 	uniCloud								上传到其他空间时使用，uniCloud和env二选一即可
-		 * @param {String} 	env											上传到其他空间时使用，uniCloud和env二选一即可
-		 * @param {String} 	cloudPathAsRealPath			阿里云目录支持，需HBX3.8.5以上版本才支持
-		 * @param {String} 	cloudPathRemoveChinese	删除文件名中的中文
-		 * @param {String} 	fileType								文件类型，可选image、video、audio 不用传，会自动识别
-		 * @param {Function} onUploadProgress				上传进度回调
+		 * @param {String} 	uniCloud								上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
+		 * @param {String} 	env											上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
+		 * @param {String} 	cloudPathAsRealPath			阿里云目录支持，需HBX3.8.5以上版本才支持（仅provider是unicloud时支持）
+		 * @param {String} 	cloudPathRemoveChinese	删除文件名中的中文，默认为true
+		 * @param {String} 	errorToast							异常时是否用toast代替alert，默认为false
+		 * @param {String} 	needAlert								异常时是否需要alert，默认为false
+		 * @param {Function} onUploadProgress				监听上传进度回调
 		 * @param {Function} success								上传成功时，执行的回调函数
 		 * @param {Function} fail  	 								上传失败时，执行的回调函数
 		 * @param {Function} complete 							无论上传成功与否，都会执行的回调函数
-		 * vk.uploadFile
 		 */
 		this.uploadFile = (obj = {}) => {
 			let that = this;
 			let config = that.config;
 			if (!obj.filePath && obj.file && obj.file.path) obj.filePath = obj.file.path;
+			if (obj.errorToast) obj.needAlert = false;
+			// 获取文件类型(image:图片 video:视频 other:其他)
+			obj.fileType = that.getFileType(obj);
+			// 获取文件后缀名
+			obj.suffix = that.getFileSuffix(obj);
 			let {
-				filePath,
-				cloudPath,
 				title,
-				errorToast,
-				needAlert,
-				success,
-				fail,
-				complete,
-				type,
-				provider,
 				file = {},
+				filePath,
+				provider,
+				cloudPath,
+				cloudDirectory,
 				needSave = false,
 				category_id,
 				uniCloud: myCloud,
 				env = "default",
 				cloudPathAsRealPath = true, // 阿里云目录支持，需HBX3.8.5以上版本才支持
 				cloudPathRemoveChinese = true, // 删除文件名中的中文
-				cloudDirectory,
+				errorToast,
+				needAlert,
+				fileType,
+				suffix
 			} = obj;
-			// 获取文件类型(image:图片 video:视频 other:其他)
-			let fileType = this.getFileType(obj);
-			obj.fileType = fileType;
-			if (type && !provider) provider = type;
 			if (!provider) {
 				let aliyunOSS = vk.pubfn.getData(config, "service.aliyunOSS");
+				let defaultProvider = vk.pubfn.getData(config, "service.cloudStorage.defaultProvider") || "unicloud";
 				if (aliyunOSS && aliyunOSS.isDefault) {
+					// 兼容旧版
 					provider = "aliyun";
 				} else {
-					provider = "unicloud";
+					// 新版
+					provider = defaultProvider;
 				}
 			}
-			if (provider === "aliyun") {
-				return vk.aliyunOSSUtil.uploadFile(obj);
+			obj.provider = provider;
+			if (provider === "unicloud") {
+				obj.runCloud = myCloud || uniCloudEnvs[env] || uniCloud;
 			}
-			if (title) vk.showLoading(title);
-			if (errorToast) needAlert = false;
-			// 生成文件名
-			if (!cloudPath) cloudPath = this.createFileName(obj);
 			let Logger = {};
-			if (config.debug) Logger.filePath = filePath;
-			if (config.debug) Logger.startTime = Date.now();
-			let runCloud = myCloud || uniCloudEnvs[env] || uniCloud;
-			return new Promise((resolve, reject) => {
-				runCloud.uploadFile({
-					filePath: filePath,
-					cloudPath: cloudPath,
-					fileType: fileType,
-					cloudPathAsRealPath,
-					onUploadProgress: function(progressEvent) {
-						let percentCompleted = Math.round(
-							(progressEvent.loaded * 100) / progressEvent.total
-						);
-						if (typeof obj.onUploadProgress == "function") {
-							obj.onUploadProgress({
-								progressEvent,
-								percentCompleted,
-								progress: percentCompleted
+			Logger.startTime = Date.now();
+			Logger.filePath = filePath;
+			let promiseRes = new Promise((resolve, reject) => {
+				if (title) vk.showLoading(title);
+				cloudStorage[provider].uploadFile(obj)
+					.then((res) => {
+						// 返回值统一增加provider
+						res.provider = provider;
+						Logger.result = res;
+						if (typeof obj.success == "function") obj.success(res);
+						resolve(res);
+						if (needSave) {
+							// 保存文件记录到数据库
+							vk.userCenter.addUploadRecord({
+								data: {
+									url: res.fileURL,
+									name: file.name,
+									size: file.size,
+									file_id: res.fileID,
+									provider,
+									category_id,
+								},
+								filePath,
+								fileType,
+								success: () => {
+									if (typeof obj.addSuccess == "function") obj.addSuccess(res);
+								},
+								fail: (err) => {
+									if (typeof obj.addFail === "function") obj.addFail(err);
+								},
+								complete: () => {
+									if (typeof obj.addComplete === "function") obj.addComplete();
+								}
 							});
 						}
-					},
-					success(res) {
-						if (config.debug) Logger.result = typeof res == "object" ? JSON.parse(JSON.stringify(res)) : res;
-						if (title) vk.hideLoading();
-						uniCloud.getTempFileURL({
-							fileList: [res.fileID],
-							success(data) {
-								let { fileID, tempFileURL } = data.fileList[0];
-								res.fileID = tempFileURL;
-								res.url = tempFileURL;
-								res.file_id = fileID;
-								if (config.debug) Logger.result.url = tempFileURL;
-								if (typeof success == "function") success(res);
-								resolve(res);
-								if (needSave) {
-									// 保存文件记录到数据库
-									vk.userCenter.addUploadRecord({
-										data: {
-											url: res.url,
-											name: file.name,
-											size: file.size,
-											file_id: res.file_id,
-											provider,
-											category_id,
-										},
-										filePath,
-										fileType,
-										success: function() {
-											if (typeof obj.addSuccess == "function") obj.addSuccess(res);
-										},
-										fail: function(res) {
-											if (typeof obj.addFail === "function") obj.addFail(res);
-										}
-									});
-								}
+					})
+					.catch((err) => {
+						Logger.error = err;
+						let errMsg = err.msg || err.errMsg || err.message || "";
+						if (errMsg.indexOf('fail url not in domain list') > -1) {
+							vk.toast('上传域名未在白名单中');
+						} else {
+							if (errorToast) {
+								vk.toast(errMsg);
+							} else if (needAlert) {
+								vk.alert(errMsg);
 							}
-						});
-					},
-					fail(err) {
-						if (title) vk.hideLoading();
-						if (config.debug) Logger.error = err;
-						if (errorToast) vk.toast(JSON.stringify(err), "none");
-						if (needAlert) {
-							if (config.debug) vk.alert(JSON.stringify(err));
 						}
-						if (typeof fail == "function") fail(err);
+						if (typeof obj.fail === "function") obj.fail(err);
 						reject(err);
-					},
-					complete() {
-						if (config.debug) {
-							Logger.endTime = Date.now();
-							Logger.runTime = (Logger.endTime - Logger.startTime);
-							let colorArr = config.logger.colorArr;
-							let colorStr = colorArr[counterNum % colorArr.length];
-							counterNum++;
-							console.log("%c--------【开始】【文件上传】--------", 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
-							console.log("【本地文件】: ", Logger.filePath);
-							console.log("【返回数据】: ", Logger.result);
-							console.log("【预览地址】: ", Logger.result.fileID);
-							console.log("【上传耗时】: ", Logger.runTime, "毫秒");
-							console.log("【上传时间】: ", vk.pubfn.timeFormat(Logger.startTime, "yyyy-MM-dd hh:mm:ss"));
-							if (Logger.error) console.error("【error】:", Logger.error);
-							console.log("%c--------【结束】【文件上传】--------", 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
-						}
-						if (typeof complete == "function") complete();
-					}
-				});
+					})
+					.finally(() => {
+						if (title) vk.hideLoading();
+						let config = this.config;
+						Logger.endTime = Date.now();
+						Logger.runTime = (Logger.endTime - Logger.startTime);
+						let colorArr = config.logger.colorArr;
+						let colorStr = colorArr[counterNum % colorArr.length];
+						counterNum++;
+						const providerObj = {
+							"unicloud": "内置存储",
+							"extStorage": "扩展存储",
+							"aliyun": "阿里云oss"
+						};
+						let providerName = providerObj[provider] || provider;
+						console.log(`%c--------【开始】【${providerName}-文件上传】--------`, 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
+						console.log("【本地文件】: ", Logger.filePath);
+						console.log("【返回数据】: ", Logger.result);
+						console.log("【预览地址】: ", Logger.result && Logger.result.url);
+						console.log("【上传耗时】: ", Logger.runTime, "毫秒");
+						console.log("【上传时间】: ", vk.pubfn.timeFormat(Logger.startTime, "yyyy-MM-dd hh:mm:ss"));
+						if (Logger.error) console.error("【error】:", Logger.error);
+						console.log(`%c--------【结束】【${providerName}-文件上传】--------`, 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
+						if (typeof obj.complete == "function") obj.complete();
+					});
 			});
+			promiseRes.catch((err) => {});
+			return promiseRes;
 		}
 	}
 	// 云函数普通请求
@@ -609,7 +601,8 @@ class CallFunctionUtil {
 			name,
 			complete,
 			uniCloud: myCloud,
-			env = "default"
+			env = "default",
+			secretType
 		} = obj;
 		if (title) vk.showLoading(title);
 		if (loading) vk.setLoading(true, loading);
@@ -626,6 +619,7 @@ class CallFunctionUtil {
 					$url: url,
 					data: data
 				},
+				secretType,
 				success(res = {}) {
 					that.callFunctionSuccess({
 						res: res.result,
@@ -833,7 +827,7 @@ class CallFunctionUtil {
 			errMsg = globalErrorCode["cloudfunction-reaches-burst-limit"] || "系统繁忙，请稍后再试。";
 		} else if (res.code === "InternalServerError") {
 			sysErr = true;
-		} 
+		}
 		let runKey = true;
 		if (typeof that.interceptor.fail == "function") {
 			runKey = that.interceptor.fail({
@@ -909,52 +903,8 @@ class CallFunctionUtil {
 		}
 		if (typeof complete == "function") complete(res);
 	}
-	// 生成文件名
-	createFileName(obj = {}) {
-		let {
-			file,
-			filePath,
-			index = 0,
-			cloudPathRemoveChinese = true,
-			cloudDirectory
-		} = obj;
-		let suffix = this.getFileSuffix(obj);
-		let oldName = index + "." + suffix;
-		// 注意：小程序无法获取到 file.name
-		if (file && file.name) {
-			let suffixName = file.name.substring(file.name.lastIndexOf(".") + 1);
-			if (suffixName && suffixName.length < 5) oldName = file.name;
-			// 只保留["数字","英文",".","-"]
-			if (cloudPathRemoveChinese) {
-				oldName = oldName.replace(/[^a-zA-Z.-d]/g, '');
-			}
-			if (oldName.indexOf(".") == 0) oldName = "0" + oldName;
-		}
-		let date = new Date();
-		let dateYYYYMMDD = vk.pubfn.timeFormat(date, "yyyy/MM/dd");
-		let dateTime = date.getTime().toString(); // 时间戳
-		// 时间戳后8位
-		let dateTimeEnd8 = dateTime.substring(dateTime.length - 8, dateTime.length);
-		let randomNumber = vk.pubfn.random(8); // 8位随机数
-		// 文件路径
-		let newFilePath = "";
-		if (cloudDirectory) {
-			// 如果自定义了上传目录，则使用自定义的上传目录
-			if (cloudDirectory.lastIndexOf("/") !== cloudDirectory.length-1) {
-				cloudDirectory = cloudDirectory + "/";
-			}
-			newFilePath = cloudDirectory;
-		} else {
-			// 否则，使用年月日作为上传目录
-			newFilePath = dateYYYYMMDD + "/";
-		}
-		// 文件名  = 时间戳后8位  - 随机数8位  + 原本文件名
-		let fileNickName = dateTimeEnd8 + "-" + randomNumber + "-" + oldName;
-		// 文件名全称（包含文件路径） = 文件路径  + 文件名
-		let fileFullName = newFilePath + fileNickName;
-		return fileFullName;
-	}
-
+	
+	// 获取文件后缀名
 	getFileSuffix(obj = {}) {
 		let {
 			file,
@@ -977,6 +927,8 @@ class CallFunctionUtil {
 		}
 		return suffix;
 	}
+	
+	// 获取文件类型
 	getFileType(obj = {}) {
 		let {
 			file,

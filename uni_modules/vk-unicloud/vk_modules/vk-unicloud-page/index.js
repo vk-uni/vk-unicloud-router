@@ -9,7 +9,6 @@ import modal              from './libs/function/modal'
 import navigate           from './libs/function/vk.navigate'
 import localStorage       from './libs/function/vk.localStorage'
 import sessionStorage     from './libs/function/vk.sessionStorage'
-import aliyunOSSUtil      from './libs/function/aliyunOSSUtil'
 import openapi            from './libs/openapi/index'
 import requestUtil        from './libs/function/vk.request'
 import importObject       from './libs/function/vk.importObject'
@@ -102,8 +101,6 @@ var vk = {
 	...localStorage,
 	// 本地会话缓存
 	...sessionStorage,
-	// 阿里云oss
-	aliyunOSSUtil,
 	// 更新管理器
 	updateManager,
 	// 开放API

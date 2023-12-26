@@ -123,11 +123,11 @@
 								// 执行绑定头像
 								vk.userCenter.setAvatar({
 									data: {
-										avatar: res.fileID,
+										avatar: res.url,
 										deleteOldFile:true
 									},
 									success:() => {
-										that.avatar = res.fileID;
+										that.avatar = res.url;
 									}
 								});
 							}

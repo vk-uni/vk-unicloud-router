@@ -103,11 +103,11 @@
 								// 执行绑定头像
 								vk.userCenter.setAvatar({
 									data: {
-										avatar: res.fileID,
+										avatar: res.url,
 									},
 									success() {
 										// 修改Vuex用户状态
-										vk.setVuex('$user.userInfo.avatar', res.fileID);
+										vk.setVuex('$user.userInfo.avatar', res.url);
 									}
 								});
 							}
