@@ -1,4 +1,4 @@
-* 【重要】`vk.uploadFile` 支持扩展存储-七牛云
+* 【重要】`vk.uploadFile` 支持扩展存储-七牛云 [传送门](https://vkdoc.fsq.pub/client/pages/uploadFile.html#%E4%B8%8A%E4%BC%A0%E6%89%A9%E5%B1%95%E5%AD%98%E5%82%A8)
 * 【修复】`vk.pubfn.timeFormat` 在抖音小程序真机调试报错的问题
 * 【优化】中间件运行报错时提示报错的中间件的名称和id
 * 【优化】`vk.callFunction` 支持参数 secretType
