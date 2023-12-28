@@ -524,7 +524,7 @@ class CallFunctionUtil {
 							vk.userCenter.addUploadRecord({
 								data: {
 									url: res.fileURL,
-									name: file.name,
+									name: file.name || this.getFileName(res.cloudPath),
 									size: file.size,
 									file_id: res.fileID,
 									provider,
@@ -943,6 +943,15 @@ class CallFunctionUtil {
 		}
 		return fileType;
 	}
+	
+	// 获取文件名
+	getFileName(cloudPath="") {
+		// 使用split方法分割字符串
+		let parts = cloudPath.split('/');
+		// 返回最后一个部分（即文件名）
+		return parts[parts.length - 1];
+	}
+	
 
 	// 系统异常重试机制（表单提交时慎用，建议只用在查询请求中，即无任何数据库修改的请求中）
 	callFunctionRetry(obj = {}) {
