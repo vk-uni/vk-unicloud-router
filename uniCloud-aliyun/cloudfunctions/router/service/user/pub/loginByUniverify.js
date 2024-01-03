@@ -34,40 +34,68 @@ module.exports = {
 			myInviteCode,
 			needPermission
 		} = data;
-		res = await uniID.loginByUniverify({
-			access_token,
-			openid,
-			type,
-			password,
-			inviteCode,
-			myInviteCode,
-			needPermission
-		});
-		if (res.token) {
-			if (!res.msg) {
-				res.msg = res.type === "register" ? "注册成功" : "登录成功";
-			}
-			if (res.type === "register") {
-				let mobileStr = res.userInfo.mobile.substring(7);
-				res.userInfo = await vk.baseDao.updateAndReturn({
-					dbName: "uni-id-users",
-					whereJson: {
-						_id: res.uid
-					},
-					dataJson: {
-						nickname: data.nickname || `手机尾号${mobileStr}用户`,
-					},
-				});
-			}
-			// 日志服务
-			const loginLogService = vk.require("service/user/util/login_log");
-			await loginLogService.add({
-				type: "login",
-				login_type: "univerify",
-				user_id: res.uid,
-				context: originalParam.context
-			}, util);
+
+		// 一键登录依赖检查
+		if (!vk.pubfn.checkModule("uni-cloud-verify")) {
+			return { code: -1, msg: "检测到未添加一键登录依赖，右键router云函数-管理公共模块或扩展库依赖-添加uni-cloud-verify扩展库，最后需重启项目" };
 		}
+
+		// 获取一键登录配置
+		const univerifyConfig = vk.pubfn.getUniIdConfig(config, "service.univerify");
+		
+		if (vk.pubfn.isNull(univerifyConfig)) {
+			return { code: -1, msg: "请在uni-id配置中配置一键登录相关参数，配置节点：service.univerify" };
+		}
+
+		// 获取手机号
+		let getPhoneNumberRes = await uniCloud.getPhoneNumber({
+			provider: 'univerify',
+			...univerifyConfig,
+			access_token,
+			openid
+		});
+
+		let mobile = getPhoneNumberRes.phoneNumber;
+
+		if (vk.pubfn.isNull(mobile)) {
+			return getPhoneNumberRes;
+		}
+
+		// 生成随机的6位数验证码
+		let code = vk.pubfn.random(6);
+
+		// 通过手机号登录或注册
+		await uniID.setVerifyCode({ mobile, code, expiresIn: 60, type: "login" });
+		res = await uniID.loginBySms({ mobile, code, type, password, inviteCode, myInviteCode, needPermission });
+
+		if (!res.token) return res;
+		if (!res.msg) {
+			res.msg = res.type === "register" ? "注册成功" : "登录成功";
+		}
+
+		if (res.type === "register") {
+			// 注册成功后设置下昵称
+			let mobileStr = res.userInfo.mobile.substring(7);
+			res.userInfo = await vk.baseDao.updateAndReturn({
+				dbName: "uni-id-users",
+				whereJson: {
+					_id: res.uid
+				},
+				dataJson: {
+					nickname: data.nickname || `手机尾号${mobileStr}用户`,
+				},
+			});
+		}
+
+		// 日志服务
+		const loginLogService = vk.require("service/user/util/login_log");
+		await loginLogService.add({
+			type: "login",
+			login_type: "univerify",
+			user_id: res.uid,
+			context: originalParam.context
+		}, util);
+
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
 	}
