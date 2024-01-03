@@ -14,13 +14,7 @@ import Vue from 'vue'
 // Vue.use(uView);
 
 // 引入 vk框架前端
-Vue.use(vk);
-
-// 初始化 vk框架
-Vue.prototype.vk.init({
-  Vue,               // Vue实例
-  config,	           // 配置
-});
+Vue.use(vk, config);
 
 Vue.config.productionTip = false
 

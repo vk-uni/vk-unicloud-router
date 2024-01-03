@@ -153,7 +153,7 @@ vk.use = function(obj, util) {
 	}
 };
 
-const install = Vue => {
+const install = (Vue, config) => {
 	// 全局混入
 	Vue.mixin(mixin);
 	// #ifndef VUE3
@@ -184,6 +184,13 @@ const install = Vue => {
 		openapi: vk.openapi
 	}, util);
 	initPermission(Vue);
+	// 初始化并加载vk配置
+	if (config) {
+		vk.init({
+			Vue,               // Vue实例
+			config,	           // 配置
+		});
+	}
 }
 
 export default {
