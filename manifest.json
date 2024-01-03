@@ -72,7 +72,8 @@
                 "desc" : "方便自动填写地址"
             }
         },
-        "__usePrivacyCheck__" : true
+        "__usePrivacyCheck__" : true,
+        "libVersion": "latest"
     },
     "mp-alipay" : {
         "usingComponents" : true
