@@ -41,13 +41,7 @@ export function createApp() {
   // app.use(uView)
   
   // 引入 vk框架前端
-  app.use(vk);
-  
-  // 初始化 vk框架
-  app.config.globalProperties.vk.init({
-    Vue: app,          // Vue实例
-    config,	           // 配置
-  });
+  app.use(vk, config);
   
   return { app }
 }
