@@ -1,23 +1,26 @@
 <template>
 	<view class="app">
 		<!-- 页面内容开始 -->
-		<view class="avatar-box">
-			<button size="mini" class="avatar-button" plain open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
-				<view class="avatar-image-box">
-					<image class="avatar-image" :src="vk.getVuex('$user.userInfo.avatar') || userInfo.avatar || defaultAvatarUrl"></image>
-				</view>
-			</button> 
-		</view>
 		
-		
-		<!-- 昵称输入 -->
-		<view class="nickname-box">
-		  <view class="nickname">
-		    <input class="input" type="nickname" v-model="userInfo.nickname" placeholder="请输入昵称" placeholder-style="color: #AAAAAA;">
-		  </view>
-		</view>
-		
-		<button type="primary" @click="updateUserInfo" style="margin-top: 40rpx;">修改</button>
+		<form @submit="submit">
+			<view class="avatar-box">
+				<button size="mini" class="avatar-button" plain open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
+					<view class="avatar-image-box">
+						<image class="avatar-image" :src="userInfo.avatar"></image>
+					</view>
+				</button> 
+			</view>
+			
+			<!-- 昵称输入 -->
+			<view class="nickname-box">
+			  <view class="nickname">
+			    <input class="input" type="nickname" name="nickname" v-model="userInfo.nickname" placeholder="请输入昵称" placeholder-style="color: #8e8e8e;">
+			  </view>
+			</view>
+			
+			<button form-type="submit" type="primary" style="margin-top: 40rpx;">修改</button>
+			
+		</form>
 		<!-- 页面内容结束 -->
 	</view>
 </template>
@@ -33,8 +36,7 @@
 				userInfo:{
 					avatar: "",
 					nickname: ""
-				},
-				defaultAvatarUrl,
+				}
 			}
 		},
 		// 监听 - 页面每次【加载时】执行(如：前进)
@@ -54,24 +56,35 @@
 			// 页面数据初始化函数
 			init(options){
 				this.userInfo.nickname = vk.getVuex("$user.userInfo.nickname");
+				this.userInfo.avatar = vk.getVuex("$user.userInfo.avatar") || defaultAvatarUrl;
+			},
+			// 为了兼容微信小程序开发工具，需要这样写
+			submit(e){
+				this.userInfo.nickname = e.detail.value.nickname;
+				this.updateUserInfo();
 			},
 			onChooseAvatar(e) {
-				const { avatarUrl } = e.detail 
+				const avatarUrl = e.detail.avatarUrl 
 				this.userInfo.avatar = avatarUrl;
 			},
 			async updateUserInfo(){
+				if (!this.userInfo.avatar || !this.userInfo.nickname) {
+					vk.toast("头像和昵称不能为空");
+					return;
+				}
 				// 上传图片到云储存
 				let dataJson = {};
-				if (this.userInfo.avatar) {
+				if (this.userInfo.avatar.indexOf("https://") !== 0) {
 					let uploadFileRes = await vk.uploadFile({
 						filePath: this.userInfo.avatar,
 						fileType: "image"
 					});
 					dataJson.avatar = uploadFileRes.url;
+				} else {
+					dataJson.avatar = this.userInfo.avatar;
 				}
-				if (this.userInfo.nickname) {
-					dataJson.nickname = this.userInfo.nickname;
-				}
+				dataJson.nickname = this.userInfo.nickname;
+				// 发起修改请求
 				vk.userCenter.updateUser({
 					data: dataJson,
 					success: (data) => {
