@@ -17,11 +17,11 @@ if (env === "h5-weixin") {
  */
 h5.getEnv = function() {
 	const ua = window.navigator.userAgent.toLowerCase();
-	const isWeChat = /micromessenger/i.test(ua);
+	const isWeixin = /micromessenger/i.test(ua);
 	const isAlipay = /alipay/i.test(ua);
+	const isQQ = /qq/i.test(ua);
 	const isMiniProgram = /miniprogram/i.test(ua);
-
-	if (isWeChat) {
+	if (isWeixin) {
 		if (isMiniProgram) {
 			return "mp-weixin";
 		} else {
@@ -33,8 +33,85 @@ h5.getEnv = function() {
 		} else {
 			return "h5-alipay";
 		}
+	} else if (isQQ) {
+		if (isMiniProgram) {
+			return "mp-qq";
+		} else {
+			return "h5-qq";
+		}
 	}
 	return "h5";
+};
+
+/**
+ * 获取当前H5所在的环境（多参数版）
+let env = vk.h5.getEnvInfo();
+if (env.isPCWeixin) {
+	
+}
+ */
+h5.getEnvInfo = function() {
+	const ua = window.navigator.userAgent.toLowerCase();
+	const isMiniProgram = /miniprogram|microapp|swan/i.test(ua);
+	// 微信
+	const isWeixin = /micromessenger/i.test(ua);
+	const isMpWeixin = isWeixin && isMiniProgram ? true : false;
+	const isH5Weixin = isWeixin && !isMiniProgram ? true : false;
+	const isPCWeixin = isWeixin && /windowswechat/i.test(ua);
+	const isDevWeixin = isWeixin && /wechatdevtools/i.test(ua);
+	// 支付宝
+	const isAlipay = /alipay/i.test(ua);
+	const isMpAlipay = isAlipay && isMiniProgram ? true : false;
+	const isH5Alipay = isAlipay && !isMiniProgram ? true : false;
+	const isDevAlipay = isAlipay && /alipayide/i.test(ua);
+	// QQ
+	const isQQ = /qq/i.test(ua);
+	const isMpQQ = isQQ && isMiniProgram ? true : false;
+	const isH5QQ = isQQ && !isMiniProgram ? true : false;
+	const isDevQQ = isQQ && /webdebugger/i.test(ua);
+	// 抖音
+	const isDouyin = /toutiao/i.test(ua);
+	const isMpDouyin = isDouyin && isMiniProgram ? true : false;
+	const isH5Douyin = isDouyin && !isMiniProgram ? true : false;
+	const isDevDouyin = isDouyin && /toutiaodevtools/i.test(ua);
+	// 百度
+	const isBaidu = /baidu/i.test(ua);
+	const isMpBaidu = isBaidu && isMiniProgram ? true : false; 
+	const isH5Baidu = isBaidu && !isMiniProgram ? true : false;
+	const isDevBaidu = isBaidu && /swandevtools/i.test(ua);
+	
+	let env = {
+		isMiniProgram, // 小程序
+		isWeixin,      // 微信
+		isMpWeixin,    // 微信小程序内的webview
+		isH5Weixin,    // 微信浏览器（一般指微信公众号）
+		isPCWeixin,	   // PC版微信浏览器
+		isDevWeixin,   // 微信开发者工具
+		isAlipay,      // 支付宝
+		isMpAlipay,    // 支付宝小程序内的webview
+		isH5Alipay,    // 支付宝浏览器
+		isDevAlipay,   // 支付宝开发者工具
+		isQQ,          // QQ
+		isMpQQ,        // QQ小程序内的webview
+		isH5QQ,        // QQ浏览器
+		isDevQQ,       // QQ开发者工具
+		isDouyin,      // 抖音
+		isMpDouyin,    // 抖音小程序内的webview
+		isH5Douyin,    // 抖音浏览器
+		isDevDouyin,   // 抖音开发者工具
+		isBaidu,       // 百度
+		isMpBaidu,     // 百度小程序
+		isH5Baidu,     // 百度浏览器
+		isDevBaidu,    // 百度开发者工具
+	};
+	let isOther = true;
+	for (let key in env) {
+		if (env[key]) {
+			isOther = false;
+		}
+	}
+	env.isOther = isOther;
+	return env;
 };
 
 /**

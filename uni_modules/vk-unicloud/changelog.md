@@ -1,3 +1,9 @@
+## 2.17.2（2024-01-31）
+* 【调整】`vk.baseDao.getTableData` 的参数 `getCount` 的默认值为 `true`，但若含有 `lastWhereJson` 或 `lastSortArr` 则默认值为 `false`（兼顾性能和实用性）
+* 【调整】`vk.baseDao.selects` 、 `vk.baseDao.getTableData` 将 `addFields` 的执行顺序调整到 `fieldJson` 之前
+* 【优化】`vk.baseDao.select`、`vk.baseDao.selects`、`vk.baseDao.getTableData` 新增返回值 `getCount`，表示是否同时执行了 `count` 请求 [传送门](https://vkdoc.fsq.pub/client/uniCloud/db/selects.html#getcount)
+* 【优化】`vk.baseDao.select`、`vk.baseDao.selects`、`vk.baseDao.getTableData` 新增参数 `debug`，传 `true` 会返回执行rows和count的数据库语句执行耗时，单位毫秒，方便优化数据库语句
+* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.17.1（2024-01-04）
 * 【修复】支付宝小程序云环境下，部分情况下查询树状结构子节点数据没有获取到数据的问题
 * 【修复】地理位置查询时，部分情况下获取到的 total 不准确的问题
