@@ -43,7 +43,7 @@ module.exports = [{
 				if (res.type === "login") {
 					// 如果是登录
 					// 判断用户当前 token数量 是否超过了最大限制 若 tokenMaxLimit 设置为0，代表不限制
-					let tokenMaxLimit = config.uni && config.uni.tokenMaxLimit;
+					let tokenMaxLimit = vk.pubfn.getUniIdConfig(config, "tokenMaxLimit", 10);
 					if (tokenMaxLimit > 0) {
 						let newUserInfo = await vk.baseDao.findById({
 							dbName: "uni-id-users",
