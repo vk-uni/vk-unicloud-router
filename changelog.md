@@ -1,3 +1,7 @@
+## 2.17.3（2024-02-14）
+* 【修复】因 `2.17.2` 引起的 `vk.baseDao.select` 的 `getOne: true` 时会报错的问题
+
+#####  框架学习Q群：`22466457` 欢迎萌新和大佬来使用和共同改进框架
 ## 2.17.2（2024-02-01）
 * 【调整】`vk.baseDao.getTableData` 的参数 `getCount` 的默认值为 `true`，但若含有 `lastWhereJson` 或 `lastSortArr` 则默认值为 `false`（兼顾性能和实用性）
 * 【调整】`vk.baseDao.selects` 、 `vk.baseDao.getTableData` 将 `addFields` 的执行顺序调整到 `fieldJson` 之前
