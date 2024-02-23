@@ -1,3 +1,7 @@
+## 2.17.4（2024-02-23）
+* 【重要】支付宝小程序云支持地理位置查询，需要先创建地理位置索引（HBX版本4.01的alpha版支持本地运行，3.99的正式版只能云端运行）
+* 【修复】`vk.baseDao.selects` 执行树形结构查询时，在支付宝小程序云中表现不一致的问题
+* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.17.3（2024-02-14）
 * 【修复】因 `2.17.2` 引起的 `vk.baseDao.select` 的 `getOne: true` 时会报错的问题
 * 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
