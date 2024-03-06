@@ -70,7 +70,7 @@ h5.getEnvInfo = function() {
 	const isH5QQ = isQQ && !isMiniProgram ? true : false;
 	const isDevQQ = isQQ && /webdebugger/i.test(ua);
 	// 抖音
-	const isDouyin = /toutiao/i.test(ua);
+	const isDouyin = /toutiao|ttwebview|bytedancewebview/i.test(ua);
 	const isMpDouyin = isDouyin && isMiniProgram ? true : false;
 	const isH5Douyin = isDouyin && !isMiniProgram ? true : false;
 	const isDevDouyin = isDouyin && /toutiaodevtools/i.test(ua);

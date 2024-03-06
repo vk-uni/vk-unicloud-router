@@ -1,4 +1,5 @@
 .hbuilderx
+.vite
 scripts
 unpackage
 node_modules

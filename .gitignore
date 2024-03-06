@@ -14,8 +14,8 @@ unpackage/
 router.param.json
 .vscode
 .hbuilderx
+.vite
 package-lock.json
-.hbuilderx
 
 
 # python
