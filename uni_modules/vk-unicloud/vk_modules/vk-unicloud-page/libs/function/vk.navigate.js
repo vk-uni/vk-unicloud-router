@@ -268,9 +268,22 @@ util.navigateToHome = function(obj = {}) {
 util.navigateToLogin = function(obj = {}) {
 	let vk = uni.vk;
 	let {
-		mode = "reLaunch"
+		mode = "reLaunch",
+		redirectUrl
 	} = obj;
-	vk[mode](config.login.url);
+	
+	let url = config.login.url;
+	if (redirectUrl) {
+		let uniIdRedirectUrl;
+		if (typeof redirectUrl === "string") {
+			uniIdRedirectUrl = encodeURIComponent(redirectUrl);
+		} else {
+			let { fullPath } = vk.pubfn.getCurrentPage();
+			uniIdRedirectUrl = encodeURIComponent(fullPath);
+		}
+		url += `?uniIdRedirectUrl=${uniIdRedirectUrl}`;
+	}
+	vk[mode](url);
 };
 
 /**
