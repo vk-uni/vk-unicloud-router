@@ -72,6 +72,7 @@
 		// 监听 - 页面每次【加载时】执行(如：前进)
 		onLoad(options) {
 			vk = uni.vk;
+			this.options = options;
 			this.init(options);
 		},
 		// 监听 - 页面【首次渲染完成时】执行。注意如果渲染速度快，会在页面进入动画完成前触发
@@ -142,13 +143,22 @@
 			login_success(data){
 				let that = this;
 				// 检查是否有指定跳转的页面
-				if(vk.navigate.getOriginalPage()){
+				
+				// 兼容uniIdRedirectUrl
+				if (this.options.uniIdRedirectUrl) {
+					let uniIdRedirectUrl = decodeURIComponent(this.options.uniIdRedirectUrl);
+					if (uniIdRedirectUrl) {
+						vk.navigate.setOriginalPage(null);
+						vk.redirectTo(uniIdRedirectUrl);
+						return;
+					}
+				}
+				if (vk.navigate.getOriginalPage()){
 					vk.navigate.originalTo();
 					return false;
 				}
 				// 跳转到首页,或页面返回
 				var pages = getCurrentPages();
-				console.log(pages.length,pages[pages.length-1].route);
 				if(pages.length > 1
 					&& pages[pages.length-2]
 					&& pages[pages.length-2].route
