@@ -1301,12 +1301,12 @@ pubfn.getFileType = function(url) {
  * vk.pubfn.getFileSuffix(url);
  */
 pubfn.getFileSuffix = function(url) {
-	let suffix;
+	let suffix = "";
 	let index = url.lastIndexOf(".");
 	if (index > -1) {
 		suffix = url.substring(index + 1);
 	}
-	return suffix;
+	return suffix.toLowerCase();
 };
 
 /**
