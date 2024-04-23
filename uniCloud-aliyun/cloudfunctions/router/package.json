@@ -21,7 +21,7 @@
     "path": "",
     "timeout": 60,
     "triggers": [],
-    "runtime": "Nodejs12",
+    "runtime": "Nodejs16",
     "keepRunningAfterReturn": false
   },
   "extensions": {}
