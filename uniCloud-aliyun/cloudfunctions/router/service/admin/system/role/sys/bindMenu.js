@@ -17,7 +17,13 @@ module.exports = {
 		let { uid } = data;
 		let res = { code: 0, msg: '' };
 		// 业务逻辑开始-----------------------------------------------------------
-		let { role_id, menuList, reset, addPermission } = data;
+		let {
+			role_id,
+			menuList,
+			reset,
+			addPermission
+		} = data;
+		
 		res = await vk.system.sysDao.roleBindMenu({
 			role_id,
 			menuList,
@@ -34,7 +40,7 @@ module.exports = {
 		});
 		let count = roleInfo.menu ? roleInfo.menu.length : 0;
 		// 修改stats_count_info统计信息
-		res.info = await vk.baseDao.updateAndReturn({
+		await vk.baseDao.update({
 			dbName,
 			whereJson: {
 				role_id
@@ -42,6 +48,35 @@ module.exports = {
 			dataJson: {
 				["stats_count_info.type.0.count"]: count
 			},
+		});
+
+		res.info = await vk.baseDao.selects({
+			dbName: "uni-id-roles",
+			getCount: false,
+			getOne: true,
+			getMain: true,
+			// 主表where条件
+			whereJson: {
+				role_id
+			},
+			// 副表列表
+			foreignDB: [
+				{
+					dbName: "opendb-admin-menus",
+					localKey: "menu",
+					localKeyType: "array",
+					foreignKey: "menu_id",
+					as: "menuList",
+					limit: 1000,
+					fieldJson: {
+						menu_id: true,
+						name: true,
+						comment: true,
+						enable: true,
+						url: true
+					}
+				}
+			]
 		});
 		return res;
 	}

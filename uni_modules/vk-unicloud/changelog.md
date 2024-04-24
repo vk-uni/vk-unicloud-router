@@ -1,3 +1,10 @@
+## 2.18.0（2024-04-24）
+* 【重要】云函数的 node.js 版本统一调整为 node16
+* 【重要】新增 vk.getReentrantLockManage 高并发分布式重入锁，主要用于控制云函数或云对象并发访问时的同步，确保同一时间只有一个线程或进程能够拿到锁。 [传送门](https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/reentrantLock.html)
+* 【重要】新增 vk.getCacheManage 缓存管理2.0版本，新版云端数据缓存同时支持空间内置数据库和Redis数据库，用户可以根据需求选择合适的存储方式。 [传送门](https://vkdoc.fsq.pub/client/uniCloud/cache/cache.html)
+* 【优化】vk.navigateToLogin 新增 redirectUrl 参数，用于登录成功后是否返回当前页面或指定页面
+* 【优化】vk.pubfn.getFileSuffix 返回值统一转小写
+* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.17.5（2024-03-14）
 * 【修复】因 `2.17.4` 更新导致的 `vk.baseDao.selects` 执行树形结构查询时无法连表的问题
 * 【优化】其他细节

@@ -16,7 +16,13 @@ module.exports = {
 		let { uid } = data;
 		let res = { code: 0, msg: '' };
 		// 业务逻辑开始-----------------------------------------------------------
-		let { role_id, permissionList, reset, stats_count_info = {} } = data;
+		let {
+			role_id,
+			permissionList,
+			reset,
+			stats_count_info = {}
+		} = data;
+		
 		res = await uniID.bindPermission({
 			roleID: role_id,
 			permissionList,
@@ -25,14 +31,42 @@ module.exports = {
 		if (res.code !== 0) return res;
 		res.msg = res.message;
 		// 修改stats_count_info统计信息
-		res.info = await vk.baseDao.updateAndReturn({
+		await vk.baseDao.update({
 			dbName: "uni-id-roles",
 			whereJson: {
 				role_id
 			},
 			dataJson: {
 				stats_count_info: _.set(stats_count_info)
+			}
+		});
+		res.info = await vk.baseDao.selects({
+			dbName: "uni-id-roles",
+			getCount: false,
+			getOne: true,
+			getMain: true,
+			// 主表where条件
+			whereJson: {
+				role_id
 			},
+			// 副表列表
+			foreignDB: [
+				{
+					dbName: "uni-id-permissions",
+					localKey: "permission",
+					localKeyType: "array",
+					foreignKey: "permission_id",
+					as: "permissionList",
+					limit: 1000,
+					fieldJson: {
+						permission_id: true,
+						permission_name: true,
+						comment: true,
+						enable: true,
+						url: true
+					}
+				}
+			]
 		});
 		return res;
 	}
