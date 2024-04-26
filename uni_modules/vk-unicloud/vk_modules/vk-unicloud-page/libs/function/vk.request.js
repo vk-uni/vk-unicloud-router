@@ -130,7 +130,7 @@ requestUtil.request = function(obj = {}) {
 			return;
 		}
 	}
-	if (typeof obj.timeout === "undefined") obj.timeout = 30000; // 超时时间，单位 ms(默认30秒)
+	if (typeof obj.timeout === "undefined") obj.timeout = 60000; // 超时时间，单位 ms(默认60秒)
 	let Logger = {};
 	if (config.debug) {
 		Logger.params = (typeof obj.data == "object") ? vk.pubfn.copyObject(obj.data) : obj.data;
