@@ -194,5 +194,6 @@ const install = (Vue, config) => {
 }
 
 export default {
-	install
+	install,
+	vk
 }

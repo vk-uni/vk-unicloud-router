@@ -285,19 +285,26 @@ class CallFunctionUtil {
 		}
 		/**
 		 * 云函数请求封装 - 统一入口
+		 * 文档 [https://vkdoc.fsq.pub/client/pages/callFunction.html](https://vkdoc.fsq.pub/client/pages/callFunction.html)
 		 * @description 通过云函数路由，1个云函数实现多个云函数的效果。
-		 * @param {String}   name       大云函数名称（默认router）
-		 * @param {String}   url        请求路径
-		 * @param {Object}   data       请求参数，如 { a:1, b:"2" } 云函数内可通过 let { a, b } = data; 获取参数
-		 * @param {String}   title      遮罩层提示语，为空或不传则代表不显示遮罩层。
-		 * @param {Boolean|Object}  loading    若设置为false，即使title有值也不显示遮罩层
-		 * @param {Boolean}  isRequest  是否使用云函数url化地址访问云函数，默认false
-		 * @param {String}   env        云空间环境 文档：https://vkdoc.fsq.pub/client/question/q9.html#%E5%89%8D%E7%AB%AF%E8%AF%B7%E6%B1%82%E5%A4%9A%E6%9C%8D%E5%8A%A1%E7%A9%BA%E9%97%B4
-		 * @param {Boolean}  needAlert  为true代表请求错误时，会有弹窗提示，默认为true
-		 * @param {Number}   retryCount 系统异常重试机制（表单提交时慎用，建议只用在查询请求中，即无任何数据库修改的请求中）
-		 * @param {Function} success    请求成功时，执行的回调函数
-		 * @param {Function} fail  	 	  请求失败时，执行的回调函数
-		 * @param {Function} complete   无论请求成功与否，都会执行的回调函数
+		 * @param {Object}   obj       	
+		 * @param {String}   obj.name       大云函数名称（默认router）
+		 * @param {String}   obj.url        请求路径
+		 * @param {Object}   obj.data       请求参数，如 { a:1, b:"2" } 云函数内可通过 let { a, b } = data; 获取参数
+		 * @param {String}   obj.title      遮罩层提示语，为空或不传则代表不显示遮罩层。
+		 * @param {Boolean|Object}  obj.loading    若设置为false，即使title有值也不显示遮罩层 文档 [https://vkdoc.fsq.pub/client/pages/callFunction.html#loading](https://vkdoc.fsq.pub/client/pages/callFunction.html#loading)
+		 * @param {Boolean}   [obj.loading=true] - 默认值 true，显示遮罩层
+		 * @param {Boolean}   [obj.loading=false] - 可选值 false，不显示遮罩层
+		 * @param {Object}    [obj.loading={ that:this, name:"loading2"}] - { that:this, name:"loading2"} 高级用法
+		 * @param {Boolean}  obj.isRequest  是否使用云函数url化地址访问云函数，默认false
+		 * @param {String}   obj.env        云空间环境 文档：https://vkdoc.fsq.pub/client/question/q9.html#%E5%89%8D%E7%AB%AF%E8%AF%B7%E6%B1%82%E5%A4%9A%E6%9C%8D%E5%8A%A1%E7%A9%BA%E9%97%B4
+		 * @param {Boolean}  obj.needAlert  为true代表请求错误时，会有弹窗提示，默认为true
+		 * @param {Boolean}   [obj.needAlert=true] - 默认值 true，请求错误时，会有弹窗提示
+		 * @param {Boolean}   [obj.needAlert=false] - 可选值 false，请求错误时，没有弹窗提示
+		 * @param {Number}   obj.retryCount 系统异常重试机制（表单提交时慎用，建议只用在查询请求中，即无任何数据库修改的请求中）
+		 * @param {Function} obj.success    请求成功时，执行的回调函数
+		 * @param {Function} obj.fail  	 	  请求失败时，执行的回调函数
+		 * @param {Function} obj.complete   无论请求成功与否，都会执行的回调函数
 		 */
 		this.callFunction = (obj = {}) => {
 			let that = this;
@@ -445,25 +452,26 @@ class CallFunctionUtil {
 		}
 		/**
 		 * 上传文件 vk.uploadFile
-		 * 文档地址: https://vkdoc.fsq.pub/client/pages/uploadFile.html
-		 * @param {String} 	title										上传时的loading提示语
-		 * @param {String} 	file										要上传的文件对象，file与filePath二选一即可
-		 * @param {String} 	filePath								要上传的文件路径，file与filePath二选一即可	
-		 * @param {String} 	provider								云存储供应商，支持：unicloud、aliyun、qiniu
-		 * @param {String} 	cloudPath								指定上传后的云端文件路径（不指定会自动生成）cloudPath优先级大于cloudDirectory
-		 * @param {String} 	cloudDirectory					指定上传后的云端文件目录
-		 * @param {String} 	needSave								是否需要将图片信息保存到admin素材库
-		 * @param {String} 	category_id							素材库分类id，当needSave为true时生效	
-		 * @param {String} 	uniCloud								上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
-		 * @param {String} 	env											上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
-		 * @param {String} 	cloudPathAsRealPath			阿里云目录支持，需HBX3.8.5以上版本才支持（仅provider是unicloud时支持）
-		 * @param {String} 	cloudPathRemoveChinese	删除文件名中的中文，默认为true
-		 * @param {String} 	errorToast							异常时是否用toast代替alert，默认为false
-		 * @param {String} 	needAlert								异常时是否需要alert，默认为false
-		 * @param {Function} onUploadProgress				监听上传进度回调
-		 * @param {Function} success								上传成功时，执行的回调函数
-		 * @param {Function} fail  	 								上传失败时，执行的回调函数
-		 * @param {Function} complete 							无论上传成功与否，都会执行的回调函数
+		 * 文档：[https://vkdoc.fsq.pub/client/pages/uploadFile.html](https://vkdoc.fsq.pub/client/pages/uploadFile.html)
+		 * @param {Object} 	obj													上传时的loading提示语
+		 * @param {String} 	obj.title										上传时的loading提示语
+		 * @param {String} 	obj.file										要上传的文件对象，file与filePath二选一即可
+		 * @param {String} 	obj.filePath								要上传的文件路径，file与filePath二选一即可	
+		 * @param {String} 	obj.provider								云存储供应商，支持：unicloud、aliyun、qiniu
+		 * @param {String} 	obj.cloudPath								指定上传后的云端文件路径（不指定会自动生成）cloudPath优先级大于cloudDirectory
+		 * @param {String} 	obj.cloudDirectory					指定上传后的云端文件目录
+		 * @param {String} 	obj.needSave								是否需要将图片信息保存到admin素材库
+		 * @param {String} 	obj.category_id							素材库分类id，当needSave为true时生效	
+		 * @param {String} 	obj.uniCloud								上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
+		 * @param {String} 	obj.env											上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
+		 * @param {String} 	obj.cloudPathAsRealPath			阿里云目录支持，需HBX3.8.5以上版本才支持（仅provider是unicloud时支持）
+		 * @param {String} 	obj.cloudPathRemoveChinese	删除文件名中的中文，默认为true
+		 * @param {String} 	obj.errorToast							异常时是否用toast代替alert，默认为false
+		 * @param {String} 	obj.needAlert								异常时是否需要alert，默认为false
+		 * @param {Function} obj.onUploadProgress				监听上传进度回调
+		 * @param {Function} obj.success								上传成功时，执行的回调函数
+		 * @param {Function} obj.fail  	 								上传失败时，执行的回调函数
+		 * @param {Function} obj.complete 							无论上传成功与否，都会执行的回调函数
 		 */
 		this.uploadFile = (obj = {}) => {
 			let that = this;

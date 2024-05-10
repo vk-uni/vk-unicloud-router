@@ -20,24 +20,25 @@ requestUtil.config = {
 var counterNum = 0;
 /**
  * request 请求库
- * 注意: 该请求库目前主要是框架自身使用，且近期变动频率较高，目前请勿使用在你自己的业务中。
- * @param {String} url                服务器接口地址
- * @param {Object/String/ArrayBuffer} data 请求的参数                                      App（自定义组件编译模式）不支持ArrayBuffer类型
- * @param {Object} header             设置请求的 header，header 中不能设置 Referer。         App、H5端会自动带上cookie，且H5端不可手动修改
- * @param {String} method             默认 POST 可选 GET
- * @param {Number} timeout            超时时间，单位 ms 默认3000(30秒)
- * @param {String} dataType           默认json 如果设为 json，会尝试对返回的数据做一次 JSON.parse
- * @param {String} responseType       默认 text 设置响应的数据类型。合法值：text、arraybuffer App和支付宝小程序不支持
- * @param {Boolean} sslVerify         默认 true 是否需要验证ssl证书 仅App安卓端支持（HBuilderX 2.3.3+）          仅App安卓端支持（HBuilderX 2.3.3+）
- * @param {Boolean} withCredentials   默认 false 跨域请求时是否携带凭证（cookies）            仅H5支持（HBuilderX 2.6.15+）
- * @param {Boolean} firstIpv4         默认 false DNS解析时优先使用ipv4                       仅 App-Android 支持 (HBuilderX 2.8.0+)
- * @param {String} success            成功回调
- * @param {String} fail               失败回调
- * @param {String} complete           完成回调
+ * 文档 [https://vkdoc.fsq.pub/client/jsapi.html#vk-request-前端调用](https://vkdoc.fsq.pub/client/jsapi.html#vk-request-前端调用)
+ * @param {Object} obj                
+ * @param {String} obj.url                服务器接口地址
+ * @param {Object|String|ArrayBuffer} obj.data 请求的参数                                      App（自定义组件编译模式）不支持ArrayBuffer类型
+ * @param {Object} obj.header             设置请求的 header，header 中不能设置 Referer。         App、H5端会自动带上cookie，且H5端不可手动修改
+ * @param {String} obj.method             默认 POST 可选 GET
+ * @param {Number} obj.timeout            超时时间，单位 ms 默认3000(30秒)
+ * @param {String} obj.dataType           默认json 如果设为 json，会尝试对返回的数据做一次 JSON.parse
+ * @param {String} obj.responseType       默认 text 设置响应的数据类型。合法值：text、arraybuffer App和支付宝小程序不支持
+ * @param {Boolean} obj.sslVerify         默认 true 是否需要验证ssl证书 仅App安卓端支持（HBuilderX 2.3.3+）          仅App安卓端支持（HBuilderX 2.3.3+）
+ * @param {Boolean} obj.withCredentials   默认 false 跨域请求时是否携带凭证（cookies）            仅H5支持（HBuilderX 2.6.15+）
+ * @param {Boolean} obj.firstIpv4         默认 false DNS解析时优先使用ipv4                       仅 App-Android 支持 (HBuilderX 2.8.0+)
+ * @param {String} obj.success            成功回调
+ * @param {String} obj.fail               失败回调
+ * @param {String} obj.complete           完成回调
  * 以下为特殊参数
- * @param {String} errorCodeName      服务器返回的错误码的字段名，若不为空，则会对返回结果进行判断
- * @param {String} errorMsgName       服务器返回的错误码的字符串含义，若不为空，且errorCodeName对应的值不为0，则会alert弹窗
- * @param {Boolean} needAlert         服务器返回的错误时，是否需要alert弹出提示
+ * @param {String} obj.errorCodeName      服务器返回的错误码的字段名，若不为空，则会对返回结果进行判断
+ * @param {String} obj.errorMsgName       服务器返回的错误码的字符串含义，若不为空，且errorCodeName对应的值不为0，则会alert弹窗
+ * @param {Boolean} obj.needAlert         服务器返回的错误时，是否需要alert弹出提示
  *
  * 调用示例
 vk.request({
