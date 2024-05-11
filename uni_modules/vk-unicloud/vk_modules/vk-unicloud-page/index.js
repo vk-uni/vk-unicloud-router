@@ -1,6 +1,15 @@
 /**
- * vk-unicloud框架客户端(前端)
+ * vk-unicloud框架客户端（前端）
  * author	VK
+ * ##### 如果你热爱编程，想快速入门云开发，欢迎使用`vk-unicloud`系列开发框架
+ * ##### 无需转变开发习惯，0成本上手云开发。
+ * ##### 框架内置了众多API、工具包，为你的业务扫平障碍。使你的项目刚起步进度就是50%（微信登录、短信、验证码、缓存、生成小程序码等等）
+ * ##### 从此你又get一个新技能，只需用js，轻松搞定前后台整体业务。
+ * ##### `client端` 框架地址：https://ext.dcloud.net.cn/plugin?id=2204
+ * ##### `admin端`  框架地址：https://ext.dcloud.net.cn/plugin?id=5043
+ * ##### `client端` 框架文档：https://vkdoc.fsq.pub/client/
+ * ##### `admin端`  框架文档：https://vkdoc.fsq.pub/admin/
+ * ##### 框架学习Q群：`22466457` 欢迎萌新和大佬来使用和共同改进框架
  */
 import userCenter         from './libs/vk-unicloud/vk-unicloud-user-center'
 import callFunctionUtil   from './libs/vk-unicloud/vk-unicloud-callFunctionUtil'
@@ -114,29 +123,9 @@ var vk = {
 	// 事件管理
 	...eventManager
 };
-// vk实例初始化
-vk.init = function(obj = {}) {
-	let {
-		Vue, // Vue实例
-		config, // 配置
-		store, // vuex简写法则(新版本无需传store)
-	} = obj;
-	if (typeof store !== "undefined") {
-		// 兼容旧版本
-		Vue.use(store);
-	} else {
-		// 新版本无需传store
-		Vue.mixin(storeMixin);
-		if (config.globalError) {
-			Vue.use(initGlobalError);
-		}
-	}
-	// 自定义云函数路由配置
-	vk.callFunctionUtil.setConfig(config);
-	// 重写 console.log
-	Vue.use(consoleLog);
-};
 
+
+// 获取全局对象
 vk.getGlobalObject = function() {
 	if (typeof globalThis === "object") return globalThis;
 	if (typeof self === "object") return self;
@@ -153,7 +142,8 @@ vk.use = function(obj, util) {
 	}
 };
 
-const install = (Vue, config) => {
+// vk的初始化函数
+vk.install = (Vue, config) => {
 	// 全局混入
 	Vue.mixin(mixin);
 	// #ifndef VUE3
@@ -161,6 +151,7 @@ const install = (Vue, config) => {
 	for (let i in filters) {
 		Vue.filter(i, filters[i]);
 	}
+	// 将vk挂载到Vue实例
 	Vue.prototype.vk = vk;
 	Vue.prototype.$fn = vk.pubfn;
 
@@ -184,16 +175,19 @@ const install = (Vue, config) => {
 		openapi: vk.openapi
 	}, util);
 	initPermission(Vue);
-	// 初始化并加载vk配置
+	// 混入Vuex
+	Vue.mixin(storeMixin);
+	// 加载vk配置
 	if (config) {
-		vk.init({
-			Vue,               // Vue实例
-			config,	           // 配置
-		});
+		if (config.globalError) {
+			// 加载全局错误
+			Vue.use(initGlobalError);
+		}
+		// 自定义云函数路由配置
+		vk.callFunctionUtil.setConfig(config);
+		// 重写 console.log
+		Vue.use(consoleLog);
 	}
 }
 
-export default {
-	install,
-	vk
-}
+export default vk

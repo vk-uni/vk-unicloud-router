@@ -103,7 +103,7 @@ requestUtil.request = function(obj = {}) {
 
 	if (!obj.method) obj.method = "POST"; // 默认POST请求
 	if (typeof obj.dataType === "undefined") obj.dataType = "json";
-	if (obj.dataType == "default" || obj.dataType === "") delete obj.dataType;
+	if (obj.dataType == "default" || obj.dataType == "buffer" || obj.dataType === "") delete obj.dataType;
 	if (typeof obj.header === "undefined" && typeof obj.headers !== "undefined") {
 		obj.header = obj.headers;
 	}

@@ -12,11 +12,6 @@
  * ##### 框架学习Q群：`22466457` 欢迎萌新和大佬来使用和共同改进框架
  */
 
-import vkCloud from './vk_modules/vk-unicloud-page'
-const vk = vkCloud.vk;
+import vk from './vk_modules/vk-unicloud-page'
 
-export default vkCloud;
-
-export {
-	vk
-}
+export default vk;
