@@ -15,7 +15,9 @@ modulesFiles.keys().map((modulePath, index) => {
 // #endif
 
 // #ifdef VUE3
-const modulesFiles = import.meta.globEager('./modules/**/*.js');
+//const modulesFiles = import.meta.globEager('./modules/**/*.js');
+// hbx4.14开始需要使用下方的写法
+const modulesFiles = import.meta.glob('./modules/**/*.js', { eager: true });
 for (const modulePath in modulesFiles) {
 	const moduleName = modulePath.replace(/^\.\/modules\/(.*)\.\w+$/, '$1')
 	modulesTemp[moduleName] = modulesFiles[modulePath].default;
@@ -78,14 +80,14 @@ const store = new Vuex.Store({
 				let obj = state[nameArr[0]];
 				for (let i = 1; i < len - 1; i++) {
 					let keyName = nameArr[i];
-					if (typeof obj[keyName] !== "object") obj[keyName] = {};
+					if (typeof obj[keyName] !== "object") Vue.set(obj, keyName, {});
 					obj = obj[keyName];
 				}
-				obj[nameArr[len - 1]] = JSON.parse(JSON.stringify(payload.value));
+				Vue.set(obj, nameArr[len - 1], JSON.parse(JSON.stringify(payload.value)));
 				saveKey = nameArr[0];
 			} else {
 				// 单层级变量，在state就是一个普通变量的情况
-				state[payload.name] = JSON.parse(JSON.stringify(payload.value));
+				Vue.set(state, payload.name, JSON.parse(JSON.stringify(payload.value)));
 				saveKey = payload.name;
 			}
 			// 保存变量到本地，见顶部函数定义

@@ -86,20 +86,25 @@ module.exports = {
 		if (Object.keys(stablePublishDb).length && appUpdate && wgtUpdate) {
 			// 判断是否可用wgt更新
 			if (min_uni_version && compare(min_uni_version, appVersion) < 1) {
+				let msg = 'wgt更新';
 				return {
 					code: 101,
-					msg: 'wgt更新',
+					msg,
+					message: msg,
 					...stablePublishDb
 				};
 			} else if (hasAppPackage && compare(appVersionInDb.version, appVersion) === 1) {
+				let msg = '整包更新';
 				return {
 					code: 102,
-					msg: '整包更新',
+					msg,
+					message: msg,
 					...appVersionInDb
 				};
 			}
 		} else {
-			return { code: 0, msg: '当前版本已经是最新的，不需要更新' };
+			let msg = '当前版本已经是最新的，不需要更新';
+			return { code: 0, msg, message: msg };
 		}
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
