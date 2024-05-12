@@ -27,7 +27,7 @@ var importObject = function(name, importObjectOptions = {}) {
 			 * @param {Boolean}  needAlert 为true代表请求错误时，会有弹窗提示。默认为true
 			 * @param {Object}   loading   与title二选一，格式为 { name: "loading", that: that }  name是变量名，that是数据源，当发起请求时，自动that[name] = true; 请求结束后，自动that[name] = false;
 			 */
-			return async function(options) {
+			return async function(options = {}) {
 				// 如果importObjectOptions中指定了easy为true，代表options的值就是请求参数
 				if (importObjectOptions.easy) {
 					options = {
