@@ -181,7 +181,7 @@ declare namespace VkNamespace {
 		/**
 		 * 失败返回的回调函数
 		 */
-		fail?: (res: UniBaseResult) => void;
+		fail?: (res: any) => void;
 		/**
 		 * 结束的回调函数（调用成功、失败都会执行
 		 */
@@ -191,12 +191,31 @@ declare namespace VkNamespace {
 	type CallFunctionResult = baseResult & {
 		[key: string]: any;
 	};
+	
+	enum SECRET_TYPE {
+	  /**
+	   * 不加密
+	   */
+	  none = 'none',
+	  /**
+	   * 仅请求参数加密
+	   */
+	  request = 'request',
+	  /**
+	   * 仅响应结果加密
+	   */
+	  response = 'response',
+	  /**
+	   * 请求响应均加密
+	   */
+	  both = 'both'
+	}
 
 	type CallFunctionOptions = {
 		/**
 		 * 符合VK框架路由规则的router大函数名，默认为app.config.js内的functionName属性的值
 		 */
-		name?: string;
+		name?: string | HBuilderX.CloudFunctionString;
 		/**
 		 * 请求路径，该路径实为router大云函数的service目录下的路径（此时的router大函数=name参数的值）
 		 */
@@ -238,17 +257,25 @@ declare namespace VkNamespace {
 		 */
 		retryCount?: number;
 		/**
+		 * 安全网络类型
+		 * - none：不加密
+		 * - request：仅请求参数加密
+		 * - response：仅响应结果加密
+		 * - both：请求响应均加密
+		 */
+		secretType?: keyof typeof SECRET_TYPE;
+		/**
 		 * 请求成功时，执行的回调函数
 		 */
 		success?: (data: CallFunctionResult) => void;
 		/**
 		 * 请求失败时，执行的回调函数
 		 */
-		fail?: (err: UniBaseResult) => void;
+		fail?: (err: any) => void;
 		/**
 		 * 无论请求成功与否，都会执行的回调函数
 		 */
-		complete?: () => void;
+		complete?: (data: CallFunctionResult) => void;
 	};
 
 	type TreeProps = {
