@@ -2,12 +2,20 @@ interface Uni {
 	vk: VkInterface;
 }
 declare namespace VkNamespace {
-	type baseResult = {
+	interface AnyInterface {
+		[key: string]: any;
+	}
+
+	type AnyKey = {
+		[key: string]: any;
+	};
+
+	type baseResult = AnyKey & {
 		msg?: string;
 		code: string | number;
 	};
 
-	type UniBaseResult = {
+	type UniBaseResult = AnyKey & {
 		errMsg: string;
 		errCode?: string | number;
 	};
@@ -21,9 +29,7 @@ declare namespace VkNamespace {
 		data?: object;
 	};
 
-	type RequestResult = baseResult & {
-		[key: string]: any;
-	};
+	type RequestResult = baseResult;
 
 	type RequestOptions = {
 		/**
@@ -188,27 +194,25 @@ declare namespace VkNamespace {
 		complete?: (res: UploadFileResult) => void;
 	};
 
-	type CallFunctionResult = baseResult & {
-		[key: string]: any;
-	};
-	
+	type CallFunctionResult = baseResult;
+
 	enum SECRET_TYPE {
-	  /**
-	   * 不加密
-	   */
-	  none = 'none',
-	  /**
-	   * 仅请求参数加密
-	   */
-	  request = 'request',
-	  /**
-	   * 仅响应结果加密
-	   */
-	  response = 'response',
-	  /**
-	   * 请求响应均加密
-	   */
-	  both = 'both'
+		/**
+		 * 不加密
+		 */
+		none = "none",
+		/**
+		 * 仅请求参数加密
+		 */
+		request = "request",
+		/**
+		 * 仅响应结果加密
+		 */
+		response = "response",
+		/**
+		 * 请求响应均加密
+		 */
+		both = "both"
 	}
 
 	type CallFunctionOptions = {
@@ -385,7 +389,7 @@ declare namespace VkNamespace {
 		imgUrl: string;
 	};
 
-	interface Pubfn {
+	interface Pubfn extends AnyInterface {
 		/**
 		 * vk.pubfn.debounce 防抖函数
 		 * @文档 [https://vkdoc.fsq.pub/client/jsapi.html#vk-pubfn-debounce-防抖函数](https://vkdoc.fsq.pub/client/jsapi.html#vk-pubfn-debounce-防抖函数)
@@ -870,6 +874,7 @@ declare namespace VkNamespace {
 	}
 
 	interface H5 {
+		wx: any;
 		/**
 	 * vk.h5.getEnv 获取当前H5所在的环境
 	 * @example
@@ -934,7 +939,7 @@ declare namespace VkNamespace {
 		updateShareData(options: UpdateShareDataOptions): void;
 	}
 
-	interface Vk {
+	interface Vk extends AnyInterface {
 		/**
 		 * vk.alert 全局弹窗
 		 * @文档 [https://vkdoc.fsq.pub/client/jsapi.html#vk-alert](https://vkdoc.fsq.pub/client/jsapi.html#vk-alert)

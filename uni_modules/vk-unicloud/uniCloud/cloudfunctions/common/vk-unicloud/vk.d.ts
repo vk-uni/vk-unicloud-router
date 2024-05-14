@@ -16,12 +16,20 @@ declare namespace UniCloudNamespace {
 }
 
 declare namespace VkCloudNamespace {
-	type baseResult = {
+	interface AnyInterface {
+		[key: string]: any;
+	}
+	
+	type AnyKey = {
+		[key: string]: any;
+	};
+	
+	type baseResult = AnyKey & {
 		msg?: string;
 		code: string | number;
 	};
 
-	type UniBaseResult = {
+	type UniBaseResult = AnyKey & {
 		errMsg: string;
 		errCode?: string | number;
 	};
@@ -35,9 +43,7 @@ declare namespace VkCloudNamespace {
 		data?: object;
 	};
 
-	type RequestResult = baseResult & {
-		[key: string]: any;
-	};
+	type RequestResult = baseResult;
 
 	type RequestOptions = {
 		/**
@@ -131,9 +137,7 @@ declare namespace VkCloudNamespace {
 		streaming?: any;
 	};
 
-	type CallFunctionResult = baseResult & {
-		[key: string]: any;
-	};
+	type CallFunctionResult = baseResult;
 
 	type CallFunctionOptions = {
 		/**
@@ -407,7 +411,7 @@ declare namespace VkCloudNamespace {
 		vk: Vk;
 	};
 
-	interface Pubfn {
+	interface Pubfn extends AnyInterface {
 		/**
 		 * vk.pubfn.arrayToTree（数组转树）
 		 */
@@ -859,7 +863,7 @@ declare namespace VkCloudNamespace {
 		aes: CryptoAes;
 	}
 
-	interface Vk {
+	interface Vk extends AnyInterface {
 		/**
 		 * vk.importObject 导入云对象
 		 * @文档 [https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#方式二-使用-uni-vk-importobject](https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#方式二-使用-uni-vk-importobject)
