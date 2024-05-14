@@ -1148,22 +1148,22 @@ declare namespace VkNamespace {
 		 * vk.navigateTo 保留当前页面，跳转到应用内的某个页面
 		 * @文档 [https://vkdoc.fsq.pub/client/jsapi.html#vk-navigateto](https://vkdoc.fsq.pub/client/jsapi.html#vk-navigateto)
 		 */
-		navigateTo(options: UniNamespace.NavigateToOptions): void;
+		navigateTo(options: UniNamespace.NavigateToOptions | string | HBuilderX.PageURIString): void;
 		/**
 		 * vk.redirectTo 关闭当前页面，跳转到应用内的某个页面
 		 * @文档 [https://vkdoc.fsq.pub/client/jsapi.html#vk-redirectto](https://vkdoc.fsq.pub/client/jsapi.html#vk-redirectto)
 		 */
-		redirectTo(options: UniNamespace.RedirectToOptions): void;
+		redirectTo(options: UniNamespace.RedirectToOptions | string | HBuilderX.PageURIString): void;
 		/**
 		 * vk.reLaunch 关闭所有页面，打开到应用内的某个页面
 		 * @文档 [https://vkdoc.fsq.pub/client/jsapi.html#vk-relaunch](https://vkdoc.fsq.pub/client/jsapi.html#vk-relaunch)
 		 */
-		reLaunch(options: UniNamespace.ReLaunchOptions): void;
+		reLaunch(options: UniNamespace.ReLaunchOptions | string | HBuilderX.PageURIString): void;
 		/**
 		 * vk.switchTab 跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面
 		 * @文档 [https://vkdoc.fsq.pub/client/jsapi.html#vk-switchtab](https://vkdoc.fsq.pub/client/jsapi.html#vk-switchtab)
 		 */
-		switchTab(options: UniNamespace.SwitchTabOptions): void;
+		switchTab(options: UniNamespace.SwitchTabOptions | string | HBuilderX.PageURIString): void;
 		/**
 		 * vk.navigateBack 关闭当前页面，返回上一页面或多级页面
 		 * @文档 [https://vkdoc.fsq.pub/client/jsapi.html#vk-navigateback](https://vkdoc.fsq.pub/client/jsapi.html#vk-navigateback)
