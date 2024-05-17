@@ -1,4 +1,3 @@
-### uniCloud云函数路由框架研究Q群:22466457 如有问题或建议可以在群内讨论。
 ### 插件名称：`vk-unicloud-router`
 ### 作者：VK
 
@@ -492,7 +491,5 @@ this.vk.callFunction({
 
 ## 本插件更新步骤
 [点击查看本插件『更新步骤』](https://vkdoc.fsq.pub/client/changeGuide.html)
-
-## uniCloud云函数路由框架研究Q群:`22466457` 如有问题或建议可以在群内讨论。
 
 ### 如果你觉得框架对你有用，可以在下方进行评论，也可以进行赞赏。

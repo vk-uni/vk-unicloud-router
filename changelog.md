@@ -1,3 +1,11 @@
+## 2.18.2（2024-05-17）
+* 【重要】新增 `d.ts` 语法提示，提升开发体验 [传送门](https://vkdoc.fsq.pub/client/codeTips.html#d-ts-%E8%AF%AD%E6%B3%95%E6%8F%90%E7%A4%BA)
+* 【重要】修复 `HBX版本 >= 4.14` 时运行项目到 `Vue3` 时会报错的问题
+* 【优化】内置的微信小程序获取 `access_token` 的接口改为稳定版接口 [传送门](https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-access-token/getStableAccessToken.html)
+
+**特别注意**
+
+* 本次更新需要替换项目根目录下的 `store/index.js` 文件
 ## 2.18.1（2024-04-26）
 * 【重要】云函数的 node.js 版本统一调整为 node16（阿里云已宣布node8不再维护）
 * 【重要】新增 vk.getReentrantLockManage 高并发分布式重入锁，主要用于控制云函数或云对象并发访问时的同步，确保同一时间只有一个线程或进程能够拿到锁。 [传送门](https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/reentrantLock.html)
