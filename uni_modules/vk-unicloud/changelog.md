@@ -1,3 +1,5 @@
+## 2.18.3（2024-05-20）
+* 【调整】删除2.18.2更新的d.ts文件，内置到 `VK框架快速开发辅助工具` [传送门](https://vkdoc.fsq.pub/client/codeAssist.html#_14%E3%80%81%E5%BC%80%E5%90%AFvk%E6%A1%86%E6%9E%B6d-ts%E8%AF%AD%E6%B3%95%E6%8F%90%E7%A4%BA)
 ## 2.18.2（2024-05-17）
 * 【重要】新增 `d.ts` 语法提示，提升开发体验 [传送门](https://vkdoc.fsq.pub/client/codeTips.html#d-ts-%E8%AF%AD%E6%B3%95%E6%8F%90%E7%A4%BA)
 * 【重要】修复 `HBX版本 >= 4.14` 时运行项目到 `Vue3` 时会报错的问题
