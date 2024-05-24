@@ -835,6 +835,17 @@ class CallFunctionUtil {
 			errMsg = globalErrorCode["cloudfunction-reaches-burst-limit"] || "系统繁忙，请稍后再试。";
 		} else if (res.code === "InternalServerError") {
 			sysErr = true;
+		} else if (res.code === "SYS_ERR" && errMsg.indexOf("似乎已断开与互联网的连接") > -1) {
+			errMsg = globalErrorCode["cloudfunction-network-unauthorized"];
+			sysErr = true;
+			needAlert = false;
+			// #ifdef APP-PLUS
+			vk.pubfn.debounce(() => {
+				vk.alert(errMsg, "提示", "确定", ()=>{
+					vk.navigateToHome();
+				});
+			}, 2000, false, "cloudfunction-network-unauthorized");
+			// #endif
 		}
 		let runKey = true;
 		if (typeof that.interceptor.fail == "function") {

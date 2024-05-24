@@ -133,7 +133,11 @@ export default {
 		// 请求超时（真正的请求超时）
 		"cloudfunction-timeout": "请求超时，请重试！",
 		// 不在预期内的异常（如数据库异常、云函数编译异常等）
-		"cloudfunction-system-error": "网络开小差了！"
+		"cloudfunction-system-error": "网络开小差了！",
+		// 云函数达到并发限制
+		"cloudfunction-reaches-burst-limit": "系统繁忙，请稍后再试。",
+		// APP未授权网络访问时的异常提示
+		"cloudfunction-network-unauthorized": "需要进行网络请求许可，若您已授权，请点击确定"
 	},
 	// 自定义拦截器
 	interceptor: {
