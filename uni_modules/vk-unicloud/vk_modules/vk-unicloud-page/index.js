@@ -190,4 +190,27 @@ vk.install = (Vue, config) => {
 	}
 }
 
+// vk旧版实例初始化（为了兼容旧版，此函数还需要保留）
+vk.init = function(obj = {}) {
+	let {
+		Vue, // Vue实例
+		config, // 配置
+		store, // 兼容更旧的版本
+	} = obj;
+	if (typeof store !== "undefined") {
+		// 兼容更旧的版本
+		Vue.use(store);
+	} else {
+		// 无需传store
+		Vue.mixin(storeMixin);
+		if (config.globalError) {
+			Vue.use(initGlobalError);
+		}
+	}
+	// 自定义云函数路由配置
+	vk.callFunctionUtil.setConfig(config);
+	// 重写 console.log
+	Vue.use(consoleLog);
+};
+
 export default vk
