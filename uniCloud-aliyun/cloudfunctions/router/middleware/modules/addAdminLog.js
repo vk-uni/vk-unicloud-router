@@ -26,7 +26,7 @@ module.exports = [{
 	main: async function(event, serviceRes) {
 		let { url, data = {}, uniIdToken, util, filterResponse, originalParam } = event;
 		let { uniID, config, vk, db, _ } = util;
-		let { userInfo = {} } = filterResponse;
+		let { uid, userInfo = {} } = filterResponse;
 		let res = serviceRes;
 		try {
 			// 此处加 try catch 保证即使添加日志环节出错，不影响业务运行。
@@ -40,6 +40,11 @@ module.exports = [{
 				let request_id;
 				if (typeof vk.pubfn.getUniCloudRequestId === "function") {
 					request_id = vk.pubfn.getUniCloudRequestId();
+				}
+				if (vk.pubfn.isNull(userInfo) && uid) {
+					// 如果userInfo为空，则通过uid获取用户信息
+					userInfo = await vk.daoCenter.userDao.findById(uid);
+					filterResponse.userInfo = userInfo; // 这里重新赋值 filterResponse.userInfo 可以使云对象里调用 await this.getUserInfo() 时无需查库
 				}
 				await vk.baseDao.add({
 					dbName: "opendb-admin-log",
