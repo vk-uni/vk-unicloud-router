@@ -640,6 +640,10 @@ export default {
 	 */
 	getWeixinMPqrcode(obj = {}) {
 		addLoading(obj, "create");
+		// 如果env_version传auto，则自动获取当前小程序版本
+		if (obj.data && obj.data.env_version === "auto") {
+			obj.data.env_version = vk.pubfn.getMiniProgramEnvVersion();
+		}
 		return callFunction({
 			...obj,
 			url: 'user/kh/getWeixinMPqrcode',
@@ -656,6 +660,10 @@ export default {
 	 */
 	getWeixinMPscheme(obj = {}) {
 		addLoading(obj, "create");
+		// 如果env_version传auto，则自动获取当前小程序版本
+		if (obj.data && obj.data.env_version === "auto") {
+			obj.data.env_version = vk.pubfn.getMiniProgramEnvVersion();
+		}
 		return callFunction({
 			...obj,
 			url: 'user/kh/getWeixinMPscheme',
@@ -673,6 +681,10 @@ export default {
 	 */
 	getWeixinMPurl(obj = {}) {
 		addLoading(obj, "create");
+		// 如果env_version传auto，则自动获取当前小程序版本
+		if (obj.data && obj.data.env_version === "auto") {
+			obj.data.env_version = vk.pubfn.getMiniProgramEnvVersion();
+		}
 		return callFunction({
 			...obj,
 			url: 'user/kh/getWeixinMPurl',

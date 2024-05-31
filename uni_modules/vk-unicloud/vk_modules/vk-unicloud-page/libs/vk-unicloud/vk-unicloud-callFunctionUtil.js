@@ -674,24 +674,53 @@ class CallFunctionUtil {
 		if (typeof obj.needAlert === "undefined") obj.needAlert = true;
 		if (!name) name = config.isTest ? config.testFunctionName : config.functionName;
 		obj.name = name;
-		let requestUrl = config.functionNameToUrl[name];
+		let functionUrl = config.functionNameToUrl[name];
 		let Logger = {};
 		if (config.debug) Logger.params = typeof data == "object" ? JSON.parse(JSON.stringify(data)) : data;
 		let uniIdToken = uni.getStorageSync(config.uniIdTokenKeyName);
 		let tokenExpired = uni.getStorageSync(config.uniIdTokenExpiredKeyName);
 		if (title) vk.showLoading(title);
 		if (loading) vk.setLoading(true, loading);
-		let promiseAction = new Promise(function(resolve, reject) {
+		let promiseAction = new Promise((resolve, reject) => {
 			if (config.debug) Logger.startTime = Date.now();
+			// 拼接functionUrl和url
+			let requestUrl = functionUrl;
+			if (url.indexOf("/") !== 0 && requestUrl.lastIndexOf("/") !== requestUrl.length - 1) {
+				requestUrl += "/";
+			}
+			requestUrl += url;
+			const systemInfo = uni.getSystemInfoSync();
+			const {
+				appId: vkAppid,
+				uniPlatform: vkPlatform,
+				appLanguage: vkLocale,
+				deviceId: vkDeviceId,
+				osName: vkOsName,
+				appName: vkAppName,
+				appVersion: vkAppVersion,
+				appVersionCode: vkAppVersionCode,
+				browserName: vkBrowserName,
+				browserVersion: vkBrowserVersion,
+			} = systemInfo;
 			uni.request({
 				method: "POST",
 				url: requestUrl,
-				data: {
-					$url: url,
-					data: data,
-					uniIdToken: uniIdToken
+				header: {
+					"content-type": "application/json;charset=utf8",
+					"uni-id-token": uniIdToken, 
+					"vk-appid": vkAppid,
+					"vk-platform": vkPlatform,
+					"vk-locale": vkLocale,
+					"vk-device-id": vkDeviceId,
+					"vk-os": vkOsName,
+					"vk-app-name": vkAppName ? encodeURIComponent(vkAppName) : undefined,
+					"vk-app-version": vkAppVersion,
+					"vk-app-version-code": vkAppVersionCode,
+					"vk-browser-name": vkBrowserName ? encodeURIComponent(vkBrowserName) : undefined,
+					"vk-browser-version": vkBrowserVersion,
 				},
-				success(res = {}) {
+				data,
+				success: (res = {}) => {
 					that.callFunctionSuccess({
 						res: res.data,
 						params: obj,
@@ -700,7 +729,7 @@ class CallFunctionUtil {
 						reject
 					});
 				},
-				fail(res) {
+				fail: (res) => {
 					that.callFunctionFail({
 						res,
 						params: obj,
@@ -709,7 +738,7 @@ class CallFunctionUtil {
 						sysFail: true
 					});
 				},
-				complete(res) {
+				complete: (res) => {
 					that.callFunctionComplete({
 						res,
 						params: obj,

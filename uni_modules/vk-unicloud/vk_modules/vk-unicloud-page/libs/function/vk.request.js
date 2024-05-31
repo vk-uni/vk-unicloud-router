@@ -114,7 +114,7 @@ requestUtil.request = function(obj = {}) {
 		let uni_id_token;
 		if (obj.uniIdToken === true) {
 			uni_id_token = vk.getToken();
-		} else if (typeof obj.uniIdToken === "boolean") {
+		} else if (typeof obj.uniIdToken === "string") {
 			uni_id_token = obj.uniIdToken;
 		}
 		if (uni_id_token) {
@@ -123,6 +123,45 @@ requestUtil.request = function(obj = {}) {
 		}
 	}
 	// 自动注入token到请求头结束-----------------------------------------------------------
+	// 自动注入clientInfo到请求头开始-----------------------------------------------------------
+	if (obj.clientInfo) {
+		let clientInfo;
+		if (obj.clientInfo === true) {
+			clientInfo = uni.getSystemInfoSync();
+		} else if (typeof obj.clientInfo === "object") {
+			clientInfo = obj.clientInfo;
+		}
+		if (vk.pubfn.isNotNull(clientInfo)) {
+			if (!obj.header) obj.header = {};
+			const {
+				appId: vkAppid,
+				uniPlatform: vkPlatform,
+				appLanguage: vkLocale,
+				deviceId: vkDeviceId,
+				osName: vkOsName,
+				appName: vkAppName,
+				appVersion: vkAppVersion,
+				appVersionCode: vkAppVersionCode,
+				browserName: vkBrowserName,
+				browserVersion: vkBrowserVersion,
+			} = clientInfo;
+			const vkHeader = {
+				"vk-appid": vkAppid,
+				"vk-platform": vkPlatform,
+				"vk-locale": vkLocale,
+				"vk-device-id": vkDeviceId,
+				"vk-os": vkOsName,
+				"vk-app-name": vkAppName ? encodeURIComponent(vkAppName) : undefined,
+				"vk-app-version": vkAppVersion,
+				"vk-app-version-code": vkAppVersionCode,
+				"vk-browser-name": vkBrowserName ? encodeURIComponent(vkBrowserName) : undefined,
+				"vk-browser-version": vkBrowserVersion,
+			}
+			obj.header = vk.pubfn.copyObject(Object.assign(obj.header, vkHeader));
+		}
+	}
+	// 自动注入clientInfo到请求头结束-----------------------------------------------------------
+
 	let interceptor = obj.interceptor;
 	delete obj.interceptor;
 	if (interceptor && typeof interceptor.invoke === "function") {

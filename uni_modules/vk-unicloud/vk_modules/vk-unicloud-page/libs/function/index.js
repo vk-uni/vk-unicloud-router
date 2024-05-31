@@ -14,6 +14,8 @@ import setClipboardData from './setClipboardData.js'
 import timeUtil from './timeUtil.js'
 // 树形结构转换
 import treeUtil from './treeUtil.js'
+// url参数工具类
+import queryStringUtil from './queryStringUtil.js'
 
 /**
  * 树形结构转换
@@ -39,6 +41,15 @@ pubfn.throttle = throttle;
  * vk.pubfn.queryParams(json);
  */
 pubfn.queryParams = queryParams;
+
+// jsonToQueryString 方便与 queryStringToJson 关联对应
+pubfn.jsonToQueryString = queryStringUtil.jsonToQueryString;
+/**
+ * url参数转对象
+ * @param {*} url 
+ * let obj = vk.pubfn.queryStringToJson(url);
+ */
+pubfn.queryStringToJson = queryStringUtil.queryStringToJson;
 /**
  * 设置剪贴板
  */
@@ -236,7 +247,7 @@ pubfn.validator = function(type) {
  * audio 音频
  * vk.pubfn.test(str, type, allowEmpty);
  */
-pubfn.test = function(str, type = "", allowEmpty=false) {
+pubfn.test = function(str, type = "", allowEmpty = false) {
 	type = type.toLowerCase();
 	let newStr;
 	if (allowEmpty && (str === "" || str === null || str === undefined)) {
@@ -766,23 +777,23 @@ pubfn.checkDataExpText = function(data = {}, expText) {
 				let andItemArr = andItem.split("!=");
 				let key = andItemArr[0];
 				let value = andItemArr[1];
-				let formValue = pubfn.getData(data,key);
-				
+				let formValue = pubfn.getData(data, key);
+
 				itemKey = String(formValue) !== value ? true : false;
-				
+
 			} else if (andItem.indexOf("==") > -1) {
 				let andItemArr = andItem.split("==");
 				let key = andItemArr[0];
 				let value = andItemArr[1];
-				let formValue = pubfn.getData(data,key);
-				
+				let formValue = pubfn.getData(data, key);
+
 				itemKey = String(formValue) == value ? true : false;
-				
+
 			} else if (andItem.indexOf(">=") > -1) {
 				let andItemArr = andItem.split(">=");
 				let key = andItemArr[0];
 				let value = andItemArr[1];
-				let formValue = pubfn.getData(data,key);
+				let formValue = pubfn.getData(data, key);
 				if (isNaN(value)) {
 					if (typeof formValue !== "undefined") itemKey = String(formValue) >= value ? true : false;
 					if (typeof formValue === "undefined" || formValue === null) itemKey = false;
@@ -794,7 +805,7 @@ pubfn.checkDataExpText = function(data = {}, expText) {
 				let andItemArr = andItem.split(">");
 				let key = andItemArr[0];
 				let value = andItemArr[1];
-				let formValue = pubfn.getData(data,key);
+				let formValue = pubfn.getData(data, key);
 				if (isNaN(value)) {
 					if (typeof formValue !== "undefined") itemKey = String(formValue) > value ? true : false;
 					if (typeof formValue === "undefined" || formValue === null) itemKey = false;
@@ -817,7 +828,7 @@ pubfn.checkDataExpText = function(data = {}, expText) {
 				let andItemArr = andItem.split("<");
 				let key = andItemArr[0];
 				let value = andItemArr[1];
-				let formValue = pubfn.getData(data,key);
+				let formValue = pubfn.getData(data, key);
 				if (isNaN(value)) {
 					if (typeof formValue !== "undefined") itemKey = String(formValue) < value ? true : false;
 					if (typeof formValue === "undefined" || formValue === null) itemKey = false;
@@ -829,7 +840,7 @@ pubfn.checkDataExpText = function(data = {}, expText) {
 				let andItemArr = andItem.split("{in}");
 				let key = andItemArr[0];
 				let value = andItemArr[1];
-				let formValue = pubfn.getData(data,key);
+				let formValue = pubfn.getData(data, key);
 				if (Array.isArray(formValue)) {
 					let index = formValue.findIndex(item => {
 						return item.toString() === value.toString();
@@ -843,7 +854,7 @@ pubfn.checkDataExpText = function(data = {}, expText) {
 				let andItemArr = andItem.split("{nin}");
 				let key = andItemArr[0];
 				let value = andItemArr[1];
-				let formValue = pubfn.getData(data,key);
+				let formValue = pubfn.getData(data, key);
 				if (Array.isArray(formValue)) {
 					let index = formValue.findIndex(item => {
 						return item.toString() === value.toString();
@@ -857,10 +868,10 @@ pubfn.checkDataExpText = function(data = {}, expText) {
 				let andItemArr = andItem.split("=");
 				let key = andItemArr[0];
 				let value = andItemArr[1];
-				let formValue = pubfn.getData(data,key);
-				
+				let formValue = pubfn.getData(data, key);
+
 				itemKey = String(formValue) == value ? true : false;
-				
+
 				//console.log("key:",key,"value:",value,"formValue",formValue.toString(),"itemKey:",itemKey);
 			}
 			if (!itemKey) {
@@ -1244,20 +1255,20 @@ pubfn.string2Number = function(obj, option = {}) {
 			} else {
 				return obj;
 			}
-			case 'object':
-				const keys = Object.keys(obj);
-				for (let i = 0; i < keys.length; i++) {
-					const key = keys[i];
-					obj[key] = pubfn.string2Number(obj[key]);
-				}
-				return obj;
-			case 'array':
-				for (let i = 0; i < obj.length; i++) {
-					obj[i] = pubfn.string2Number(obj[i]);
-				}
-				return obj;
-			default:
-				return obj;
+		case 'object':
+			const keys = Object.keys(obj);
+			for (let i = 0; i < keys.length; i++) {
+				const key = keys[i];
+				obj[key] = pubfn.string2Number(obj[key]);
+			}
+			return obj;
+		case 'array':
+			for (let i = 0; i < obj.length; i++) {
+				obj[i] = pubfn.string2Number(obj[i]);
+			}
+			return obj;
+		default:
+			return obj;
 	}
 };
 
@@ -2424,6 +2435,22 @@ pubfn.objectAssignForVue = function(obj1, obj2, that) {
 	for (let key in obj2) {
 		that.$set(obj1, key, obj2[key]);
 	}
+};
+
+/**
+ * 获取小程序当前环境版本
+ * let envVersion = vk.pubfn.getMiniProgramEnvVersion();
+ */
+pubfn.getMiniProgramEnvVersion = function() {
+	// #ifdef MP
+	try {
+		const info = uni.getAccountInfoSync();
+		return info.miniProgram.envVersion;
+	} catch (err) {
+		console.error('getMiniProgramEnvVersionErr: ', err)
+	}
+	// #endif
+	return undefined;
 };
 
 // 前端专属结束 -----------------------------------------------------------
