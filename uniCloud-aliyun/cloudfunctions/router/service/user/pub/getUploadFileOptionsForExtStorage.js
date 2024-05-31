@@ -25,8 +25,19 @@ module.exports = {
 		if (cloudPath.indexOf("public/") !== 0) {
 			return { code: -1, msg: "仅能上传到public目录" };
 		}
+		// 如果 uniCloud.getExtStorageManager 是undefined，说明没有安装扩展库，需要提示用户安装扩展库
 		if (typeof uniCloud.getExtStorageManager === "undefined") {
 			return { code: -1, msg: "请右键云函数-管理依赖-添加扩展库uni-cloud-ext-storage（需要HBX版本>=3.99）添加后需重启项目" };
+		}
+		// 如果没有传入domain，则尝试从云端配置中获取
+		if (!domain) {
+			domain = vk.getConfig("vk.service.cloudStorage.extStorage.domain");
+		}
+		if (!domain) {
+			const pageTisp = "扩展存储的domain不能为空，请配置前端 app.config.js 内的 service.cloudStorage.extStorage.domain";
+			const cloudTisp = "或 配置云端 uni-config-center/vk-unicloud/index.js 内的 vk.service.cloudStorage.extStorage.domain";
+			console.error(`${pageTisp} ${cloudTisp}`);
+			return { code: -1, msg: "domain不能为空" };
 		}
 		// 然后获取 extStorageManager 对象实例
 		const extStorageManager = uniCloud.getExtStorageManager({
@@ -38,6 +49,11 @@ module.exports = {
 			cloudPath,
 			allowUpdate: false, // 是否允许覆盖更新，如果返回前端，建议设置false，代表仅新增，不可覆盖
 		});
+		// 如果配置了自定义上传地址，则使用自定义上传地址，否则使用默认上传地址 https://upload.qiniup.com
+		const uploadEndpoint = vk.getConfig("vk.service.cloudStorage.extStorage.endpoint.upload");
+		if (uploadEndpoint) {
+			uploadFileOptionsRes.uploadFileOptions.url = uploadEndpoint;
+		}
 		// 业务逻辑结束-----------------------------------------------------------
 		return {
 			...uploadFileOptionsRes,

@@ -90,6 +90,27 @@ module.exports = {
 					"appid": "",    // 对应的API Key
 					"appsecret": "" // 对应的Secret Key
 				}
+			},
+			// 云储存相关配置
+			"cloudStorage": {
+				/**
+				 * vk.uploadFile 接口默认使用哪个存储
+				 * unicloud 空间内置存储（默认）
+				 * extStorage 扩展存储
+				 */
+				"defaultProvider": "unicloud",
+				// 空间内置存储
+				"unicloud": {
+					// 暂无配置项
+				},
+				// 扩展存储配置
+				"extStorage": {
+					"provider": "qiniu", // qiniu: 扩展存储-七牛云
+					"domain": "", // 自定义域名，如：cdn.example.com（填你在扩展存储绑定的域名）
+					"endpoint": {
+						"upload": "", // 上传接口的代理域名，在国内上传无需填写
+					}
+				}
 			}
 		},
 		"db": {
