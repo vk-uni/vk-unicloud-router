@@ -108,7 +108,7 @@ module.exports = {
 					"provider": "qiniu", // qiniu: 扩展存储-七牛云
 					"domain": "", // 自定义域名，如：cdn.example.com（填你在扩展存储绑定的域名）
 					"endpoint": {
-						"upload": "", // 上传接口的代理域名，在国内上传无需填写
+						"upload": "", // 上传接口的代理地址，在国内上传无需填写
 					}
 				}
 			}

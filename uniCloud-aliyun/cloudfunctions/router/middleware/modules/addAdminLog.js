@@ -49,8 +49,8 @@ module.exports = [{
 				await vk.baseDao.add({
 					dbName: "opendb-admin-log",
 					dataJson: {
-						user_id: userInfo._id,
-						user_name: userInfo.nickname,
+						user_id: userInfo && userInfo._id || "",
+						user_name: userInfo && userInfo.nickname || "",
 						title,
 						ip: originalParam.context.CLIENTIP,
 						url: url,
