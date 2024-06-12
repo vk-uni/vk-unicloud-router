@@ -706,7 +706,7 @@ export default {
 				obj.data = {};
 			}
 			if (!obj.data.url) {
-				obj.data.url = window.location.href;
+				obj.data.url = window.location.href.split('#')[0];
 			}
 			return callFunction({
 				...obj,
