@@ -7,8 +7,8 @@ module.exports = [{
 	id: "encryptFilter",
 	// 正则匹配规则，满足以下规则的云函数会强制需要加密通信
 	regExp: [
-		"^template/test/pub/testCryptoRequest",
-		"^template/test/kh/testCryptoRequest"
+		"^template/test/pub/testEncryptRequest",
+		"^template/encrypt/(.*)"
 	],
 	description: "加密函数拦截器",
 	index: 10, // 此处建议填一个很小的值，建议小于100，这是为了让该过滤器最先执行（越小越先执行）

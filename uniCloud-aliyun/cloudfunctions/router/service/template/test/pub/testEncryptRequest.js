@@ -2,7 +2,7 @@
 module.exports = {
 	/**
 	 * XXXnameXXX
-	 * @url template/test/pub/testCryptoRequest 前端调用的url参数地址
+	 * @url template/test/pub/testEncryptRequest 前端调用的url参数地址
 	 * data 请求参数
 	 * @param {String} params1  参数1
 	 */
