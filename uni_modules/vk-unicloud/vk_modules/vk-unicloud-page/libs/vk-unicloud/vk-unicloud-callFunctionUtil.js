@@ -302,7 +302,7 @@ class CallFunctionUtil {
 		 * @param {Boolean}   [obj.needAlert=true] - 默认值 true，请求错误时，会有弹窗提示
 		 * @param {Boolean}   [obj.needAlert=false] - 可选值 false，请求错误时，没有弹窗提示
 		 * @param {Number}   obj.retryCount 系统异常重试机制（表单提交时慎用，建议只用在查询请求中，即无任何数据库修改的请求中）
-		 * @param {Boolean}   obj.crypto 是否加密请求
+		 * @param {Boolean}   obj.encrypt 是否加密请求
 		 * @param {Function} obj.success    请求成功时，执行的回调函数
 		 * @param {Function} obj.fail  	 	  请求失败时，执行的回调函数
 		 * @param {Function} obj.complete   无论请求成功与否，都会执行的回调函数
@@ -388,6 +388,22 @@ class CallFunctionUtil {
 			if (typeof obj.isRequest === "undefined") {
 				obj.isRequest = config.isRequestDefault;
 			}
+			
+			// 判断是否需要加密请求开始-----------------------------------------------------------
+			let lifeData = vk.getStorageSync("lifeData") || {};
+			let encryptRequestConfig = vk.pubfn.getData(lifeData, "$app.config.checkEncryptRequest") || {};
+			if (encryptRequestConfig.mode === 1) {
+				let list = encryptRequestConfig.list || [];
+				for (let i = 0; i < list.length; i++) {
+					let regExp = new RegExp(list[i]);
+					if (regExp.test(url)) {
+						obj.encrypt = true;
+						break;
+					}
+				}
+			}
+			// 判断是否需要加密请求结束-----------------------------------------------------------
+			
 			// 执行请求
 			if (obj.isRequest) {
 				return that.runRequest(obj);

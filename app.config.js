@@ -71,6 +71,20 @@ export default {
 			"/pages_template/*",
 		]
 	},
+	// 需要检查是否哪些请求需要加密通信
+	checkEncryptRequest: {
+		/**
+		 * 如果 mode = 0 则不做处理
+		 * 如果 mode = 1 则代表list内的云函数或云对象需要加密通信，不在list内的不需要加密通信
+		 * 注意1: list内是正则表达式，非通配符表达式
+		 * 注意2: 建议与 router/middleware/modules/encryptFilter.js 内的regExp保持一致
+		 */
+		mode: 1,
+		list: [
+			"^template/test/pub/testEncryptRequest$", // 表示 template/test/pub/testEncryptRequest 云函数需要加密通信
+			"^template/encrypt/(.*)", // 表示以 template/encrypt/ 开头的云函数或云对象需要加密通信
+		]
+	},
 	// 静态文件的资源URL地址
 	staticUrl: {
 		// Logo
