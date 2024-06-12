@@ -60,7 +60,7 @@ class CallFunctionUtil {
 		 */
 		this.getToken = (res = {}) => {
 			let config = this.config;
-			return vk.getStorageSync(config.uniIdTokenKeyName);
+			return vk.getStorageSync(config.uniIdTokenKeyName) || undefined;
 		}
 		/**
 		 * 保存新的token
@@ -302,6 +302,7 @@ class CallFunctionUtil {
 		 * @param {Boolean}   [obj.needAlert=true] - 默认值 true，请求错误时，会有弹窗提示
 		 * @param {Boolean}   [obj.needAlert=false] - 可选值 false，请求错误时，没有弹窗提示
 		 * @param {Number}   obj.retryCount 系统异常重试机制（表单提交时慎用，建议只用在查询请求中，即无任何数据库修改的请求中）
+		 * @param {Boolean}   obj.crypto 是否加密请求
 		 * @param {Function} obj.success    请求成功时，执行的回调函数
 		 * @param {Function} obj.fail  	 	  请求失败时，执行的回调函数
 		 * @param {Function} obj.complete   无论请求成功与否，都会执行的回调函数
@@ -610,7 +611,8 @@ class CallFunctionUtil {
 			complete,
 			uniCloud: myCloud,
 			env = "default",
-			secretType
+			secretType,
+			encrypt
 		} = obj;
 		if (title) vk.showLoading(title);
 		if (loading) vk.setLoading(true, loading);
@@ -621,14 +623,52 @@ class CallFunctionUtil {
 		let promiseAction = new Promise(function(resolve, reject) {
 			if (config.debug) Logger.startTime = Date.now();
 			let runCloud = myCloud || uniCloudEnvs[env] || uniCloud;
+			let decryptFn;
+			if (encrypt) {
+				const nowTime = Date.now();
+				const encryptMode = "aes-256-ecb";
+				const sysInfo = uni.getSystemInfoSync();
+				const encryptKey = vk.crypto.md5(sysInfo.appId + sysInfo.deviceId + vk.getToken());
+				data = vk.crypto.aes.encrypt({
+					mode: encryptMode,
+					data: {
+						...data,
+						timeStamp: nowTime
+					},
+					key: encryptKey
+				});
+				decryptFn = (data) => {
+					if (data && data.encrypt) {
+						try {
+							const arr = data.data.split(",");
+							const encryptData = arr[0];
+							const newEncryptKey = vk.crypto.md5(encryptKey + arr[1] + arr[2]);
+							let decrypted = vk.crypto.aes.decrypt({
+								mode: encryptMode,
+								data: encryptData,
+								key: newEncryptKey
+							});
+							return decrypted;
+						} catch(err){
+							return { code: 412, msg: "解密失败，响应体不合法" };
+						}
+					} else {
+						return data;
+					}
+				}
+			}
 			runCloud.callFunction({
 				name: name,
 				data: {
 					$url: url,
-					data: data
+					data: data,
+					encrypt
 				},
 				secretType,
 				success(res = {}) {
+					if (typeof decryptFn === "function") {
+						res.result = decryptFn(res.result);
+					}
 					that.callFunctionSuccess({
 						res: res.result,
 						params: obj,
@@ -669,7 +709,8 @@ class CallFunctionUtil {
 			title,
 			loading,
 			name,
-			complete
+			complete,
+			encrypt
 		} = obj;
 		if (typeof obj.needAlert === "undefined") obj.needAlert = true;
 		if (!name) name = config.isTest ? config.testFunctionName : config.functionName;
@@ -689,7 +730,7 @@ class CallFunctionUtil {
 				requestUrl += "/";
 			}
 			requestUrl += url;
-			const systemInfo = uni.getSystemInfoSync();
+			const sysInfo = uni.getSystemInfoSync();
 			const {
 				appId: vkAppid,
 				uniPlatform: vkPlatform,
@@ -701,7 +742,42 @@ class CallFunctionUtil {
 				appVersionCode: vkAppVersionCode,
 				browserName: vkBrowserName,
 				browserVersion: vkBrowserVersion,
-			} = systemInfo;
+			} = sysInfo;
+			
+			let decryptFn;
+			if (encrypt) {
+				const nowTime = Date.now();
+				const encryptMode = "aes-256-ecb";
+				const encryptKey = vk.crypto.md5(sysInfo.appId + sysInfo.deviceId + vk.getToken());
+				data = vk.crypto.aes.encrypt({
+					mode: encryptMode,
+					data: {
+						...data,
+						timeStamp: nowTime
+					},
+					key: encryptKey
+				});
+				decryptFn = (data) => {
+					if (data && data.encrypt) {
+						try {
+							const arr = data.data.split(",");
+							const encryptData = arr[0];
+							const newEncryptKey = vk.crypto.md5(encryptKey + arr[1] + arr[2]);
+							let decrypted = vk.crypto.aes.decrypt({
+								mode: encryptMode,
+								data: encryptData,
+								key: newEncryptKey
+							});
+							return decrypted;
+						} catch(err){
+							return { code: 412, msg: "解密失败，响应体不合法" };
+						}
+					} else {
+						return data;
+					}
+				}
+			}
+			
 			uni.request({
 				method: "POST",
 				url: requestUrl,
@@ -718,9 +794,13 @@ class CallFunctionUtil {
 					"vk-app-version-code": vkAppVersionCode,
 					"vk-browser-name": vkBrowserName ? encodeURIComponent(vkBrowserName) : undefined,
 					"vk-browser-version": vkBrowserVersion,
+					"vk-encrypt": encrypt ? "true" : undefined
 				},
 				data,
 				success: (res = {}) => {
+					if (typeof decryptFn === "function") {
+						res.data = decryptFn(res.data);
+					}
 					that.callFunctionSuccess({
 						res: res.data,
 						params: obj,
@@ -875,6 +955,11 @@ class CallFunctionUtil {
 				});
 			}, 2000, false, "cloudfunction-network-unauthorized");
 			// #endif
+		} else if (typeof res.error === "object" && res.success === false) {
+			res = {
+				code: res.error.code || -1,
+				msg: res.error.message || res.error.msg || res.error.errMsg || "未知错误"
+			}
 		}
 		let runKey = true;
 		if (typeof that.interceptor.fail == "function") {
@@ -915,7 +1000,8 @@ class CallFunctionUtil {
 			url,
 			isRequest,
 			complete,
-			debug: debugLog
+			debug: debugLog,
+			encrypt
 		} = params;
 		if (params.needRetry && Logger.sysFail) {
 			return false;
@@ -933,6 +1019,9 @@ class CallFunctionUtil {
 			let colorStr = colorArr[counterNum % colorArr.length];
 			counterNum++;
 			let functionType = url.indexOf(".") > -1 ? "云对象" : "云函数";
+			if (encrypt) {
+				functionType = functionType + "加密";
+			}
 			console.log(`%c--------【开始】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
 			console.log("【请求参数】: ", Logger.params);
 			console.log("【返回数据】: ", Logger.result);
@@ -945,6 +1034,9 @@ class CallFunctionUtil {
 					console.error("【Stack】: ", Logger.error.err.stack);
 				} else {
 					errorLog("【Error】: ", Logger.error);
+					if ((typeof Logger.error === "object" && typeof Logger.error.code === "undefined" && typeof Logger.error.success !== "boolean") || (typeof Logger.error !== "object")) {
+						errorLog("【提示】: ", "返回数据必须是对象，且至少需要返回 { code: 0 }，请查看VK框架响应体规范 https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/resformat.html");
+					}
 				}
 			}
 			console.log(`%c--------【结束】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);

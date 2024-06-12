@@ -43,11 +43,22 @@ class CloudStorage {
 				let uploadTask = uni.uploadFile({
 					...uploadFileOptionsRes.uploadFileOptions,
 					filePath, // 本地文件路径
-					success: (res) => {
-						if (![200, 201].includes(res.statusCode)) {
-							reject(res);
+					success: (uploadFileRes) => {
+						if (![200, 201].includes(uploadFileRes.statusCode)) {
+							reject(uploadFileRes);
 						} else {
 							// 上传成功
+							let extendInfo = {};
+							try {
+								if (cloudStorageConfig.provider === "qiniu") {
+									extendInfo = JSON.parse(uploadFileRes.data);
+									if (!isNaN(extendInfo.width)) extendInfo.width = Number(extendInfo.width);
+									if (!isNaN(extendInfo.height)) extendInfo.height = Number(extendInfo.height);
+									if (!isNaN(extendInfo.size)) extendInfo.size = Number(extendInfo.size);
+								}
+							} catch(err){
+								console.error('err: ', err)
+							}
 							const { cloudPath, fileID, fileURL } = uploadFileOptionsRes;
 							const res = {
 								filePath, // 本地文件路径
@@ -55,6 +66,7 @@ class CloudStorage {
 								fileID, // 文件ID
 								fileURL, // 云端文件URL
 								url: fileURL, // 云端文件URL，与fileURL一致
+								extendInfo
 							};
 							resolve(res);
 						}

@@ -1102,4 +1102,35 @@ export default {
 			url: 'user/pub/checkVersion',
 		});
 	},
+	/**
+	 * 用户登录，使用token登录，仅为了实现当token过期时间设置很长时，做用户登录统计会有问题，因此需要每天执行一次token登录来增加登录日志，方便做用户每日登录统计
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 */
+	everydayLogin(obj = {}) {
+		const vk = uni.vk;
+		if (!vk.checkToken()) {
+			// token无效，则无需执行
+			return;
+		}
+		// 获取最新一次执行时间
+		const keyName = "pub-vk.userCenter.everydayLogin";
+		let time = vk.getStorageSync(keyName) || 0;
+		const { todayStart, todayEnd } = vk.pubfn.getCommonTime();
+		if (time >= todayStart && time <= todayEnd) {
+			// 如果今日执行过，则无需执行
+			return;
+		}
+		// 执行
+		return callFunction({
+			...obj,
+			url: 'user/pub/everydayLogin',
+			success: (res) => {
+				if (typeof obj.success === "function") obj.success(res);
+				// 记录最新一次执行时间
+				vk.setStorageSync(keyName, Date.now());
+			}
+		});
+	},
 };

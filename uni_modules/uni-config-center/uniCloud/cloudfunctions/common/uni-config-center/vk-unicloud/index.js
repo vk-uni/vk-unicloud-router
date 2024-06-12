@@ -30,6 +30,10 @@ module.exports = {
 		"crypto": {
 			"aes": "dad4c0cb88c7d005bc5e844b8e79a9f0dad4c0cb88c7d005bc5e844b8e79a9f0", // 对称加密的密钥，建议长度在64位-128位（此处建议修改成自己的密钥）
 		},
+		// 客户端加密通信配置
+		"clientCrypto": {
+			"expTime": 5, // 同一个请求过期时间，单位秒（可防止重放攻击）取值范围：5 ~ 3600
+		},
 		// 当 context 内的下面值为空时，赋予默认的值（主要用于解决云函数 URL 后的默认 APPID 问题。
 		"context": {
 			"APPID": "", // 默认 dcloud_appid
