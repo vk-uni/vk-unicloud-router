@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
 	/**
-	 * XXXnameXXX
+	 * 测试加密请求
 	 * @url template/test/pub/testEncryptRequest 前端调用的url参数地址
 	 * data 请求参数
 	 * @param {String} params1  参数1
