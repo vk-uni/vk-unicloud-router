@@ -641,37 +641,9 @@ class CallFunctionUtil {
 			let runCloud = myCloud || uniCloudEnvs[env] || uniCloud;
 			let decryptFn;
 			if (encrypt) {
-				const nowTime = Date.now();
-				const encryptMode = "aes-256-ecb";
-				const sysInfo = uni.getSystemInfoSync();
-				const encryptKey = vk.crypto.md5(sysInfo.appId + sysInfo.deviceId + vk.getToken());
-				data = vk.crypto.aes.encrypt({
-					mode: encryptMode,
-					data: {
-						...data,
-						timeStamp: nowTime
-					},
-					key: encryptKey
-				});
-				decryptFn = (data) => {
-					if (data && data.encrypt) {
-						try {
-							const arr = data.data.split(",");
-							const encryptData = arr[0];
-							const newEncryptKey = vk.crypto.md5(encryptKey + arr[1] + arr[2]);
-							let decrypted = vk.crypto.aes.decrypt({
-								mode: encryptMode,
-								data: encryptData,
-								key: newEncryptKey
-							});
-							return decrypted;
-						} catch(err){
-							return { code: 412, msg: "解密失败，响应体不合法" };
-						}
-					} else {
-						return data;
-					}
-				}
+				let encryptRes = vk.crypto.encryptCallFunction(data);
+				data = encryptRes.data;
+				decryptFn = encryptRes.decrypt;
 			}
 			runCloud.callFunction({
 				name: name,
@@ -762,36 +734,9 @@ class CallFunctionUtil {
 			
 			let decryptFn;
 			if (encrypt) {
-				const nowTime = Date.now();
-				const encryptMode = "aes-256-ecb";
-				const encryptKey = vk.crypto.md5(sysInfo.appId + sysInfo.deviceId + vk.getToken());
-				data = vk.crypto.aes.encrypt({
-					mode: encryptMode,
-					data: {
-						...data,
-						timeStamp: nowTime
-					},
-					key: encryptKey
-				});
-				decryptFn = (data) => {
-					if (data && data.encrypt) {
-						try {
-							const arr = data.data.split(",");
-							const encryptData = arr[0];
-							const newEncryptKey = vk.crypto.md5(encryptKey + arr[1] + arr[2]);
-							let decrypted = vk.crypto.aes.decrypt({
-								mode: encryptMode,
-								data: encryptData,
-								key: newEncryptKey
-							});
-							return decrypted;
-						} catch(err){
-							return { code: 412, msg: "解密失败，响应体不合法" };
-						}
-					} else {
-						return data;
-					}
-				}
+				let encryptRes = vk.crypto.encryptCallFunction(data);
+				data = encryptRes.data;
+				decryptFn = encryptRes.decrypt;
 			}
 			
 			uni.request({
