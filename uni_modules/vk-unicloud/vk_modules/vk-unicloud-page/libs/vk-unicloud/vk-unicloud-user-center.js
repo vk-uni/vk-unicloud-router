@@ -1108,24 +1108,25 @@ export default {
 	 * @param {Number} code 错误码，0表示成功
 	 * @param {String} msg 详细信息
 	 */
-	everydayLogin(obj = {}) {
+	loginByToken(obj = {}) {
 		const vk = uni.vk;
 		if (!vk.checkToken()) {
 			// token无效，则无需执行
 			return;
 		}
 		// 获取最新一次执行时间
-		const keyName = "pub-vk.userCenter.everydayLogin";
+		const keyName = "pub-vk.userCenter.loginByToken";
 		let time = vk.getStorageSync(keyName) || 0;
 		const { todayStart, todayEnd } = vk.pubfn.getCommonTime();
 		if (time >= todayStart && time <= todayEnd) {
 			// 如果今日执行过，则无需执行
+			console.log("今日执行过loginByToken")
 			return;
 		}
 		// 执行
 		return callFunction({
 			...obj,
-			url: 'user/pub/everydayLogin',
+			url: 'user/pub/loginByToken',
 			success: (res) => {
 				if (typeof obj.success === "function") obj.success(res);
 				// 记录最新一次执行时间
