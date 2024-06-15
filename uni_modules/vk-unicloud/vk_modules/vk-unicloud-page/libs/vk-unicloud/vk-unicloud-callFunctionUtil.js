@@ -287,7 +287,7 @@ class CallFunctionUtil {
 		 * 云函数请求封装 - 统一入口
 		 * 文档 [https://vkdoc.fsq.pub/client/pages/callFunction.html](https://vkdoc.fsq.pub/client/pages/callFunction.html)
 		 * @description 通过云函数路由，1个云函数实现多个云函数的效果。
-		 * @param {Object}   obj       	
+		 * @param {Object}   obj
 		 * @param {String}   obj.name       大云函数名称（默认router）
 		 * @param {String}   obj.url        请求路径
 		 * @param {Object}   obj.data       请求参数，如 { a:1, b:"2" } 云函数内可通过 let { a, b } = data; 获取参数
@@ -388,10 +388,15 @@ class CallFunctionUtil {
 			if (typeof obj.isRequest === "undefined") {
 				obj.isRequest = config.isRequestDefault;
 			}
-			
+
 			// 判断是否需要加密请求开始-----------------------------------------------------------
-			let lifeData = vk.getStorageSync("lifeData") || {};
-			let encryptRequestConfig = vk.pubfn.getData(lifeData, "$app.config.checkEncryptRequest") || {};
+			let encryptRequestConfig = {};
+			if (typeof vk.getVuex === "function") {
+				encryptRequestConfig = vk.getVuex("$app.config.checkEncryptRequest") || {};
+			} else {
+				let lifeData = vk.getStorageSync("lifeData") || {};
+				encryptRequestConfig = vk.pubfn.getData(lifeData, "$app.config.checkEncryptRequest") || {};
+			}
 			if (encryptRequestConfig.mode === 1) {
 				let list = encryptRequestConfig.list || [];
 				for (let i = 0; i < list.length; i++) {
@@ -403,7 +408,7 @@ class CallFunctionUtil {
 				}
 			}
 			// 判断是否需要加密请求结束-----------------------------------------------------------
-			
+
 			// 执行请求
 			if (obj.isRequest) {
 				return that.runRequest(obj);
@@ -473,12 +478,12 @@ class CallFunctionUtil {
 		 * @param {Object} 	obj													上传时的loading提示语
 		 * @param {String} 	obj.title										上传时的loading提示语
 		 * @param {String} 	obj.file										要上传的文件对象，file与filePath二选一即可
-		 * @param {String} 	obj.filePath								要上传的文件路径，file与filePath二选一即可	
+		 * @param {String} 	obj.filePath								要上传的文件路径，file与filePath二选一即可
 		 * @param {String} 	obj.provider								云存储供应商，支持：unicloud、aliyun、qiniu
 		 * @param {String} 	obj.cloudPath								指定上传后的云端文件路径（不指定会自动生成）cloudPath优先级大于cloudDirectory
 		 * @param {String} 	obj.cloudDirectory					指定上传后的云端文件目录
 		 * @param {String} 	obj.needSave								是否需要将图片信息保存到admin素材库
-		 * @param {String} 	obj.category_id							素材库分类id，当needSave为true时生效	
+		 * @param {String} 	obj.category_id							素材库分类id，当needSave为true时生效
 		 * @param {String} 	obj.uniCloud								上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
 		 * @param {String} 	obj.env											上传到其他空间时使用，uniCloud和env二选一即可（仅provider是unicloud时支持）
 		 * @param {String} 	obj.cloudPathAsRealPath			阿里云目录支持，需HBX3.8.5以上版本才支持（仅provider是unicloud时支持）
@@ -718,45 +723,43 @@ class CallFunctionUtil {
 				requestUrl += "/";
 			}
 			requestUrl += url;
-			const sysInfo = uni.getSystemInfoSync();
-			const {
-				appId: vkAppid,
-				uniPlatform: vkPlatform,
-				appLanguage: vkLocale,
-				deviceId: vkDeviceId,
-				osName: vkOsName,
-				appName: vkAppName,
-				appVersion: vkAppVersion,
-				appVersionCode: vkAppVersionCode,
-				browserName: vkBrowserName,
-				browserVersion: vkBrowserVersion,
-			} = sysInfo;
-			
+
 			let decryptFn;
 			if (encrypt) {
 				let encryptRes = vk.crypto.encryptCallFunction(data);
 				data = encryptRes.data;
 				decryptFn = encryptRes.decrypt;
 			}
-			
+
+			const sysInfo = uni.getSystemInfoSync();
+			// 设置请求头，并将值为undefined的属性删除
+			let header = JSON.parse(JSON.stringify({
+				"content-type": "application/json;charset=utf8",
+				"vk-encrypt": encrypt ? "true" : undefined,
+				"uni-id-token": uniIdToken,
+				"vk-appid": sysInfo.appId,
+				"vk-platform": sysInfo.uniPlatform,
+				"vk-locale": sysInfo.appLanguage,
+				"vk-device-id": sysInfo.deviceId,
+				"vk-os": sysInfo.osName,
+				"vk-app-name": sysInfo.appName ? encodeURIComponent(sysInfo.appName) : undefined,
+				"vk-app-version": sysInfo.appVersion,
+				"vk-app-version-code": sysInfo.appVersionCode,
+				"vk-browser-name": sysInfo.browserName ? encodeURIComponent(sysInfo.browserName) : undefined,
+				"vk-browser-version": sysInfo.browserVersion,
+				"vk-app-wgt-version": sysInfo.appWgtVersion,
+				"vk-device-brand": sysInfo.deviceBrand,
+				"vk-device-model": sysInfo.deviceModel,
+				"vk-device-type": sysInfo.deviceType,
+				"vk-uni-compile-version": sysInfo.uniCompileVersion,
+				"vk-uni-runtime-version": sysInfo.uniRuntimeVersion,
+				"vk-uni-compiler-version": sysInfo.uniCompilerVersion,
+			}));
+
 			uni.request({
 				method: "POST",
 				url: requestUrl,
-				header: {
-					"content-type": "application/json;charset=utf8",
-					"uni-id-token": uniIdToken, 
-					"vk-appid": vkAppid,
-					"vk-platform": vkPlatform,
-					"vk-locale": vkLocale,
-					"vk-device-id": vkDeviceId,
-					"vk-os": vkOsName,
-					"vk-app-name": vkAppName ? encodeURIComponent(vkAppName) : undefined,
-					"vk-app-version": vkAppVersion,
-					"vk-app-version-code": vkAppVersionCode,
-					"vk-browser-name": vkBrowserName ? encodeURIComponent(vkBrowserName) : undefined,
-					"vk-browser-version": vkBrowserVersion,
-					"vk-encrypt": encrypt ? "true" : undefined
-				},
+				header,
 				data,
 				success: (res = {}) => {
 					if (typeof decryptFn === "function") {
@@ -1004,7 +1007,7 @@ class CallFunctionUtil {
 		}
 		if (typeof complete == "function") complete(res);
 	}
-	
+
 	// 获取文件后缀名
 	getFileSuffix(obj = {}) {
 		let {
@@ -1028,7 +1031,7 @@ class CallFunctionUtil {
 		}
 		return suffix;
 	}
-	
+
 	// 获取文件类型
 	getFileType(obj = {}) {
 		let {
@@ -1044,7 +1047,7 @@ class CallFunctionUtil {
 		}
 		return fileType;
 	}
-	
+
 	// 获取文件名
 	getFileName(cloudPath="") {
 		// 使用split方法分割字符串
@@ -1052,7 +1055,7 @@ class CallFunctionUtil {
 		// 返回最后一个部分（即文件名）
 		return parts[parts.length - 1];
 	}
-	
+
 
 	// 系统异常重试机制（表单提交时慎用，建议只用在查询请求中，即无任何数据库修改的请求中）
 	callFunctionRetry(obj = {}) {
