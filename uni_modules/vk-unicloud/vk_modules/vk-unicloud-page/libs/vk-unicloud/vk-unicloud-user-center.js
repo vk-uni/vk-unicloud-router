@@ -1120,7 +1120,7 @@ export default {
 		const { todayStart, todayEnd } = vk.pubfn.getCommonTime();
 		if (time >= todayStart && time <= todayEnd) {
 			// 如果今日执行过，则无需执行
-			console.log("今日执行过loginByToken")
+			// console.log("今日执行过loginByToken")
 			return;
 		}
 		// 执行

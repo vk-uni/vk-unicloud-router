@@ -107,7 +107,10 @@ requestUtil.request = function(obj = {}) {
 	if (typeof obj.header === "undefined" && typeof obj.headers !== "undefined") {
 		obj.header = obj.headers;
 	}
-
+	if (obj.encrypt) {
+		obj.uniIdToken = true;
+		if (!obj.clientInfo) obj.clientInfo = true;
+	}
 	// 自动注入token到请求头开始-----------------------------------------------------------
 	// 注意：自2.15.1开始，需要手动指定uniIdToken: true 才会自动添加token到请求头里
 	if (typeof vk.getToken === "function" && obj.uniIdToken) {
@@ -133,7 +136,9 @@ requestUtil.request = function(obj = {}) {
 		}
 		if (vk.pubfn.isNotNull(clientInfo)) {
 			if (!obj.header) obj.header = {};
+			clientInfo.uniIdToken = obj.uniIdToken;
 			const {
+				uniIdToken,
 				appId: vkAppid,
 				uniPlatform: vkPlatform,
 				appLanguage: vkLocale,
@@ -146,6 +151,8 @@ requestUtil.request = function(obj = {}) {
 				browserVersion: vkBrowserVersion,
 			} = clientInfo;
 			const vkHeader = {
+				"uni-id-token": uniIdToken,
+				"vk-encrypt": obj.encrypt ? "true" : undefined,
 				"vk-appid": vkAppid,
 				"vk-platform": vkPlatform,
 				"vk-locale": vkLocale,
@@ -157,7 +164,7 @@ requestUtil.request = function(obj = {}) {
 				"vk-browser-name": vkBrowserName ? encodeURIComponent(vkBrowserName) : undefined,
 				"vk-browser-version": vkBrowserVersion,
 			}
-			obj.header = vk.pubfn.copyObject(Object.assign(obj.header, vkHeader));
+			obj.header = vk.pubfn.copyObject(Object.assign(vkHeader, obj.header));
 		}
 	}
 	// 自动注入clientInfo到请求头结束-----------------------------------------------------------
@@ -188,10 +195,19 @@ requestUtil.request = function(obj = {}) {
 	}
 	if (obj.title) vk.showLoading(obj.title);
 	if (obj.loading) vk.setLoading(true, obj.loading);
+	let decryptFn;
+	if (obj.encrypt) {
+		let encryptRes = vk.crypto.encryptCallFunction(obj, "request");
+		obj.data = encryptRes.data;
+		decryptFn = encryptRes.decrypt;
+		Logger.encrypt = obj.encrypt;
+		delete obj.encrypt;
+	}
 	let promiseAction = new Promise(function(resolve, reject) {
 		uni.request({
 			...obj,
 			success: (res) => {
+				if (decryptFn) res.data = decryptFn(res.data);
 				if (interceptor && typeof interceptor.success === "function") {
 					let interceptorRes = interceptor.success(res);
 					if (interceptorRes === false) {
@@ -380,7 +396,8 @@ function requestComplete(obj = {}) {
 		let colorArr = config.logger.colorArr;
 		let colorStr = colorArr[counterNum % colorArr.length];
 		counterNum++;
-		console.log("%c--------【开始】【服务器请求】【" + Logger.action + "】--------", 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
+		let functionType = Logger.encrypt ? "服务器加密请求" : "服务器请求";
+		console.log("%c--------【开始】【" + functionType + "】【" + Logger.action + "】--------", 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
 		console.log("【请求地址】: ", Logger.url);
 		console.log("【请求参数】: ", Logger.params);
 		console.log("【返回数据】: ", Logger.result);
@@ -396,7 +413,7 @@ function requestComplete(obj = {}) {
 				errorLog("【Error】: ", Logger.error);
 			}
 		}
-		console.log("%c--------【结束】【服务器请求】【" + Logger.action + "】--------", 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
+		console.log("%c--------【结束】【" + functionType + "】【" + Logger.action + "】--------", 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
 	}
 	let data = res.data;
 	if (needOriginalRes) data.originalRes = vk.pubfn.copyObject(res);
