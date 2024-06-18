@@ -8,9 +8,9 @@ module.exports = {
 	 */
 	"notifyUrl": {
 		// 测试环境服务空间
-		"mp-33d35e24-c2f3-47b4-80fc-7b23a6010e11": "https://fc-mp-33d35e24-c2f3-47b4-80fc-7b23a6010e11.next.bspapp.com/http/vk-pay",
+		"mp-33d35e24-c2f3-47b4-80fc-7b23a6666666": "https://fc-mp-33d35e24-c2f3-47b4-80fc-7b23a6666666.next.bspapp.com/http/vk-pay",
 		// 线上环境服务空间（如果只有一个服务空间，则只需要配置线上环境服务空间即可）
-		"mp-5761d885-11b8-21b2-9122-22afeadcf669": "https://fc-mp-5761d885-11b8-21b2-9122-22afeadcf669.next.bspapp.com/http/vk-pay"
+		"mp-5761d885-11b8-21b2-9122-22afea666666": "https://fc-mp-5761d885-11b8-21b2-9122-22afea666666.next.bspapp.com/http/vk-pay"
 	},
 	// 此密钥主要用于跨云函数回调或回调java、php等外部系统时的通信密码（建议修改成自己的，最好64位以上，更加安全）
 	// 详细介绍：https://vkdoc.fsq.pub/vk-uni-pay/uniCloud/pay-notify.html#特别注意
