@@ -7,7 +7,7 @@ import config from '@/app.config.js'
 // 引入 vk框架前端
 import vk from './uni_modules/vk-unicloud';
 
-// #ifndef VUE3
+// #ifdef VUE2
 import Vue from 'vue'
 
 // 引入 uView UI

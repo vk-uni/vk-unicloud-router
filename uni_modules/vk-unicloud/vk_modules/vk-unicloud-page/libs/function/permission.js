@@ -21,7 +21,7 @@ function $hasPermission(...args) {
 }
 
 export default function(Vue) {
-	// #ifndef VUE3
+	// #ifdef VUE2
 	Vue.prototype.$hasRole = $hasRole;
 	Vue.prototype.$hasPermission = $hasPermission;
 	// #endif

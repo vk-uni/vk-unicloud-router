@@ -1,7 +1,7 @@
 /**
  * 函数 - 页面导航
  */
-// #ifndef VUE3
+// #ifdef VUE2
 var config;
 try {
 	config = require('@/app.config.js');

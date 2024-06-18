@@ -58,7 +58,7 @@ const saveLifeData = function(key, value) {
 	}
 }
 
-// #ifndef VUE3
+// #ifdef VUE2
 import Vue from 'vue'
 import Vuex from 'vuex'
 

@@ -149,7 +149,7 @@ vk.use = function(obj, util) {
 vk.install = (Vue, config) => {
 	// 全局混入
 	Vue.mixin(mixin);
-	// #ifndef VUE3
+	// #ifdef VUE2
 	// 加载全局过滤器开始
 	for (let i in filters) {
 		Vue.filter(i, filters[i]);
