@@ -11,7 +11,6 @@
 ##### `admin端`框架地址：[https://ext.dcloud.net.cn/plugin?id=5043](https://ext.dcloud.net.cn/plugin?name=vk-unicloud-admin)
 ##### `client端`框架文档：[点击查看](https://vkdoc.fsq.pub/client/)
 ##### `admin端`框架文档：[点击查看](https://vkdoc.fsq.pub/admin/)
-##### 框架学习Q群：`22466457` 欢迎萌新和大佬来使用和共同改进框架
 
 ## 主要功能 以及 对开发者的价值
 
