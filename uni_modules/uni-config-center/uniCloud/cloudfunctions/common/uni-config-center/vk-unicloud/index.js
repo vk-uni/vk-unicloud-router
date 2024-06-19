@@ -28,7 +28,7 @@ module.exports = {
 		},
 		// 加密的密钥
 		"crypto": {
-			"aes": "dad4c0cb88c7d005bc5e844b8e79a9f0dad4c0cb88c7d005bc5e844b8e79a9f0", // 对称加密的密钥，建议长度在64位-128位（此处建议修改成自己的密钥）
+			"aes": "dad4c0cb88c7d005bc5e844b8e79a9f0", // 对称加密的密钥，长度固定32位（此处建议修改成自己的密钥）
 		},
 		// 客户端加密通信配置
 		"clientCrypto": {
