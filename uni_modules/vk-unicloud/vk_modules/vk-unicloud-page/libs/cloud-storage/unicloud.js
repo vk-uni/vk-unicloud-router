@@ -21,6 +21,7 @@ class CloudStorage {
 			cloudPathAsRealPath = true,
 		} = obj;
 		let vk = uni.vk;
+		if (!runCloud) runCloud = uniCloud;
 		// 生成文件名
 		if (!cloudPath) cloudPath = createFileName(obj);
 		return new Promise((resolve, reject) => {

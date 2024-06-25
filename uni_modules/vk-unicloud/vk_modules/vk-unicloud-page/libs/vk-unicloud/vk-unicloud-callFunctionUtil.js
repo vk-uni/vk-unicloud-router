@@ -440,7 +440,13 @@ class CallFunctionUtil {
 									provider: envItem.provider,
 									spaceId: envItem.spaceId
 								};
-								if (envItem.clientSecret) initConifg.clientSecret = envItem.clientSecret;
+								if (envItem.provider === "aliyun") {
+									initConifg.clientSecret = envItem.clientSecret;
+								} else if (envItem.provider === "alipay") {
+									initConifg.spaceAppId = envItem.spaceAppId;
+									initConifg.accessKey = envItem.accessKey;
+									initConifg.secretKey = envItem.secretKey;
+								}
 								if (envItem.endpoint) initConifg.endpoint = envItem.endpoint;
 								uniCloudEnvs[envKey] = uniCloud.init(initConifg);
 							}
@@ -504,6 +510,12 @@ class CallFunctionUtil {
 			obj.fileType = that.getFileType(obj);
 			// 获取文件后缀名
 			obj.suffix = that.getFileSuffix(obj);
+			if (typeof obj.encrypt === "undefined") {
+				obj.encrypt = vk.pubfn.getData(config, "service.cloudStorage.encrypt") || false;
+			}
+			if (typeof obj.env === "undefined") {
+				obj.env = vk.pubfn.getData(config, "service.cloudStorage.env") || "default";
+			}
 			let {
 				title,
 				file = {},
@@ -514,13 +526,14 @@ class CallFunctionUtil {
 				needSave = false,
 				category_id,
 				uniCloud: myCloud,
-				env = "default",
+				env,
 				cloudPathAsRealPath = true, // 阿里云目录支持，需HBX3.8.5以上版本才支持
 				cloudPathRemoveChinese = true, // 删除文件名中的中文
 				errorToast,
 				needAlert,
 				fileType,
-				suffix
+				suffix,
+				encrypt
 			} = obj;
 			if (!provider) {
 				let aliyunOSS = vk.pubfn.getData(config, "service.aliyunOSS");
@@ -534,9 +547,7 @@ class CallFunctionUtil {
 				}
 			}
 			obj.provider = provider;
-			if (provider === "unicloud") {
-				obj.runCloud = myCloud || uniCloudEnvs[env] || uniCloud;
-			}
+			obj.runCloud = myCloud || uniCloudEnvs[env];
 			let Logger = {};
 			Logger.startTime = Date.now();
 			Logger.filePath = filePath;
@@ -552,6 +563,7 @@ class CallFunctionUtil {
 						if (needSave) {
 							// 保存文件记录到数据库
 							vk.userCenter.addUploadRecord({
+								encrypt: obj.encrypt,
 								data: {
 									url: res.fileURL,
 									name: file.name || this.getFileName(res.cloudPath),
