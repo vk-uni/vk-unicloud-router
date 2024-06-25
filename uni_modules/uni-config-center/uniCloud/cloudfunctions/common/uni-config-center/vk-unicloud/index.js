@@ -137,7 +137,7 @@ module.exports = {
 					{ "appid": "", "appsecret": "" }
 				]
 			},
-			// 支付宝
+			// 支付宝小程序
 			"alipay": {
 				// 密钥列表
 				"list": [
@@ -145,7 +145,7 @@ module.exports = {
 					{ "appid": "", "privateKey": "" }
 				]
 			},
-			// qq
+			// qq小程序
 			"qq": {
 				// 密钥列表
 				"list": [
@@ -153,7 +153,7 @@ module.exports = {
 					{ "appid": "", "appsecret": "" }
 				]
 			},
-			// 抖音
+			// 抖音小程序
 			"toutiao": {
 				// 密钥列表
 				"list": [
