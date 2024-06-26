@@ -111,6 +111,8 @@ module.exports = {
 				"extStorage": {
 					"provider": "qiniu", // qiniu: 扩展存储-七牛云
 					"domain": "", // 自定义域名，如：cdn.example.com（填你在扩展存储绑定的域名）
+					"bucketName": "", // 存储空间名称，可不填，不填则使用当前空间绑定的存储空间
+					"bucketSecret": "", // 存储空间密钥，可不填，不填则使用当前空间绑定的存储空间
 					"endpoint": {
 						"upload": "", // 上传接口的代理地址，在国内上传无需填写
 					}

@@ -1,4 +1,3 @@
-* 【重要】客户端与云函数支持双向加密通信 [传送门](https://vkdoc.fsq.pub/client/pages/callFunction.html#encrypt-%E5%8A%A0%E5%AF%86%E9%80%9A%E4%BF%A1)
-* 【优化】扩展存储上传成功额外返回 extendInfo [传送门](https://vkdoc.fsq.pub/client/pages/uploadFile.html#%E8%BF%94%E5%9B%9E%E5%80%BC)
-* 【优化】新增 vk.userCenter.loginByToken 接口 [传送门](https://vkdoc.fsq.pub/client/vk.userCenter.html#vk-usercenter-loginbytoken-%E5%88%B7%E6%96%B0token)
-* 【优化】微信公众号jsapi在ios端上的兼容性
+* 【调整】参数 `need_user_info` 调整为 `needUserInfo`（同时兼容这2个参数）
+* 【优化】当 tokenMaxLimit 设置为1时，强制 needUserInfo 为 true（此时访问非pub函数就会达到同一个账号只能一台设备登录的效果）
+* 【修复】请求多服务空间使用方式二的情况下支付宝云会报错的问题 [传送门](https://vkdoc.fsq.pub/client/question/q9.html#%E6%96%B9%E5%BC%8F%E4%BA%8C)

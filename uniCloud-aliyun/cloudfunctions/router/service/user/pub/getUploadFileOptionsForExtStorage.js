@@ -16,34 +16,33 @@ module.exports = {
 		let {
 			cloudPath, // 文件路径
 			domain, // 域名
-			provider = "qiniu",
+			provider,
 		} = data;
 		if (!cloudPath) {
 			return { code: -1, msg: "cloudPath不能为空" };
 		}
 		// 可以在此先判断下此路径是否允许上传等逻辑
-		if (cloudPath.indexOf("public/") !== 0) {
-			return { code: -1, msg: "仅能上传到public目录" };
+		let dirname = "public";
+		if (cloudPath.indexOf(`${dirname}/`) !== 0) {
+			return { code: -1, msg: `仅能上传到${dirname}目录` };
 		}
 		// 如果 uniCloud.getExtStorageManager 是undefined，说明没有安装扩展库，需要提示用户安装扩展库
 		if (typeof uniCloud.getExtStorageManager === "undefined") {
 			return { code: -1, msg: "请右键云函数-管理依赖-添加扩展库uni-cloud-ext-storage（需要HBX版本>=3.99）添加后需重启项目" };
 		}
-		// 如果没有传入domain，则尝试从云端配置中获取
-		if (!domain) {
-			domain = vk.getConfig("vk.service.cloudStorage.extStorage.domain");
-		}
-		if (!domain) {
+		// 获取扩展存储的配置		
+		let extStorageConfig = vk.pubfn.copyObject(vk.getConfig("vk.service.cloudStorage.extStorage"));
+		if (provider) extStorageConfig.provider = provider;
+		if (domain) extStorageConfig.domain = domain;
+		if (!extStorageConfig.domain) {
 			const pageTisp = "扩展存储的domain不能为空，请配置前端 app.config.js 内的 service.cloudStorage.extStorage.domain";
 			const cloudTisp = "或 配置云端 uni-config-center/vk-unicloud/index.js 内的 vk.service.cloudStorage.extStorage.domain";
 			console.error(`${pageTisp} ${cloudTisp}`);
 			return { code: -1, msg: "domain不能为空" };
 		}
+
 		// 然后获取 extStorageManager 对象实例
-		const extStorageManager = uniCloud.getExtStorageManager({
-			provider,
-			domain,
-		});
+		const extStorageManager = uniCloud.getExtStorageManager(extStorageConfig);
 		// 最后调用 extStorageManager.getUploadFileOptions
 		let uploadFileOptionsRes = extStorageManager.getUploadFileOptions({
 			cloudPath,
