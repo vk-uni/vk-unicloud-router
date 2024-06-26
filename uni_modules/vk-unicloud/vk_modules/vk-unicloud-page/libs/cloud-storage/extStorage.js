@@ -24,9 +24,6 @@ class CloudStorage {
 		if (!cloudPath) cloudPath = createFileName(obj);
 		// 获取配置
 		let cloudStorageConfig = getConfig();
-		if (!runCloud && typeof cloudStorageConfig.uniCloud === "object") {
-			runCloud = uniCloud.init(cloudStorageConfig.uniCloud);
-		}
 		return new Promise((resolve, reject) => {
 			vk.callFunction({
 				url: cloudStorageConfig.authAction,
