@@ -24,7 +24,7 @@ module.exports = {
 			type, // 指定操作类型，可选值为login、register，不传此参数时表现为已注册则登录，未注册则进行注册
 			myInviteCode, // 设置当前注册用户自己的邀请码，type为register时生效（如果uni-id配置了autoSetInviteCode为true，则会强制设置）
 		} = data;
-		
+
 		if (!code) {
 			return { code: -1, msg: "code不能为空" };
 		}
@@ -36,7 +36,7 @@ module.exports = {
 			nickname: data.nickname,
 			avatar: data.avatar
 		};
-		
+
 		// 额外返回给前端的数据
 		let extraRes = {};
 
@@ -65,10 +65,13 @@ module.exports = {
 			appid, // 微信appid
 			openid, // 用户的openid
 			unionid, // 用户的unionid（只有绑定开放平台后才有此值）
+			sessionKey, // 用户的sessionKey
 			accessToken, // 微信用户accessToken
+			refreshToken, // 微信用户refreshToken
+			expiresIn: accessTokenExpired, // 微信用户accessToken过期时间
 			encryptedKey, // 加密信息
 		} = code2SessionRes;
-		
+
 		// 设置额外返回给前端的数据
 		extraRes = {
 			encryptedKey,
@@ -123,6 +126,25 @@ module.exports = {
 		}
 		// 登录成功
 		Object.assign(res, extraRes);
+
+		// 为了能使用官方的安全网络，微信登录成功后需要向 opendb-open-data 表插入 sessionKey
+		if (vk.system.opendbOpenDataDao) {
+			let platformData = {
+				"mp-weixin": "weixin-mp",
+				"app-plus": "weixin-app",
+				"app": "weixin-app",
+				"h5-weixin": "weixin-h5",
+				"web-weixin": "weixin-web",
+			};
+			if (platformData[platform]) {
+				let cacheKey = {
+					appId: appid,
+					platform: platformData[platform],
+					openid,
+				};
+				await vk.system.opendbOpenDataDao.setSessionKey(cacheKey, { session_key: sessionKey }, 30 * 24 * 60 * 60);
+			}
+		}
 
 		// 添加登录日志
 		const loginLogService = vk.require("service/user/util/login_log");
