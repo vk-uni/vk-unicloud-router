@@ -53,7 +53,7 @@ module.exports = {
 						platform,
 						state,
 						dcloud_appid,
-						date:{
+						date: {
 							...now,
 							date_day_str: vk.pubfn.timeFormat(nowDate, "yyyy-MM-dd"),
 							date_month_str: vk.pubfn.timeFormat(nowDate, "yyyy-MM")
@@ -68,5 +68,27 @@ module.exports = {
 		}
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
+	},
+	// 检测用户今日是否登录过
+	checkTodayIsLogin: async (event, util) => {
+		let { uniID, config, pubFun, vk, db, _ } = util;
+		// 业务逻辑开始-----------------------------------------------------------
+		let {
+			user_id,
+			context = {}
+		} = event;
+		let dcloud_appid = context.APPID;
+
+		let { todayStart, todayEnd } = vk.pubfn.getCommonTime();
+		let num = await vk.baseDao.count({
+			dbName: "uni-id-log",
+			whereJson: {
+				user_id,
+				_add_time: _.gte(todayStart).lte(todayEnd),
+				dcloud_appid
+			}
+		});
+		// 业务逻辑结束-----------------------------------------------------------
+		return num > 0 ? true : false;
 	}
 }

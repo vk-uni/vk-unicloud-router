@@ -1,6 +1,6 @@
 module.exports = {
 	/**
-	 * 用户登录(微信授权)
+	 * 用户登录 - 微信登录（新版）
 	 * @url user/pub/loginByWeixin 前端调用的url参数地址
 	 * @description 支持APP、微信小程序、微信公众号
 	 * data 请求参数 说明
@@ -17,41 +17,122 @@ module.exports = {
 		let { data = {}, util, originalParam } = event;
 		let { uniID, config, pubFun, vk, db, _ } = util;
 		let { uid } = data;
-		let res = {};
+		let res = { code: 0, msg: "" };
 		// 业务逻辑开始-----------------------------------------------------------
+		let {
+			code, // 微信登录返回的code
+			type, // 指定操作类型，可选值为login、register，不传此参数时表现为已注册则登录，未注册则进行注册
+			myInviteCode, // 设置当前注册用户自己的邀请码，type为register时生效（如果uni-id配置了autoSetInviteCode为true，则会强制设置）
+		} = data;
+		
+		if (!code) {
+			return { code: -1, msg: "code不能为空" };
+		}
+
+		let platform = vk.pubfn.getPlatformForUniId(originalParam.context);
+
 		// 额外写入的自定义字段数据（可以自己增加，建议只传一些显示的信息，不要传余额字段等，因为前端不可信任）
-		// 注意：app的微信登录已经支持自动获取昵称和头像，前端无需再传昵称和头像。
-		let custom = {
+		let customData = {
 			nickname: data.nickname,
 			avatar: data.avatar
 		};
+		
+		// 额外返回给前端的数据
+		let extraRes = {};
+
+		let customConfig = {};
 		/**
 		 * 支持多小程序登录
 		 * 此处data可以额外接收appid和appsecret参数（appid可以从前端传，而appsecret可以配置在全局配置中（common/uni-config-center/vk-unicloud/index.js），也可以自己从数据库获取）
 		 * 如果不传appid，则默认使用uni-id的配置信息
 		 * 特别注意：如果使用多小程序登录，则同一用户（同一个微信号）在不同小程序登录时，会分别创建不同的用户（除非小程序绑定在同一个开放平台下）。
 		 */
-		
 		// 打开下方注释，动态赋值appid和appsecret即可支持多小程序登录
-		// data.appid = "xxxx";
-		// data.appsecret = "xxxx";
-		
-		res = await vk.openapi.weixin.loginByWeixin({
-			data,
-			context: originalParam.context,
-			custom,
-			needKey: false, // 是否需要返回明文的sessionKey或accessToken（为了安全期间，建议设置false）
+		// customConfig.appid = "xxxx";
+		// customConfig.appsecret = "xxxx";
+
+		// code获取openid
+		let code2SessionRes = await vk.openapi.weixin.auth.code2Session({
+			context: originalParam.context, // 内部会根据context来判断是小程序还是APP还是公众号
+			code,
+			needKey: true, // 需要返回密钥信息
+			...customConfig
 		});
-		if (res.token) {
-			// 日志服务
-			const loginLogService = vk.require("service/user/util/login_log");
-			await loginLogService.add({
-				type: "login",
-				login_type: "weixin",
-				user_id: res.uid,
-				context: originalParam.context
-			}, util);
+		if (code2SessionRes.code !== 0) {
+			return code2SessionRes;
 		}
+		let {
+			appid, // 微信appid
+			openid, // 用户的openid
+			unionid, // 用户的unionid（只有绑定开放平台后才有此值）
+			accessToken, // 微信用户accessToken
+			encryptedKey, // 加密信息
+		} = code2SessionRes;
+		
+		// 设置额外返回给前端的数据
+		extraRes = {
+			encryptedKey,
+			openid, // 用户的openid
+			unionid, // 用户的unionid
+		};
+
+		if (["h5-weixin", "app-plus"].indexOf(platform) > -1) {
+			// h5 和 app 共用 app 的 getUserInfo 接口
+			let getUserInfoRes = await vk.openapi.weixin.app.auth.getUserInfo({
+				access_token: accessToken,
+				openid: openid,
+			});
+			if (!customData.nickname) customData.nickname = getUserInfoRes.nickname;
+			if (!customData.avatar) customData.avatar = getUserInfoRes.headimgurl;
+		}
+		let orArr = [];
+		if (unionid) {
+			orArr.push({
+				"wx_unionid": unionid
+			});
+		}
+		if (openid) {
+			orArr.push({
+				"wx_openid": {
+					[platform]: openid,
+				}
+			});
+		}
+		// 查找用户是否存在
+		let userInfo = await vk.daoCenter.userDao.findByWhereJson(_.or(orArr));
+		// 定义openid和unionid存在userInfo的哪个字段中
+		let fieldInfo = {
+			wx_openid: {
+				[platform]: openid,
+				[`${platform}_${appid}`]: openid
+			},
+			wx_unionid: unionid
+		};
+		// 执行登录接口
+		res = await vk.login({
+			clientInfo: originalParam.context, // 客户端信息
+			type, // 操作类型，login: 仅登录，register: 仅注册 不传则自动判断
+			customData, // 自定义数据
+			userInfo, // 用户信息
+			fieldInfo, // 登录相关字段存储信息
+		});
+
+		if (res.code !== 0) {
+			// 登录失败
+			return res;
+		}
+		// 登录成功
+		Object.assign(res, extraRes);
+
+		// 添加登录日志
+		const loginLogService = vk.require("service/user/util/login_log");
+		await loginLogService.add({
+			type: "login",
+			login_type: "weixin",
+			user_id: res.uid,
+			context: originalParam.context
+		}, util);
+
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
 	}

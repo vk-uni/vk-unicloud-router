@@ -1134,4 +1134,56 @@ export default {
 			}
 		});
 	},
+	/**
+	 * 抖音登录获取用户code
+	 */
+	getDouyinCode() {
+		return new Promise((resolve, reject) => {
+			// #ifndef MP-TOUTIAO
+			vk.toast("请在抖音小程序中打开");
+			return;
+			// #endif
+
+			// #ifdef MP-TOUTIAO
+			uni.login({
+				provider: '',
+				success(res) {
+					resolve(res.code)
+				},
+				fail(err) {
+					reject(new Error('抖音登录失败'))
+				}
+			})
+			// #endif
+		})
+	},
+	/**
+	 * 用户登录(抖音登录)
+	 * @description 用户登录(抖音登录)
+	 * data 请求参数 说明
+	 * @param {String} code 抖音登录返回的code
+	 * @param {String} platform 客户端类型：mp-weixin、app-plus，默认uni-id会自动取客户端类型，但是在云函数url化等场景无法取到客户端类型，可以使用此参数指定
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 * @param {String} token 登录成功之后返回的token信息
+	 * @param {String} tokenExpired token过期时间
+	 */
+	loginByDouyin(obj = {}) {
+		let that = this;
+		debounce(() => {
+			addLoading(obj, "login");
+			let { data = {} } = obj;
+			that.getDouyinCode().then((code) => {
+				callFunction({
+					url: 'user/pub/loginByDouyin',
+					...obj,
+					data: {
+						code,
+						...data
+					}
+				});
+			});
+		}, debounceTime, true, "login");
+	},
 };
