@@ -196,5 +196,16 @@ module.exports = {
 	"vkspay": {
 		"mchId": "", // 商户号
 		"key": "" // 商户key
+	},
+	// 抖音支付
+	"douyin": {
+		// 抖音小程序支付
+		"mp-toutiao": {
+			"appId": "", // 抖音小程序的appId
+			"secret": "", // 抖音小程序的secret
+			"mchId": "", // 商户id（商户号）
+			"salt": "", // salt，从支付信息 - 支付设置中获取
+			"sandbox": false, // 是否是沙箱环境（正式上线时必须配置为false）
+		}
 	}
 }
