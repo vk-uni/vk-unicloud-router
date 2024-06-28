@@ -1186,4 +1186,40 @@ export default {
 			});
 		}, debounceTime, true, "login");
 	},
+	/**
+	 * 绑定抖音
+	 * @description 将当前登录用户绑定抖音
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 */
+	bindDouyin(obj = {}) {
+		let that = this;
+		addLoading(obj, "loading");
+		let { data = {} } = obj;
+		that.getDouyinCode().then((code) => {
+			callFunction({
+				...obj,
+				url: 'user/kh/bindDouyin',
+				data: {
+					code,
+					...data
+				}
+			});
+		});
+	},
+	/**
+	 * 解绑抖音
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 */
+	unbindDouyin(obj = {}) {
+		addLoading(obj, "loading");
+		let { data = {} } = obj;
+		return callFunction({
+			...obj,
+			url: 'user/kh/unbindDouyin',
+		});
+	},
 };
