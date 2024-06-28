@@ -2,10 +2,11 @@ module.exports = {
 	/**
 	 * 用户登录 - 抖音登录
 	 * @url user/pub/loginByDouyin 前端调用的url参数地址
-	 * @description 支持抖音小程序
+	 * @description 支持小程序登录
 	 * data 请求参数 说明
-	 * @param {String} code 登录返回的code
-	 * @param {String} type login:登录 register:注册
+	 * @param {String} code 抖音登录返回的code
+	 * @param {String} type 指定操作类型，可选值为login、register，不传此参数时表现为已注册则登录，未注册则进行注册
+	 * @param {String} myInviteCode 设置当前注册用户自己的邀请码，type为register时生效（如果uni-id配置了 autoSetInviteCode 为 true，则会强制设置）
 	 * res 返回参数说明
 	 * @param {Number} code 错误码，0表示成功
 	 * @param {String} msg 详细信息
@@ -20,9 +21,9 @@ module.exports = {
 		let res = { code: 0, msg: "" };
 		// 业务逻辑开始-----------------------------------------------------------
 		let {
-			code, // 抖音登录返回的code
-			type, // 指定操作类型，可选值为login、register，不传此参数时表现为已注册则登录，未注册则进行注册
-			myInviteCode, // 设置当前注册用户自己的邀请码，type为register时生效（如果uni-id配置了 autoSetInviteCode 为 true，则会强制设置）
+			code,
+			type,
+			myInviteCode, 
 		} = data;
 
 		if (!code) {
@@ -38,16 +39,13 @@ module.exports = {
 			avatar: data.avatar
 		};
 
-		// 额外返回给前端的数据
-		let extraRes = {};
-
 		// 自定义配置
 		let customConfig = {};
 		/**
 		 * 支持多小程序登录
 		 * 此处data可以额外接收appid和appsecret参数（appid可以从前端传，而appsecret可以配置在全局配置中（common/uni-config-center/vk-unicloud/index.js），也可以自己从数据库获取）
 		 * 如果不传appid，则默认使用uni-id的配置信息
-		 * 特别注意：如果使用多小程序登录，则同一用户（同一个抖音号）在不同小程序登录时，会分别创建不同的用户（除非unionid是一样的才是同一个用户）。
+		 * 特别注意：如果使用多小程序登录，则同一用户在不同小程序登录时，会分别创建不同的用户（除非unionid是一样的才是同一个用户）。
 		 */
 		// 打开下方注释，动态赋值appid和appsecret即可支持多小程序登录
 		// customConfig.appid = "xxxx";
@@ -56,22 +54,22 @@ module.exports = {
 		// code获取openid
 		let code2SessionRes = await vk.openapi.douyin.auth.code2Session({
 			code: code,
-			needKey: false,
+			needKey: true,
 			...customConfig
 		});
 		if (code2SessionRes.code !== 0) {
 			return code2SessionRes;
 		}
 		let {
-			appid, // 抖音appid
+			appid, // appid
 			openid, // 用户的openid
 			unionid, // 用户的unionid（只有绑定开放平台后才有此值）
-			accessToken, // 抖音用户accessToken
+			accessToken, // 用户accessToken
 			encryptedKey, // 加密信息
 		} = code2SessionRes;
 
 		// 设置额外返回给前端的数据
-		extraRes = {
+		let extraRes = {
 			encryptedKey,
 			openid, // 用户的openid
 			unionid, // 用户的unionid
