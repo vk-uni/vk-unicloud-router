@@ -916,6 +916,9 @@ class CallFunctionUtil {
 		} else if (typeof errMsg.toLowerCase === "function" && (errMsg.toLowerCase().indexOf("timeout") > -1 || errMsg.toLowerCase().indexOf("etimedout") > -1)) {
 			sysErr = true;
 			errMsg = globalErrorCode["cloudfunction-timeout"] || "请求超时，请重试！";
+			// 所有正常请求超时的情况都不需要弹框
+			needAlert = false;
+			errorToast = false;
 		} else if (errMsg.indexOf("reaches burst limit") > -1) {
 			errMsg = globalErrorCode["cloudfunction-reaches-burst-limit"] || "系统繁忙，请稍后再试。";
 		} else if (res.code === "InternalServerError") {
