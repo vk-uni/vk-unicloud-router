@@ -16,17 +16,13 @@ module.exports = {
 		let res = { code: 0, msg: '' };
 
 		let {
-			code
+			code,
+			appid: myAppId
 		} = data;
 
 		// 标记当前平台的provider
 		const provider = "douyin";
 		const providerName = "抖音";
-
-		// 判断当前登录用户是否已经绑定过
-		if (userInfo[`${provider}_openid`]) {
-			return { code: 1, msg: `当前账号已绑定${providerName}，请勿重复绑定` };
-		}
 
 		// 自定义配置
 		let customConfig = {};
@@ -37,7 +33,9 @@ module.exports = {
 		 * 特别注意：如果使用多小程序登录，则同一用户在不同小程序登录时，会分别创建不同的用户（除非unionid是一样的才是同一个用户）。
 		 */
 		// 打开下方注释，动态赋值appid和appsecret即可支持多小程序登录
-		// customConfig.appid = "xxxx";
+		if (myAppId) {
+			customConfig.appid = myAppId;
+		}
 		// customConfig.appsecret = "xxxx";
 
 		// code获取openid
@@ -68,56 +66,18 @@ module.exports = {
 		// 以下代码一般不需要更改-----------------------------------------------------------
 		// 以下代码一般不需要更改-----------------------------------------------------------
 		// 以下代码一般不需要更改-----------------------------------------------------------
-		let platform = vk.pubfn.getPlatformForUniId(originalParam.context);
 
-		let orArr = [];
-		if (unionid) {
-			orArr.push({
-				[`${provider}_unionid`]: unionid
-			});
-		}
-		if (openid) {
-			orArr.push({
-				[`${provider}_openid`]: {
-					[platform]: openid,
-				}
-			});
-		}
-
-		let userList = await vk.daoCenter.userDao.select({
-			pageIndex: 1,
-			pageSize: 1000,
-			getMain: true,
-			whereJson: _.or(orArr)
-		});
-
-		const dcloudAppid = originalParam.context.APPID;
-
-		userList = userList.filter(item => {
-			return item.dcloud_appid === undefined || item.dcloud_appid === null || item.dcloud_appid.indexOf(dcloudAppid) > -1 || item.dcloud_appid.indexOf(null) > -1;
-		});
-
-		if (userList && userList.length > 0) {
-			return { code: 1, msg: `当前${providerName}号已绑定其他账号，请先解绑` };
-		}
-
-		// 定义openid和unionid存在userInfo的哪个字段中
-		let fieldInfo = {
-			[`${provider}_openid`]: {
-				[platform]: openid,
-				[`${platform}_${appid}`]: openid
-			},
-			[`${provider}_unionid`]: unionid
-		};
-
-		let num = await vk.daoCenter.userDao.updateById({
-			id: uid,
-			dataJson: fieldInfo
-		});
-
-		res.msg = num > 0 ? "绑定成功" : "绑定失败";
-
-		Object.assign(res, extraRes);
+		const loginUtil = vk.require("service/user/util/loginUtil");
+		res = await loginUtil.bind({
+			clientInfo: originalParam.context,
+			userInfo,
+			provider,
+			providerName,
+			appid,
+			openid,
+			unionid,
+			extraRes,
+		}, util);
 
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;

@@ -26,7 +26,7 @@ module.exports = {
 		res.uid = checkTokenRes.uid;
 
 		// 日志服务
-		const loginLogService = vk.require("service/user/util/login_log");
+		const loginLogService = vk.require("service/user/util/loginLog");
 		// 判断今日已经登录过（即每日只允许用token刷新一次）
 		let isLogin = await loginLogService.checkTodayIsLogin({
 			user_id: res.uid,
@@ -50,6 +50,7 @@ module.exports = {
 			res.token = token;
 			res.tokenExpired = tokenExpired;
 			res.msg = "登录成功";
+			// 添加登录日志
 			await loginLogService.add({
 				type: "login",
 				login_type: "token",

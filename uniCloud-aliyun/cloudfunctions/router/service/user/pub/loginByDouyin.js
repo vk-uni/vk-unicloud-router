@@ -7,6 +7,8 @@ module.exports = {
 	 * @param {String} code 抖音登录返回的code
 	 * @param {String} type 指定操作类型，可选值为login、register，不传此参数时表现为已注册则登录，未注册则进行注册
 	 * @param {String} myInviteCode 设置当前注册用户自己的邀请码，type为register时生效（如果uni-id配置了 autoSetInviteCode 为 true，则会强制设置）
+	 * @param {String} nickname 用户昵称，仅注册时有效
+	 * @param {String} avatar 用户头像，仅注册时有效
 	 * res 返回参数说明
 	 * @param {Number} code 错误码，0表示成功
 	 * @param {String} msg 详细信息
@@ -23,7 +25,9 @@ module.exports = {
 		let {
 			code,
 			type,
-			myInviteCode, 
+			myInviteCode,
+			nickname,
+			avatar
 		} = data;
 
 		if (!code) {
@@ -35,8 +39,9 @@ module.exports = {
 
 		// 额外写入的自定义字段数据（可以自己增加，建议只传一些显示的信息，不要传余额字段等，因为前端不可信任）
 		let customData = {
-			nickname: data.nickname,
-			avatar: data.avatar
+			nickname,
+			avatar,
+			my_invite_code: myInviteCode
 		};
 
 		// 自定义配置
@@ -70,7 +75,7 @@ module.exports = {
 
 		// 设置额外返回给前端的数据
 		let extraRes = {
-			encryptedKey,
+			encryptedKey, // 加密信息
 			openid, // 用户的openid
 			unionid, // 用户的unionid
 		};
@@ -78,57 +83,18 @@ module.exports = {
 		// 以下代码一般不需要更改-----------------------------------------------------------
 		// 以下代码一般不需要更改-----------------------------------------------------------
 		// 以下代码一般不需要更改-----------------------------------------------------------
-		let platform = vk.pubfn.getPlatformForUniId(originalParam.context);
-		let orArr = [];
-		if (unionid) {
-			orArr.push({
-				[`${provider}_unionid`]: unionid
-			});
-		}
-		if (openid) {
-			orArr.push({
-				[`${provider}_openid`]: {
-					[platform]: openid,
-				}
-			});
-		}
-		// 查找用户是否存在
-		let userInfo = await vk.daoCenter.userDao.findByWhereJson(_.or(orArr));
-		// 定义openid和unionid存在userInfo的哪个字段中
-		let fieldInfo = {
-			[`${provider}_openid`]: {
-				[platform]: openid,
-				[`${platform}_${appid}`]: openid
-			},
-			[`${provider}_unionid`]: unionid
-		};
-
-		// 执行登录接口
-		res = await vk.login({
-			clientInfo: originalParam.context, // 客户端信息
-			type, // 操作类型，login: 仅登录，register: 仅注册 不传则自动判断
-			customData, // 自定义数据
-			userInfo, // 用户信息
-			fieldInfo, // 登录相关字段存储信息
-		});
-
-		if (res.code !== 0) {
-			// 登录失败
-			return res;
-		}
-
-		// 登录成功
-		Object.assign(res, extraRes);
-
-		// 添加登录日志
-		const loginLogService = vk.require("service/user/util/login_log");
-		await loginLogService.add({
-			type: "login",
-			login_type: provider,
-			user_id: res.uid,
-			context: originalParam.context
+		const loginUtil = vk.require("service/user/util/loginUtil");
+		return await loginUtil.login({
+			clientInfo: originalParam.context,
+			type,
+			provider,
+			appid,
+			openid,
+			unionid,
+			customData,
+			extraRes,
+			addLog: true
 		}, util);
-
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
 	}

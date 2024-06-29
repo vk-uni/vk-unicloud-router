@@ -41,7 +41,7 @@ module.exports = {
 					now
 				} = vk.pubfn.getCommonTime(nowDate);
 				// 增加登录日志
-				await vk.baseDao.add({
+				res.logId = await vk.baseDao.add({
 					dbName: "uni-id-log",
 					dataJson: {
 						type,

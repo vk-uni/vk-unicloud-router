@@ -13,6 +13,10 @@ module.exports = {
 		let { uid } = data;
 		let res = { code: 0, msg: '' };
 
+		let {
+			appid, // 需要解绑的appid，不传则解绑所有
+		} = data
+
 		// 标记当前平台的provider
 		const provider = "douyin";
 		const providerName = "抖音";
@@ -21,28 +25,13 @@ module.exports = {
 		// 以下代码一般不需要更改-----------------------------------------------------------
 		// 以下代码一般不需要更改-----------------------------------------------------------
 
-		// 如果账户没有绑定手机号或没有设置用户名则不允许解绑（因为解绑后会造成无法登录）
-		if (vk.pubfn.isNullAll(userInfo.mobile, userInfo.username)) {
-			return { code: -1, msg: `为了您的账号安全，请绑定手机号后再解绑${providerName}` };
-		}
-
-		// 判断当前登录用户是否已经绑定过
-		if (!userInfo[`${provider}_openid`]) {
-			return { code: 1, msg: `当前账号未绑定${providerName}，无需解绑` };
-		}
-
-		// 定义openid和unionid存在userInfo的哪个字段中
-		let fieldInfo = {
-			[`${provider}_openid`]: _.remove(),
-			[`${provider}_unionid`]: _.remove()
-		};
-
-		let num = await vk.daoCenter.userDao.updateById({
-			id: uid,
-			dataJson: fieldInfo
-		});
-
-		res.msg = num > 0 ? "解绑成功" : "解绑失败";
+		const loginUtil = vk.require("service/user/util/loginUtil");
+		res = await loginUtil.unbind({
+			userInfo,
+			provider,
+			providerName,
+			appid
+		}, util);
 
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;

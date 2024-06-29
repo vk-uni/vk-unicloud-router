@@ -88,7 +88,7 @@ module.exports = {
 		}
 
 		// 日志服务
-		const loginLogService = vk.require("service/user/util/login_log");
+		const loginLogService = vk.require("service/user/util/loginLog");
 		await loginLogService.add({
 			type: "login",
 			login_type: "univerify",

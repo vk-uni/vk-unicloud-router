@@ -42,7 +42,7 @@ module.exports = {
 				res.msg = res.type === "register" ? "注册成功" : "登录成功";
 			}
 			// 日志服务
-			const loginLogService = vk.require("service/user/util/login_log");
+			const loginLogService = vk.require("service/user/util/loginLog");
 			await loginLogService.add({
 				type: "login",
 				login_type: "email",

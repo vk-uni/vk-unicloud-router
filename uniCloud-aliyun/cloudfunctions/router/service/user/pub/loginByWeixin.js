@@ -29,6 +29,9 @@ module.exports = {
 			return { code: -1, msg: "code不能为空" };
 		}
 
+		// 标记当前平台的provider
+		const provider = "wx"; // 历史原因，这里用wx，而非weixin
+
 		let platform = vk.pubfn.getPlatformForUniId(originalParam.context);
 
 		// 额外写入的自定义字段数据（可以自己增加，建议只传一些显示的信息，不要传余额字段等，因为前端不可信任）
@@ -62,13 +65,13 @@ module.exports = {
 			return code2SessionRes;
 		}
 		let {
-			appid, // 微信appid
+			appid, // appid
 			openid, // 用户的openid
 			unionid, // 用户的unionid（只有绑定开放平台后才有此值）
 			sessionKey, // 用户的sessionKey
-			accessToken, // 微信用户accessToken
-			refreshToken, // 微信用户refreshToken
-			expiresIn: accessTokenExpired, // 微信用户accessToken过期时间
+			accessToken, // 用户accessToken
+			refreshToken, // 用户refreshToken
+			expiresIn: accessTokenExpired, // 用户accessToken过期时间
 			encryptedKey, // 加密信息
 		} = code2SessionRes;
 
@@ -88,44 +91,27 @@ module.exports = {
 			if (!customData.nickname) customData.nickname = getUserInfoRes.nickname;
 			if (!customData.avatar) customData.avatar = getUserInfoRes.headimgurl;
 		}
-		let orArr = [];
-		if (unionid) {
-			orArr.push({
-				"wx_unionid": unionid
-			});
-		}
-		if (openid) {
-			orArr.push({
-				"wx_openid": {
-					[platform]: openid,
-				}
-			});
-		}
-		// 查找用户是否存在
-		let userInfo = await vk.daoCenter.userDao.findByWhereJson(_.or(orArr));
-		// 定义openid和unionid存在userInfo的哪个字段中
-		let fieldInfo = {
-			wx_openid: {
-				[platform]: openid,
-				[`${platform}_${appid}`]: openid
-			},
-			wx_unionid: unionid
-		};
-		// 执行登录接口
-		res = await vk.login({
-			clientInfo: originalParam.context, // 客户端信息
-			type, // 操作类型，login: 仅登录，register: 仅注册 不传则自动判断
-			customData, // 自定义数据
-			userInfo, // 用户信息
-			fieldInfo, // 登录相关字段存储信息
-		});
+
+		// 以下代码一般不需要更改-----------------------------------------------------------
+		// 以下代码一般不需要更改-----------------------------------------------------------
+		// 以下代码一般不需要更改-----------------------------------------------------------
+		const loginUtil = vk.require("service/user/util/loginUtil");
+		res = await loginUtil.login({
+			clientInfo: originalParam.context,
+			type,
+			provider,
+			appid,
+			openid,
+			unionid,
+			customData,
+			extraRes,
+			addLog: false, // 历史原因，这里不记录日志，单独记录，因为原先日志的login_type与login的provider不一样
+		}, util);
 
 		if (res.code !== 0) {
 			// 登录失败
 			return res;
 		}
-		// 登录成功
-		Object.assign(res, extraRes);
 
 		// 为了能使用官方的安全网络，微信登录成功后需要向 opendb-open-data 表插入 sessionKey
 		if (vk.system.opendbOpenDataDao) {
@@ -147,7 +133,7 @@ module.exports = {
 		}
 
 		// 添加登录日志
-		const loginLogService = vk.require("service/user/util/login_log");
+		const loginLogService = vk.require("service/user/util/loginLog");
 		await loginLogService.add({
 			type: "login",
 			login_type: "weixin",

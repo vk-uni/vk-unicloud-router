@@ -44,7 +44,7 @@ module.exports = {
 			delete res.refreshToken; // 删除明文refreshToken
 			res.encryptedKey = encrypted; // 返回前端加密内容
 			// 日志服务
-			const loginLogService = vk.require("service/user/util/login_log");
+			const loginLogService = vk.require("service/user/util/loginLog");
 			await loginLogService.add({
 				type: "login",
 				login_type: "qq",
