@@ -61,6 +61,7 @@ module.exports = {
 		});
 
 		Object.assign(res, extraRes);
+		res.provider = provider;
 
 		if (res.code !== 0) {
 			// 登录失败
@@ -96,7 +97,7 @@ module.exports = {
 			clientInfo,
 			userInfo,
 			provider,
-			providerName,
+			providerName = "",
 			appid,
 			openid,
 			unionid,
@@ -104,7 +105,7 @@ module.exports = {
 			customData,
 			encryptedKey,
 		} = data;
-		
+
 		if (!openid && encryptedKey) {
 			// 解密获得openid和unionid
 			let decryptedRes = vk.crypto.aes.decrypt({
@@ -164,7 +165,7 @@ module.exports = {
 		if (!userInfo[`${provider}_unionid`] && unionid) {
 			updateDataJson[`${provider}_unionid`] = unionid;
 		}
-		
+
 		if (typeof customData === "object") {
 			updateDataJson = Object.assign(updateDataJson, customData);
 		}

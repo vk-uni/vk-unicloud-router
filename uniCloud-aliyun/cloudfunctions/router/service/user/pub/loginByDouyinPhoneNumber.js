@@ -44,7 +44,6 @@ module.exports = {
 			encryptedData,
 			iv
 		});
-		console.log('res: ', res)
 		if (res.code !== 0) return res;
 		let {
 			mobile
@@ -68,16 +67,26 @@ module.exports = {
 				avatar,
 				gender
 			};
-			// 如果encryptedKey有值，则执行绑定抖音
-			const loginUtil = vk.require("service/user/util/loginUtil");
-			await loginUtil.bind({
-				clientInfo: originalParam.context,
-				userInfo: res.userInfo,
-				provider,
-				providerName,
-				encryptedKey,
-				customData,
-			}, util);
+			if (encryptedKey) {
+				// 如果encryptedKey有值，则执行绑定抖音
+				const loginUtil = vk.require("service/user/util/loginUtil");
+				await loginUtil.bind({
+					clientInfo: originalParam.context,
+					userInfo: res.userInfo,
+					provider,
+					providerName,
+					encryptedKey,
+					customData,
+				}, util);
+			} else {
+				res.userInfo = await vk.baseDao.updateAndReturn({
+					dbName: "uni-id-users",
+					whereJson: {
+						_id: res.uid
+					},
+					dataJson: customData
+				});
+			}
 		}
 		// 日志服务
 		const loginLogService = vk.require("service/user/util/loginLog");

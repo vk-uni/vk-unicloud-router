@@ -32,7 +32,9 @@ module.exports = {
 			password,
 			inviteCode,
 			myInviteCode,
-			needPermission
+			needPermission,
+			encryptedProvider,
+			encryptedKey,
 		} = data;
 
 		// 一键登录依赖检查
@@ -42,7 +44,7 @@ module.exports = {
 
 		// 获取一键登录配置
 		const univerifyConfig = vk.pubfn.getUniIdConfig(config, "service.univerify");
-		
+
 		if (vk.pubfn.isNull(univerifyConfig)) {
 			return { code: -1, msg: "请在uni-id配置中配置一键登录相关参数，配置节点：service.univerify" };
 		}
@@ -74,19 +76,34 @@ module.exports = {
 		}
 
 		if (res.type === "register") {
-			// 注册成功后设置下昵称
-			let mobileStr = res.userInfo.mobile.substring(7);
-			res.userInfo = await vk.baseDao.updateAndReturn({
-				dbName: "uni-id-users",
-				whereJson: {
-					_id: res.uid
-				},
-				dataJson: {
-					nickname: data.nickname || `手机尾号${mobileStr}用户`,
-				},
-			});
+			if (!res.userInfo._id) res.userInfo._id = res.uid;
+			let mobileStr = mobile.substring(7);
+			// 额外写入的自定义字段数据（可以自己增加，建议只传一些显示的信息，不要传余额字段等，因为前端不可信任）
+			let customData = {
+				nickname: nickname || `手机尾号${mobileStr}用户`,
+				avatar,
+				gender
+			};
+			if (encryptedKey && encryptedProvider) {
+				// 如果encryptedKey有值，则执行绑定微信
+				const loginUtil = vk.require("service/user/util/loginUtil");
+				await loginUtil.bind({
+					clientInfo: originalParam.context,
+					userInfo: res.userInfo,
+					provider: encryptedProvider,
+					encryptedKey,
+					customData,
+				}, util);
+			} else {
+				res.userInfo = await vk.baseDao.updateAndReturn({
+					dbName: "uni-id-users",
+					whereJson: {
+						_id: res.uid
+					},
+					dataJson: customData
+				});
+			}
 		}
-
 		// 日志服务
 		const loginLogService = vk.require("service/user/util/loginLog");
 		await loginLogService.add({
