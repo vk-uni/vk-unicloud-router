@@ -4,8 +4,10 @@ module.exports = {
 	 * @url user/pub/loginByWeixin 前端调用的url参数地址
 	 * @description 支持APP、微信小程序、微信公众号
 	 * data 请求参数 说明
-	 * @param {String} code 微信登录返回的code
-	 * @param {String} type login:登录 register:注册
+	 * @param {String} code 登录返回的code
+	 * @param {String} type 指定操作类型，可选值为login、register，不传此参数时表现为已注册则登录，未注册则进行注册
+	 * @param {String} nickname 用户昵称，仅注册时有效
+	 * @param {String} avatar 用户头像，仅注册时有效
 	 * res 返回参数说明
 	 * @param {Number} code 错误码，0表示成功
 	 * @param {String} msg 详细信息
@@ -20,9 +22,10 @@ module.exports = {
 		let res = { code: 0, msg: "" };
 		// 业务逻辑开始-----------------------------------------------------------
 		let {
-			code, // 微信登录返回的code
-			type, // 指定操作类型，可选值为login、register，不传此参数时表现为已注册则登录，未注册则进行注册
-			myInviteCode, // 设置当前注册用户自己的邀请码，type为register时生效（如果uni-id配置了autoSetInviteCode为true，则会强制设置）
+			code,
+			type,
+			nickname,
+			avatar
 		} = data;
 
 		if (!code) {
@@ -36,8 +39,8 @@ module.exports = {
 
 		// 额外写入的自定义字段数据（可以自己增加，建议只传一些显示的信息，不要传余额字段等，因为前端不可信任）
 		let customData = {
-			nickname: data.nickname,
-			avatar: data.avatar
+			nickname,
+			avatar
 		};
 
 		// 额外返回给前端的数据

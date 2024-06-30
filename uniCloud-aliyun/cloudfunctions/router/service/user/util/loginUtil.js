@@ -32,10 +32,13 @@ module.exports = {
 		}
 		if (openid) {
 			orArr.push({
-				[`${provider}_openid`]: {
-					[platform]: openid,
-				}
+				[`${provider}_openid.${platform}`]: openid
 			});
+			if (appid) {
+				orArr.push({
+					[`${provider}_openid.${platform}_${appid}`]: openid
+				});
+			}
 		}
 		// 查找用户是否存在
 		let userInfo = await vk.daoCenter.userDao.findByWhereJson(_.or(orArr));
@@ -98,7 +101,19 @@ module.exports = {
 			openid,
 			unionid,
 			extraRes,
+			customData,
+			encryptedKey,
 		} = data;
+		
+		if (!openid && encryptedKey) {
+			// 解密获得openid和unionid
+			let decryptedRes = vk.crypto.aes.decrypt({
+				data: encryptedKey, // 待解密的原文
+			});
+			appid = decryptedRes.appid;
+			openid = decryptedRes.openid;
+			unionid = decryptedRes.unionid;
+		}
 
 		let platform = vk.pubfn.getPlatformForUniId(clientInfo);
 
@@ -146,8 +161,12 @@ module.exports = {
 		if (appid) {
 			updateDataJson[`${provider}_openid.${platform}_${appid}`] = openid;
 		}
-		if (!userInfo[`${provider}_unionid`]) {
+		if (!userInfo[`${provider}_unionid`] && unionid) {
 			updateDataJson[`${provider}_unionid`] = unionid;
+		}
+		
+		if (typeof customData === "object") {
+			updateDataJson = Object.assign(updateDataJson, customData);
 		}
 
 		let num = await vk.daoCenter.userDao.updateById({

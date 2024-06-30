@@ -3,7 +3,9 @@ module.exports = {
 	 * 绑定抖音
 	 * @url user/kh/bindDouyin 前端调用的url参数地址
 	 * data 请求参数 说明
-	 * @param {String} code 抖音登录返回的code
+	 * @param {String} code 登录返回的code
+	 * @param {String} appid 可不填（如果需要支持多小程序登录，则必填）
+	 * @param {String} encryptedKey code和encryptedKey二选一传即可
 	 * res 返回参数说明
 	 * @param {Number} code 错误码，0表示成功
 	 * @param {String} msg 详细信息
@@ -17,8 +19,13 @@ module.exports = {
 
 		let {
 			code,
-			appid: myAppId
+			appid: myAppId,
+			encryptedKey: myEncryptedKey
 		} = data;
+		
+		if (vk.pubfn.isNullAll(code, myEncryptedKey)) {
+			return { code: -1, msg: "code不能为空" };
+		}
 
 		// 标记当前平台的provider
 		const provider = "douyin";
@@ -42,6 +49,7 @@ module.exports = {
 		let code2SessionRes = await vk.openapi.douyin.auth.code2Session({
 			code,
 			needKey: true,
+			encryptedKey: myEncryptedKey,
 			...customConfig
 		});
 		if (code2SessionRes.code !== 0) {

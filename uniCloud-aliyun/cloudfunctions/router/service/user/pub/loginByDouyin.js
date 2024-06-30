@@ -4,9 +4,8 @@ module.exports = {
 	 * @url user/pub/loginByDouyin 前端调用的url参数地址
 	 * @description 支持小程序登录
 	 * data 请求参数 说明
-	 * @param {String} code 抖音登录返回的code
+	 * @param {String} code 登录返回的code
 	 * @param {String} type 指定操作类型，可选值为login、register，不传此参数时表现为已注册则登录，未注册则进行注册
-	 * @param {String} myInviteCode 设置当前注册用户自己的邀请码，type为register时生效（如果uni-id配置了 autoSetInviteCode 为 true，则会强制设置）
 	 * @param {String} nickname 用户昵称，仅注册时有效
 	 * @param {String} avatar 用户头像，仅注册时有效
 	 * res 返回参数说明
@@ -25,7 +24,6 @@ module.exports = {
 		let {
 			code,
 			type,
-			myInviteCode,
 			nickname,
 			avatar
 		} = data;
@@ -40,8 +38,7 @@ module.exports = {
 		// 额外写入的自定义字段数据（可以自己增加，建议只传一些显示的信息，不要传余额字段等，因为前端不可信任）
 		let customData = {
 			nickname,
-			avatar,
-			my_invite_code: myInviteCode
+			avatar
 		};
 
 		// 自定义配置

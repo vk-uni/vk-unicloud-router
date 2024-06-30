@@ -2,10 +2,10 @@ module.exports = {
 	/**
 	 * 绑定微信
 	 * @url user/kh/bindWeixin 前端调用的url参数地址
-	 * @description 将当前登录用户绑定微信
 	 * data 请求参数 说明
-	 * @param {String} code 微信登录返回的code
-	 * @param {String} appid 微信appid，可不填（如果需要支持多小程序登录，则必填）
+	 * @param {String} code 登录返回的code
+	 * @param {String} appid 可不填（如果需要支持多小程序登录，则必填）
+	 * @param {String} encryptedKey code和encryptedKey二选一传即可
 	 * res 返回参数说明
 	 * @param {Number} code 错误码，0表示成功
 	 * @param {String} msg 详细信息
@@ -18,8 +18,13 @@ module.exports = {
 
 		let {
 			code,
-			appid: myAppId
+			appid: myAppId,
+			encryptedKey: myEncryptedKey
 		} = data;
+		
+		if (vk.pubfn.isNullAll(code, myEncryptedKey)) {
+			return { code: -1, msg: "code不能为空" };
+		}
 
 		// 标记当前平台的provider
 		const provider = "wx"; // 历史原因，这里用wx，而非weixin
@@ -38,12 +43,13 @@ module.exports = {
 			customConfig.appid = myAppId;
 		}
 		// customConfig.appsecret = "xxxx";
-
+		
 		// code获取openid
 		let code2SessionRes = await vk.openapi.weixin.auth.code2Session({
 			context: originalParam.context, // 内部会根据context来判断是小程序还是APP还是公众号
 			code,
 			needKey: true, // 需要返回密钥信息
+			encryptedKey: myEncryptedKey,
 			...customConfig
 		});
 		if (code2SessionRes.code !== 0) {

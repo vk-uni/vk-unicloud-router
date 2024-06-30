@@ -453,8 +453,13 @@ export default {
 	/**
 	 * 微信登录获取用户code
 	 */
-	getWeixinCode() {
+	getWeixinCode(data = {}) {
 		return new Promise((resolve, reject) => {
+			let { encryptedKey } = data;
+			if (encryptedKey) {
+				resolve();
+				return;
+			}
 			// #ifdef MP-WEIXIN
 			uni.login({
 				provider: 'weixin',
@@ -503,7 +508,7 @@ export default {
 		debounce(() => {
 			addLoading(obj, "login");
 			let { data = {} } = obj;
-			that.getWeixinCode().then((code) => {
+			that.getWeixinCode(data).then((code) => {
 				// #ifdef H5
 				// H5平台需要区分环境（如微信公众号？网页H5?）
 				data.vk_platform = uni.vk.h5.getEnv();
@@ -535,7 +540,7 @@ export default {
 		let that = this;
 		addLoading(obj, "loading");
 		let { data = {} } = obj;
-		that.getWeixinCode().then((code) => {
+		that.getWeixinCode(data).then((code) => {
 			callFunction({
 				...obj,
 				url: 'user/pub/code2SessionWeixin',
@@ -557,7 +562,7 @@ export default {
 		let that = this;
 		addLoading(obj, "loading");
 		let { data = {} } = obj;
-		that.getWeixinCode().then((code) => {
+		that.getWeixinCode(data).then((code) => {
 			// #ifdef H5
 			// H5平台需要区分环境（如微信公众号？网页H5?）
 			data.vk_platform = uni.vk.h5.getEnv();
@@ -1137,8 +1142,13 @@ export default {
 	/**
 	 * 抖音登录获取用户code
 	 */
-	getDouyinCode() {
+	getDouyinCode(data = {}) {
 		return new Promise((resolve, reject) => {
+			let { encryptedKey } = data;
+			if (encryptedKey) {
+				resolve();
+				return;
+			}
 			// #ifndef MP-TOUTIAO
 			vk.toast("请在抖音小程序中打开");
 			return;
@@ -1174,7 +1184,7 @@ export default {
 		debounce(() => {
 			addLoading(obj, "login");
 			let { data = {} } = obj;
-			that.getDouyinCode().then((code) => {
+			that.getDouyinCode(data).then((code) => {
 				callFunction({
 					url: 'user/pub/loginByDouyin',
 					...obj,
@@ -1197,7 +1207,7 @@ export default {
 		let that = this;
 		addLoading(obj, "loading");
 		let { data = {} } = obj;
-		that.getDouyinCode().then((code) => {
+		that.getDouyinCode(data).then((code) => {
 			callFunction({
 				...obj,
 				url: 'user/kh/bindDouyin',
@@ -1222,4 +1232,25 @@ export default {
 			url: 'user/kh/unbindDouyin',
 		});
 	},
+	/**
+	 * 通过抖音小程序绑定的手机号登录
+	 * data 请求参数 说明
+	 * @param {String} encryptedData
+	 * @param {String} iv
+	 * @param {String} sessionKey
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 * @param {String} token 登录成功之后返回的token信息
+	 * @param {String} tokenExpired token过期时间
+	 */
+	loginByDouyinPhoneNumber(obj = {}) {
+		return debounce(() => {
+			addLoading(obj, "login");
+			return callFunction({
+				url: 'user/pub/loginByDouyinPhoneNumber',
+				...obj
+			});
+		}, debounceTime, true, "login");
+	}
 };
