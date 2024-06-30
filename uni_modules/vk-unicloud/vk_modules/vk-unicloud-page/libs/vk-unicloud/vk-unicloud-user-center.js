@@ -1252,5 +1252,42 @@ export default {
 				...obj
 			});
 		}, debounceTime, true, "login");
-	}
+	},
+	/**
+	 * 获取抖音openid
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 * @param {String} openid 用户openid
+	 * @param {String} unionid 用户unionid，可以取到此值时返回
+	 */
+	code2SessionDouyin(obj = {}) {
+		let that = this;
+		addLoading(obj, "loading");
+		let { data = {} } = obj;
+		that.getDouyinCode(data).then((code) => {
+			callFunction({
+				...obj,
+				url: 'user/pub/code2SessionDouyin',
+				data: {
+					code,
+					...data,
+				}
+			});
+		});
+	},
+	/**
+	 * 获取抖音绑定的手机号
+	 * data 请求参数
+	 * @param {String} encryptedData
+	 * @param {String} iv
+	 * @param {String} sessionKey
+	 */
+	getDouyinPhoneNumber(obj = {}) {
+		addLoading(obj, "loading");
+		return callFunction({
+			...obj,
+			url: 'user/pub/getDouyinPhoneNumber'
+		});
+	},
 };
