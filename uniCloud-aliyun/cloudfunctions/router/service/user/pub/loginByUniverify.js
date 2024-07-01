@@ -33,6 +33,9 @@ module.exports = {
 			inviteCode,
 			myInviteCode,
 			needPermission,
+			nickname,
+			avatar,
+			gender,
 			encryptedProvider,
 			encryptedKey,
 		} = data;
