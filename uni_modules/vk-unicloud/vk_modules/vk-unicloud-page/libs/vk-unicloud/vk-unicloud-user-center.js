@@ -597,7 +597,7 @@ export default {
 		});
 	},
 	/**
-	 * 获取微信绑定的手机号(后面会支持支付宝)
+	 * 获取小程序绑定的手机号
 	 * data 请求参数
 	 * @param {String} encryptedData
 	 * @param {String} iv
@@ -1082,6 +1082,29 @@ export default {
 		});
 	},
 	/**
+	 * 获取抖音openid
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 * @param {String} openid 用户openid
+	 * @param {String} unionid 用户unionid，可以取到此值时返回
+	 */
+	code2SessionQQ(obj = {}) {
+		let that = this;
+		addLoading(obj, "loading");
+		let { data = {} } = obj;
+		that.getQQCode(data).then(({ code, accessToken }) => {
+			callFunction({
+				...obj,
+				url: 'user/pub/code2SessionQQ',
+				data: {
+					code,
+					...data,
+				}
+			});
+		});
+	},
+	/**
 	 * 生成qq小程序码
 	 * @param {String} path         必须是已经发布的小程序存在的页面（否则报错），例如 pages/index/index, 根路径前不要填加 /,不能携带参数（参数请放在scene字段里），如果不填写这个字段，默认跳主页面
 	 * res 返回参数说明
@@ -1275,19 +1298,5 @@ export default {
 				}
 			});
 		});
-	},
-	/**
-	 * 获取抖音绑定的手机号
-	 * data 请求参数
-	 * @param {String} encryptedData
-	 * @param {String} iv
-	 * @param {String} sessionKey
-	 */
-	getDouyinPhoneNumber(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/pub/getDouyinPhoneNumber'
-		});
-	},
+	}
 };

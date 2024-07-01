@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
 	/**
-	 * 获取用户微信绑定的手机号
+	 * 获取用户小程序绑定的手机号
 	 * 微信小程序API更新了，现在只需传code可以代替encryptedData和iv
 	 * @url user/pub/getPhoneNumber 前端调用的url参数地址
 	 * data 请求参数
@@ -16,7 +16,17 @@ module.exports = {
 		let { uid } = data;
 		let res = { code: 0, msg: '' };
 		// 业务逻辑开始-----------------------------------------------------------
-		res = await vk.openapi.weixin.decrypt.getPhoneNumber(data);
+		let {
+			platform
+		} = data;
+		if (!platform) platform = vk.pubfn.getPlatformForUniId(originalParam.context);
+		if (platform === "mp-weixin") {
+			res = await vk.openapi.weixin.decrypt.getPhoneNumber(data);
+		} else if (platform === "mp-toutiao") {
+			res = await vk.openapi.douyin.decrypt.getPhoneNumber(data);
+		} else {
+			res = { code: -1, msg: "暂不支持平台 ${platform}" };
+		}
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
 	}
