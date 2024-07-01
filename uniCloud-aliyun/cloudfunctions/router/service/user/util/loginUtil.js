@@ -23,6 +23,10 @@ module.exports = {
 			addLog
 		} = data;
 
+		// 参数非空检测
+		let nullKey = vk.pubfn.isNullOneByObject({ clientInfo, provider, openid });
+		if (nullKey) return { code: -1, msg: '参数 ' + nullKey + ' 不能为空' };
+
 		let platform = vk.pubfn.getPlatformForUniId(clientInfo);
 		let orArr = [];
 		if (unionid) {
@@ -44,12 +48,14 @@ module.exports = {
 		let userInfo = await vk.daoCenter.userDao.findByWhereJson(_.or(orArr));
 		// 定义openid和unionid存在userInfo的哪个字段中
 		let fieldInfo = {
-			[`${provider}_openid`]: {
-				[platform]: openid,
-				[`${platform}_${appid}`]: openid
-			},
-			[`${provider}_unionid`]: unionid
+			[`${provider}_openid.${platform}`]: openid,
 		};
+		if (appid) {
+			fieldInfo[`${provider}_openid.${platform}_${appid}`] = openid;
+		}
+		if (unionid) {
+			fieldInfo[`${provider}_unionid`] = unionid;
+		}
 
 		// 执行登录接口
 		res = await vk.login({
@@ -115,6 +121,10 @@ module.exports = {
 			openid = decryptedRes.openid;
 			unionid = decryptedRes.unionid;
 		}
+
+		// 参数非空检测
+		let nullKey = vk.pubfn.isNullOneByObject({ clientInfo, userInfo, provider, openid });
+		if (nullKey) return { code: -1, msg: '参数 ' + nullKey + ' 不能为空' };
 
 		let platform = vk.pubfn.getPlatformForUniId(clientInfo);
 
@@ -197,6 +207,10 @@ module.exports = {
 			providerName,
 			appid, // 注意：如果不传appid，则解绑所有
 		} = data;
+
+		// 参数非空检测
+		let nullKey = vk.pubfn.isNullOneByObject({ userInfo, provider });
+		if (nullKey) return { code: -1, msg: '参数 ' + nullKey + ' 不能为空' };
 
 		// 如果账户没有绑定手机号或没有设置用户名则不允许解绑（因为解绑后会造成无法登录）
 		if (vk.pubfn.isNullAll(userInfo.mobile, userInfo.username)) {
