@@ -1,3 +1,10 @@
+## 2.18.8（2024-07-01）
+* 【重要】`vk.userCenter` 新增抖音登录、绑定抖音、解绑抖音、抖音手机号授权登录等API [传送门](https://vkdoc.fsq.pub/client/vk.userCenter.html#%E6%8A%96%E9%9F%B3)
+* 【重要】新增云端 `vk.login` 万能授权登录API，可参考云函数 `user/pub/loginByDouyin` 实现任意第三方授权登录 [传送门](https://vkdoc.fsq.pub/client/uniCloud/plus/login.html)
+* 【调整】`pub类型` 云函数获取 userInfo 的参数 `need_user_info` 调整为 `needUserInfo`（同时兼容这2个参数）
+* 【修复】请求多服务空间使用方式二的情况下支付宝云会报错的问题 [传送门](https://vkdoc.fsq.pub/client/question/q9.html#%E6%96%B9%E5%BC%8F%E4%BA%8C)
+* 【优化】当 `tokenMaxLimit` 设置为1时，强制 `needUserInfo` 为 `true`（此时访问非pub函数就会达到同一个账号只能一台设备登录的效果）
+* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.18.7（2024-06-19）
 * 【重要】客户端与云函数支持双向加密通信 [传送门](https://vkdoc.fsq.pub/client/pages/callFunction.html#encrypt-%E5%8A%A0%E5%AF%86%E9%80%9A%E4%BF%A1)
 * 【优化】扩展存储上传成功额外返回 extendInfo [传送门](https://vkdoc.fsq.pub/client/pages/uploadFile.html#%E8%BF%94%E5%9B%9E%E5%80%BC)
