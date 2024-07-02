@@ -1,3 +1,10 @@
+## 2.18.9（2024-07-02）
+* 【修复】因 `2.18.8` 更新导致的APP本机号码一键登录会报错的问题
+* 【优化】`router/service/user/util/loginUtil.js` 内部细节
+
+**特别注意**
+
+* 本次更新需要替换项目的 `/router/service/user/` 目录
 ## 2.18.8（2024-07-01）
 * 【重要】`vk.userCenter` 新增抖音登录、绑定抖音、解绑抖音、抖音手机号授权登录等API [传送门](https://vkdoc.fsq.pub/client/vk.userCenter.html#%E6%8A%96%E9%9F%B3)
 * 【重要】新增云端 `vk.login` 万能授权登录API，可参考云函数 `user/pub/loginByDouyin` 实现任意第三方授权登录 [传送门](https://vkdoc.fsq.pub/client/uniCloud/plus/login.html)
