@@ -48,10 +48,12 @@ module.exports = {
 		let userInfo = await vk.daoCenter.userDao.findByWhereJson(_.or(orArr));
 		// 定义openid和unionid存在userInfo的哪个字段中
 		let fieldInfo = {
-			[`${provider}_openid.${platform}`]: openid,
+			[`${provider}_openid`]: {
+				[platform]: openid
+			}
 		};
 		if (appid) {
-			fieldInfo[`${provider}_openid.${platform}_${appid}`] = openid;
+			fieldInfo[`${provider}_openid`][`${platform}_${appid}`] = openid;
 		}
 		if (unionid) {
 			fieldInfo[`${provider}_unionid`] = unionid;
@@ -167,10 +169,12 @@ module.exports = {
 
 		// 需要修改的字段信息
 		let updateDataJson = {
-			[`${provider}_openid.${platform}`]: openid
+			[`${provider}_openid`]: {
+				[platform]: openid
+			}
 		};
 		if (appid) {
-			updateDataJson[`${provider}_openid.${platform}_${appid}`] = openid;
+			updateDataJson[`${provider}_openid`][`${platform}_${appid}`] = openid;
 		}
 		if (!userInfo[`${provider}_unionid`] && unionid) {
 			updateDataJson[`${provider}_unionid`] = unionid;
