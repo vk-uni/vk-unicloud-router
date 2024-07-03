@@ -1,6 +1,1 @@
-* 【修复】因 `2.18.8` 更新导致的APP本机号码一键登录会报错的问题
-* 【优化】`router/service/user/util/loginUtil.js` 内部细节
-
-**特别注意**
-
-* 本次更新需要替换项目的 `/router/service/user/` 目录
+* 【重要】修复 `vk.userCenter` 微信登录、抖音登录细节问题（需要替换项目的 `/router/service/user/util/loginUtil.js` 文件）
