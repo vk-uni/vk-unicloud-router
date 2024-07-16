@@ -41,8 +41,16 @@ module.exports = {
 			return { code: -1, msg: "domain不能为空" };
 		}
 
+		// extStorageConfig 去除所有空值
+		let realityExtStorageConfig = {};
+		for (const key in extStorageConfig) {
+			if (extStorageConfig.hasOwnProperty(key) && vk.pubfn.isNotNull(extStorageConfig[key])) {
+				realityExtStorageConfig[key] = extStorageConfig[key];
+			}
+		}
+		
 		// 然后获取 extStorageManager 对象实例
-		const extStorageManager = uniCloud.getExtStorageManager(extStorageConfig);
+		const extStorageManager = uniCloud.getExtStorageManager(realityExtStorageConfig);
 		// 最后调用 extStorageManager.getUploadFileOptions
 		let uploadFileOptionsRes = extStorageManager.getUploadFileOptions({
 			cloudPath,

@@ -15,15 +15,16 @@ module.exports = {
 		if (!uniIdToken) {
 			return { code: -1, msg: "缺少token" };
 		}
-		// 验证token是否合法
+		// 验证token是否合法（设置needUserInfo为true是为了查库校验）
 		let checkTokenRes = await uniID.checkToken(uniIdToken, {
-			needPermission: false,
-			needUserInfo: false
+			needPermission: true,
+			needUserInfo: true
 		});
 		if (!checkTokenRes.uid) {
 			return checkTokenRes;
 		}
-		res.uid = checkTokenRes.uid;
+		// 用户信息
+		let userInfo = checkTokenRes.userInfo;
 
 		// 日志服务
 		const loginLogService = vk.require("service/user/util/loginLog");
@@ -36,28 +37,50 @@ module.exports = {
 			res.msg = "今日已登录过";
 			return res;
 		}
-		// 如果今日没有登录过，则刷新token，并添加登录日志
-		const refreshTokenRes = await uniID.refreshToken({
-			token: uniIdToken
+
+		// 如果今日没有登录过，则重新获得一个token（当前的旧token不删除，删除旧token会出现一些问题）
+		const { token, tokenExpired } = await uniID.createToken({
+			uid: checkTokenRes.uid,
+			needPermission: true,
+			role: checkTokenRes.role || [],
+			permission: checkTokenRes.permission || []
 		});
 
-		const {
-			token,
-			tokenExpired
-		} = refreshTokenRes
-
-		if (token) {
-			res.token = token;
-			res.tokenExpired = tokenExpired;
-			res.msg = "登录成功";
-			// 添加登录日志
-			await loginLogService.add({
-				type: "login",
-				login_type: "token",
-				user_id: res.uid,
-				context: originalParam.context
-			}, util);
+		if (!token) {
+			return { code: -1, msg: "token生成失败" };
 		}
+
+		// 写入token，并记录登录时间和IP，最后返回最新的userInfo
+		userInfo = await vk.daoCenter.userDao.updateAndReturn({
+			whereJson: {
+				_id: checkTokenRes.uid,
+			},
+			dataJson: {
+				token: _.push(token), // 写入新的token
+				last_login_date: Date.now(), // 记录最后一次登录的时间
+				last_login_ip: originalParam.context.CLIENTIP, // 记录最后一次登录的ip
+			}
+		});
+
+		let tokenMaxLimit = vk.pubfn.getUniIdConfig(config, "tokenMaxLimit", 10);
+		// 使用token登录的时候，tokenMaxLimit不能为1，否则前端并发请求时会出现需要跳登录页面的情况
+		if (tokenMaxLimit === 1) {
+			tokenMaxLimit = 2;
+		}
+		res.type = "login";
+		res.msg = "登录成功";
+		res.token = token;
+		res.tokenExpired = tokenExpired;
+		res.tokenMaxLimit = tokenMaxLimit;
+		res.uid = userInfo._id;
+		res.userInfo = userInfo;
+		// 添加登录日志
+		await loginLogService.add({
+			type: "login",
+			login_type: "token",
+			user_id: res.uid,
+			context: originalParam.context
+		}, util);
 
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
