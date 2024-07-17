@@ -19,17 +19,18 @@ module.exports = {
 		let { uid } = data;
 		let res = { code: 0, msg: '' };
 		// 业务逻辑开始-----------------------------------------------------------
-		// 用户登录(账号+密码)
-		res = await uniID.code2SessionAlipay(data);
-		if (res.code === 0) {
-			let encrypted = vk.crypto.aes.encrypt({
-				data: res
-			});
-			delete res.sessionKey; // 删除明文sessionKey
-			delete res.accessToken; // 删除明文accessToken
-			delete res.refreshToken; // 删除明文refreshToken
-			res.encryptedKey = encrypted; // 返回前端加密内容
-		}
+		let {
+			appid,
+			code
+		} = data;
+
+		res = await vk.openapi.alipay.auth.code2Session({
+			context: originalParam.context,
+			appid,
+			code,
+			needKey: false
+		});
+
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
 	}

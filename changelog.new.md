@@ -1,6 +1,5 @@
-* 【修复】getUploadFileOptionsForExtStorage 会报 bucketName 必填的错误的问题
-* 【修复】vk.openapi.weixin.decrypt.getPhoneNumber 使用参数 code 的方式时，多小程序调用不生效的问题
-* 【优化】loginByToken 内部逻辑
+* 【优化】当微信或抖音在 `uni-config-center/vk-unicloud/index.js` 内已经设置了多小程序登录时，uni-id的配置即使未配置也能登录了
+* 【优化】loginByToken 内部细节
 
 **特别注意**
 

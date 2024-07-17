@@ -42,6 +42,22 @@ function addLoading(obj, title) {
 	return obj;
 }
 
+function addAppid(obj) {
+	if (!obj.data) obj.data = {};
+	if (!obj.data.appid) {
+		// #ifdef MP-WEIXIN
+		obj.data.appid = uni.getAccountInfoSync().miniProgram.appId;
+		// #endif
+		// #ifdef MP-TOUTIAO
+		obj.data.appid = uni.getEnvInfoSync().microapp.appId;
+		// #endif
+		// #ifdef MP-ALIPAY
+		obj.data.appid = uni.getAccountInfoSync().miniProgram.appId;
+		// #endif
+	}
+	return obj;
+}
+
 export default {
 	/**
 	 * 用户注册(用户名+密码)
@@ -507,6 +523,7 @@ export default {
 		let that = this;
 		debounce(() => {
 			addLoading(obj, "login");
+			addAppid(obj);
 			let { data = {} } = obj;
 			that.getWeixinCode(data).then((code) => {
 				// #ifdef H5
@@ -539,6 +556,7 @@ export default {
 	code2SessionWeixin(obj = {}) {
 		let that = this;
 		addLoading(obj, "loading");
+		addAppid(obj);
 		let { data = {} } = obj;
 		that.getWeixinCode(data).then((code) => {
 			callFunction({
@@ -561,6 +579,7 @@ export default {
 	bindWeixin(obj = {}) {
 		let that = this;
 		addLoading(obj, "loading");
+		addAppid(obj);
 		let { data = {} } = obj;
 		that.getWeixinCode(data).then((code) => {
 			// #ifdef H5
@@ -585,6 +604,7 @@ export default {
 	 */
 	unbindWeixin(obj = {}) {
 		addLoading(obj, "loading");
+		addAppid(obj);
 		let { data = {} } = obj;
 		// #ifdef H5
 		// H5平台需要区分环境（如微信公众号？网页H5?）
@@ -605,6 +625,7 @@ export default {
 	 */
 	getPhoneNumber(obj = {}) {
 		addLoading(obj, "loading");
+		addAppid(obj);
 		return callFunction({
 			...obj,
 			url: 'user/pub/getPhoneNumber'
@@ -625,6 +646,7 @@ export default {
 	loginByWeixinPhoneNumber(obj = {}) {
 		return debounce(() => {
 			addLoading(obj, "login");
+			addAppid(obj);
 			return callFunction({
 				url: 'user/pub/loginByWeixinPhoneNumber',
 				...obj
@@ -645,6 +667,7 @@ export default {
 	 */
 	getWeixinMPqrcode(obj = {}) {
 		addLoading(obj, "create");
+		addAppid(obj);
 		// 如果env_version传auto，则自动获取当前小程序版本
 		if (obj.data && obj.data.env_version === "auto") {
 			obj.data.env_version = vk.pubfn.getMiniProgramEnvVersion();
@@ -665,6 +688,7 @@ export default {
 	 */
 	getWeixinMPscheme(obj = {}) {
 		addLoading(obj, "create");
+		addAppid(obj);
 		// 如果env_version传auto，则自动获取当前小程序版本
 		if (obj.data && obj.data.env_version === "auto") {
 			obj.data.env_version = vk.pubfn.getMiniProgramEnvVersion();
@@ -686,6 +710,7 @@ export default {
 	 */
 	getWeixinMPurl(obj = {}) {
 		addLoading(obj, "create");
+		addAppid(obj);
 		// 如果env_version传auto，则自动获取当前小程序版本
 		if (obj.data && obj.data.env_version === "auto") {
 			obj.data.env_version = vk.pubfn.getMiniProgramEnvVersion();
@@ -750,6 +775,7 @@ export default {
 		let that = this;
 		debounce(() => {
 			addLoading(obj, "login");
+			addAppid(obj);
 			let { data = {} } = obj;
 			that.getAlipayCode().then((code) => {
 				callFunction({
@@ -777,6 +803,7 @@ export default {
 	code2SessionAlipay(obj = {}) {
 		let that = this;
 		addLoading(obj, "loading");
+		addAppid(obj);
 		let { data = {} } = obj;
 		that.getAlipayCode().then((code) => {
 			callFunction({
@@ -798,6 +825,7 @@ export default {
 	bindAlipay(obj = {}) {
 		let that = this;
 		addLoading(obj, "loading");
+		addAppid(obj);
 		let { data = {} } = obj;
 		that.getAlipayCode().then((code) => {
 			callFunction({
@@ -818,6 +846,7 @@ export default {
 	 */
 	unbindAlipay(obj = {}) {
 		addLoading(obj, "loading");
+		addAppid(obj);
 		return callFunction({
 			...obj,
 			url: 'user/kh/unbindAlipay',
@@ -833,6 +862,7 @@ export default {
 	 */
 	getAlipayMiniCode(obj = {}) {
 		addLoading(obj, "create");
+		addAppid(obj);
 		return callFunction({
 			...obj,
 			url: 'user/kh/getAlipayMiniCode',
@@ -1206,6 +1236,7 @@ export default {
 		let that = this;
 		debounce(() => {
 			addLoading(obj, "login");
+			addAppid(obj);
 			let { data = {} } = obj;
 			that.getDouyinCode(data).then((code) => {
 				callFunction({
@@ -1229,6 +1260,7 @@ export default {
 	bindDouyin(obj = {}) {
 		let that = this;
 		addLoading(obj, "loading");
+		addAppid(obj);
 		let { data = {} } = obj;
 		that.getDouyinCode(data).then((code) => {
 			callFunction({
@@ -1249,6 +1281,7 @@ export default {
 	 */
 	unbindDouyin(obj = {}) {
 		addLoading(obj, "loading");
+		addAppid(obj);
 		let { data = {} } = obj;
 		return callFunction({
 			...obj,
@@ -1270,6 +1303,7 @@ export default {
 	loginByDouyinPhoneNumber(obj = {}) {
 		return debounce(() => {
 			addLoading(obj, "login");
+			addAppid(obj);
 			return callFunction({
 				url: 'user/pub/loginByDouyinPhoneNumber',
 				...obj
@@ -1287,6 +1321,7 @@ export default {
 	code2SessionDouyin(obj = {}) {
 		let that = this;
 		addLoading(obj, "loading");
+		addAppid(obj);
 		let { data = {} } = obj;
 		that.getDouyinCode(data).then((code) => {
 			callFunction({
@@ -1298,5 +1333,20 @@ export default {
 				}
 			});
 		});
-	}
+	},
+	/**
+	 * 生成抖音小程序码
+	 * @param {String} path         必须是已经发布的小程序存在的页面（否则报错），例如 pages/index/index, 根路径前不要填加 /,不能携带参数（参数请放在scene字段里），如果不填写这个字段，默认跳主页面
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 */
+	getDouyinMiniCode(obj = {}) {
+		addLoading(obj, "create");
+		addAppid(obj);
+		return callFunction({
+			...obj,
+			url: 'user/kh/getDouyinMiniCode',
+		});
+	},
 };

@@ -49,7 +49,11 @@ module.exports = {
 		 * 如果不传appid，则默认使用uni-id的配置信息
 		 * 特别注意：如果使用多小程序登录，则同一用户在不同小程序登录时，会分别创建不同的用户（除非unionid是一样的才是同一个用户）。
 		 */
-		// 打开下方注释，动态赋值appid和appsecret即可支持多小程序登录
+		if (data.appid) {
+			// appid前端传，appsecret自动从配置列表匹配
+			customConfig.appid = data.appid;
+		}
+		// 也可以打开下方注释，动态赋值appid和appsecret即可支持多小程序登录
 		// customConfig.appid = "xxxx";
 		// customConfig.appsecret = "xxxx";
 

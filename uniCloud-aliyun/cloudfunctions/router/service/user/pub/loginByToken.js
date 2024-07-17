@@ -30,7 +30,7 @@ module.exports = {
 		const loginLogService = vk.require("service/user/util/loginLog");
 		// 判断今日已经登录过（即每日只允许用token刷新一次）
 		let isLogin = await loginLogService.checkTodayIsLogin({
-			user_id: res.uid,
+			user_id: checkTokenRes.uid,
 			context: originalParam.context
 		}, util);
 		if (isLogin) {

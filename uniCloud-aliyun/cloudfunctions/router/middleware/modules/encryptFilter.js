@@ -1,6 +1,7 @@
 /**
  * 加密函数拦截器 - 前置
  * 作用：用于指定哪些函数必须加密请求
+ * 文档地址：https://vkdoc.fsq.pub/client/pages/callFunction.html#encrypt-vk版双向加密通信
  */
 
 module.exports = [{
