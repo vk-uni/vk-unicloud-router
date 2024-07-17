@@ -1,3 +1,11 @@
+## 2.18.11（2024-07-17）
+* 【修复】getUploadFileOptionsForExtStorage 会报 bucketName 必填的错误的问题
+* 【修复】vk.openapi.weixin.decrypt.getPhoneNumber 使用参数 code 的方式时，多小程序调用不生效的问题
+* 【优化】loginByToken 内部逻辑
+
+**特别注意**
+
+* 本次更新需要替换项目的 `/router/service/user/` 目录
 ## 2.18.10（2024-07-03）
 * 【重要】修复 `vk.userCenter` 微信登录、抖音登录细节问题（需要替换项目的 `/router/service/user/util/loginUtil.js` 文件）
 ## 2.18.9（2024-07-02）
