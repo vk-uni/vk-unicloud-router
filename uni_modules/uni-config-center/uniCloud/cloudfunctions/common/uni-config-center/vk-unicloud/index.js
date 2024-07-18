@@ -26,7 +26,7 @@ module.exports = {
 			// 云函数默认时区（中国为8）
 			"targetTimezone": 8
 		},
-		// 加密的密钥
+		// 服务端加密的密钥
 		"crypto": {
 			"aes": "dad4c0cb88c7d005bc5e844b8e79a9f0", // 对称加密的密钥，长度固定32位（此处建议修改成自己的密钥）
 		},
