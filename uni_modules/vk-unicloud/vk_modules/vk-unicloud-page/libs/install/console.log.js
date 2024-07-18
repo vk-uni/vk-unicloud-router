@@ -6,8 +6,8 @@ const install = Vue => {
 		if (typeof vk.getConfig === "function") {
 			debug = vk.getConfig().debug;
 		}
-		if(!debug){
-			console.log = function(...obj){};
+		if (!debug) {
+			console.log = function(...obj) {};
 		}
 	}
 }
@@ -15,4 +15,3 @@ const install = Vue => {
 export default {
 	install
 }
-
