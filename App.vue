@@ -6,7 +6,7 @@
 
 		},
 		// 监听 - 页面404
-		onPageNotFound:function(e) {
+		onPageNotFound: function(e) {
 			uni.redirectTo({
 				url: config.error.url
 			})
@@ -33,17 +33,18 @@
 			// #ifdef MP-WEIXIN
 			// 检测如果当前是体验版，但没有点HBX的【发行】菜单发布，则提示开发者请点【发行】按钮
 			try {
-				console.log('当前运行模式: ', process.env.NODE_ENV);
+				const nodeEnv = process.env.NODE_ENV;
+				console.log('当前运行模式: ', nodeEnv);
 				const info = uni.getAccountInfoSync();
-				if (info.miniProgram.envVersion === "trial" && process.env.NODE_ENV !== 'production') {
+				if (info.miniProgram.envVersion === "trial" && nodeEnv !== 'production') {
 					// 如果不想要alert弹窗提示，可以将vk.alert改成console.log
 					uni.vk.alert('检测到您当前发布的【体验版】是通过【运行】按钮打包发布的，请重新点击HBX上方菜单的【发行】按钮进行打包发布小程序（如果确定是【发行】按钮打包的，请删除手机上的体验版小程序并重新扫码进入）', '重要提示', '好的');
 				}
-			} catch(err){}
+			} catch (err) {}
 			// #endif
 		},
 		onHide: function() {
-			if(config.debug) console.log('App Hide');
+			if (config.debug) console.log('App Hide');
 		}
 	}
 </script>
@@ -51,5 +52,5 @@
 <style lang="scss">
 	/*每个页面公共css */
 	// @import "./uni_modules/vk-uview-ui/index.scss";
-  @import "./common/css/app.scss";
+	@import "./common/css/app.scss";
 </style>

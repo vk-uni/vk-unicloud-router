@@ -1,7 +1,7 @@
 // 引入自定义公共函数
 import myPubFunction from '@/common/function/myPubFunction.js'
 export default {
-	// 开发模式启用调式模式(请求时会打印日志)
+	// 如果设置为false，则开发模式下也不会打印云函数请求日志
 	debug: process.env.NODE_ENV !== 'production',
 	// 主云函数名称
 	functionName: "router",
