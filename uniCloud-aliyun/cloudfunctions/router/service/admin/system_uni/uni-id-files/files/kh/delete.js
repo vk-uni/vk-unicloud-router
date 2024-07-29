@@ -45,7 +45,7 @@ module.exports = {
 		if (selectRes.length > 0) {
 			try {
 				let fileList = vk.pubfn.arrayObjectGetArray(selectRes, "file_id");
-				await uniCloud.deleteFile({ fileList });
+				await vk.deleteFile({ fileList });
 			} catch (err) {}
 			// 执行数据库API请求
 			res.num = await vk.baseDao.del({
