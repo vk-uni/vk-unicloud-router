@@ -1275,12 +1275,17 @@ pubfn.string2Number = function(obj, option = {}) {
 /**
  * 保留小数
  * @param {Number} val 原值
- * @param {Number} precision 精度
+ * @param {Number} precision 精度（建议在0-6之间），默认0
  * vk.pubfn.toDecimal(val, 2);
  */
 pubfn.toDecimal = function(val, precision = 0) {
 	if (typeof val === "string") val = Number(val);
-	return parseFloat(val.toFixed(precision));
+	if (precision <= 6 && val < 100000000) {
+		let multiplier = Math.pow(10, precision);
+		return Math.round(val * multiplier) / multiplier;
+	} else {
+		return parseFloat(val.toFixed(precision));
+	}
 };
 
 /**

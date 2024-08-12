@@ -110,15 +110,17 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	logout(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/pub/logout',
-			success(res) {
-				deleteToken();
-				if (typeof obj.success == "function") obj.success(res);
-			}
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/pub/logout',
+				success(res) {
+					deleteToken();
+					if (typeof obj.success == "function") obj.success(res);
+				}
+			});
+		}, debounceTime, true, "logout");
 	},
 	/**
 	 * 修改密码
@@ -181,7 +183,7 @@ export default {
 	 */
 	updateUser(obj = {}) {
 		addLoading(obj, "loading");
-		callFunction({
+		return callFunction({
 			...obj,
 			url: 'user/kh/updateUser'
 		});
@@ -328,21 +330,34 @@ export default {
 		addLoading(obj, "login");
 		if (typeof obj.needAlert === "undefined") obj.needAlert = true;
 		// #ifdef APP-PLUS
-		uni.login({
-			provider: 'univerify',
-			univerifyStyle: obj.univerifyStyle,
-			success(res) {
-				let dataJson = Object.assign(obj.data, res.authResult);
-				callFunction({
-					url: 'user/pub/loginByUniverify',
-					...obj,
-					data: dataJson,
-				});
-			},
-			fail: obj.fail,
-			complete: (res) => {
-				uni.vk.hideLoading();
-			}
+		return new Promise((resolve, reject) => {
+			uni.login({
+				provider: 'univerify',
+				univerifyStyle: obj.univerifyStyle,
+				success: (res) =>{
+					let dataJson = Object.assign(obj.data, res.authResult);
+					callFunction({
+						url: 'user/pub/loginByUniverify',
+						...obj,
+						data: dataJson,
+						success: (res) => {
+							if (typeof obj.success === "function") obj.success(res);
+							resolve(res);
+						},
+						fail: (err) => {
+							if (typeof obj.fail === "function") obj.fail(err);
+							reject(err);
+						}
+					});
+				},
+				fail: (err)=>{
+					if (typeof obj.fail === "function") obj.fail(err);
+					reject(err);
+				},
+				complete: (res) => {
+					uni.vk.hideLoading();
+				}
+			});
 		});
 		// #endif
 		// #ifndef APP-PLUS
@@ -521,16 +536,16 @@ export default {
 	 */
 	loginByWeixin(obj = {}) {
 		let that = this;
-		debounce(() => {
+		return debounce(() => {
 			addLoading(obj, "login");
 			addAppid(obj);
 			let { data = {} } = obj;
-			that.getWeixinCode(data).then((code) => {
+			return that.getWeixinCode(data).then((code) => {
 				// #ifdef H5
 				// H5平台需要区分环境（如微信公众号？网页H5?）
 				data.vk_platform = uni.vk.h5.getEnv();
 				// #endif
-				callFunction({
+				return callFunction({
 					url: 'user/pub/loginByWeixin',
 					...obj,
 					data: {
@@ -558,8 +573,8 @@ export default {
 		addLoading(obj, "loading");
 		addAppid(obj);
 		let { data = {} } = obj;
-		that.getWeixinCode(data).then((code) => {
-			callFunction({
+		return that.getWeixinCode(data).then((code) => {
+			return callFunction({
 				...obj,
 				url: 'user/pub/code2SessionWeixin',
 				data: {
@@ -581,12 +596,12 @@ export default {
 		addLoading(obj, "loading");
 		addAppid(obj);
 		let { data = {} } = obj;
-		that.getWeixinCode(data).then((code) => {
+		return that.getWeixinCode(data).then((code) => {
 			// #ifdef H5
 			// H5平台需要区分环境（如微信公众号？网页H5?）
 			data.vk_platform = uni.vk.h5.getEnv();
 			// #endif
-			callFunction({
+			return callFunction({
 				...obj,
 				url: 'user/kh/bindWeixin',
 				data: {
@@ -773,12 +788,12 @@ export default {
 	 */
 	loginByAlipay(obj = {}) {
 		let that = this;
-		debounce(() => {
+		return debounce(() => {
 			addLoading(obj, "login");
 			addAppid(obj);
 			let { data = {} } = obj;
-			that.getAlipayCode().then((code) => {
-				callFunction({
+			return that.getAlipayCode().then((code) => {
+				return callFunction({
 					url: 'user/pub/loginByAlipay',
 					...obj,
 					data: {
@@ -805,8 +820,8 @@ export default {
 		addLoading(obj, "loading");
 		addAppid(obj);
 		let { data = {} } = obj;
-		that.getAlipayCode().then((code) => {
-			callFunction({
+		return that.getAlipayCode().then((code) => {
+			return callFunction({
 				...obj,
 				url: 'user/pub/code2SessionAlipay',
 				data: {
@@ -827,8 +842,8 @@ export default {
 		addLoading(obj, "loading");
 		addAppid(obj);
 		let { data = {} } = obj;
-		that.getAlipayCode().then((code) => {
-			callFunction({
+		return that.getAlipayCode().then((code) => {
+			return callFunction({
 				...obj,
 				url: 'user/kh/bindAlipay',
 				data: {
@@ -999,12 +1014,14 @@ export default {
 			uni.getVideoInfo({
 				src: filePath,
 				success: function(res) {
+					let duration = Number(res.duration) || 0;
+					duration = parseFloat(duration.toFixed(3));
 					return callFunction({
 						...obj,
 						url: 'user/kh/addUploadRecord',
 						data: {
 							...obj.data,
-							duration: parseFloat(res.duration.toFixed(3)),
+							duration,
 							width: res.width,
 							height: res.height
 						}
@@ -1060,11 +1077,11 @@ export default {
 	 */
 	loginByQQ(obj = {}) {
 		let that = this;
-		debounce(() => {
+		return debounce(() => {
 			addLoading(obj, "login");
 			let { data = {} } = obj;
-			that.getQQCode().then(({ code, accessToken } = {}) => {
-				callFunction({
+			return that.getQQCode().then(({ code, accessToken } = {}) => {
+				return callFunction({
 					url: 'user/pub/loginByQQ',
 					...obj,
 					data: {
@@ -1086,8 +1103,8 @@ export default {
 		let that = this;
 		addLoading(obj, "loading");
 		let { data = {} } = obj;
-		that.getQQCode().then(({ code, accessToken } = {}) => {
-			callFunction({
+		return that.getQQCode().then(({ code, accessToken } = {}) => {
+			return callFunction({
 				...obj,
 				url: 'user/kh/bindQQ',
 				data: {
@@ -1123,8 +1140,8 @@ export default {
 		let that = this;
 		addLoading(obj, "loading");
 		let { data = {} } = obj;
-		that.getQQCode(data).then(({ code, accessToken }) => {
-			callFunction({
+		return that.getQQCode(data).then(({ code, accessToken }) => {
+			return callFunction({
 				...obj,
 				url: 'user/pub/code2SessionQQ',
 				data: {
@@ -1234,12 +1251,12 @@ export default {
 	 */
 	loginByDouyin(obj = {}) {
 		let that = this;
-		debounce(() => {
+		return debounce(() => {
 			addLoading(obj, "login");
 			addAppid(obj);
 			let { data = {} } = obj;
-			that.getDouyinCode(data).then((code) => {
-				callFunction({
+			return that.getDouyinCode(data).then((code) => {
+				return callFunction({
 					url: 'user/pub/loginByDouyin',
 					...obj,
 					data: {
@@ -1262,8 +1279,8 @@ export default {
 		addLoading(obj, "loading");
 		addAppid(obj);
 		let { data = {} } = obj;
-		that.getDouyinCode(data).then((code) => {
-			callFunction({
+		return that.getDouyinCode(data).then((code) => {
+			return callFunction({
 				...obj,
 				url: 'user/kh/bindDouyin',
 				data: {
@@ -1323,8 +1340,8 @@ export default {
 		addLoading(obj, "loading");
 		addAppid(obj);
 		let { data = {} } = obj;
-		that.getDouyinCode(data).then((code) => {
-			callFunction({
+		return that.getDouyinCode(data).then((code) => {
+			return callFunction({
 				...obj,
 				url: 'user/pub/code2SessionDouyin',
 				data: {

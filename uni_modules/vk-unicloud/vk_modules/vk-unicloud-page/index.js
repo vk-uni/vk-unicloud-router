@@ -31,6 +31,7 @@ import initGlobalError    from './libs/store/libs/error'
 import consoleLog         from './libs/install/console.log'
 import updateManager      from './libs/function/updateManager'
 import crypto             from './libs/function/vk.crypto'
+import connectWebSocket   from './libs/function/vk.connectWebSocket'
 
 // #ifdef H5
 import h5                 from './libs/function/vk.h5'
@@ -124,7 +125,9 @@ var vk = {
 	// 事件管理
 	...eventManager,
 	// 客户端加密函数
-	crypto
+	crypto,
+	// webSocket
+	connectWebSocket
 };
 
 

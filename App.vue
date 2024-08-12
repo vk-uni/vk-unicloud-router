@@ -27,6 +27,11 @@
 			// #ifdef MP
 			uni.vk.updateManager.updateReady(); // 此代码可以让小程序自动检测最新版本
 			// #endif
+			
+			// 当token有效期大于1天时，做用户每日登录统计时就会有问题，因为用户可能好几天只需要登录一次，但此用户可能每天都在线，导致每日登录用户数量不准确，因此可以在此执行 vk.userCenter.loginByToken()
+			// 作用：调用此接口后，会使用当前token进行登录（token需在有效期内），并获得新的token，同时增加登录日志，方便做每日登录统计。（此接口一天内重复调用多次时，只有每日的第一次调用生效）
+			// 如果需要，可以打开下面一行的注释代码即可
+			// vk.userCenter.loginByToken();
 		},
 		onShow: function() {
 			if (config.debug) console.log("App Show");

@@ -366,8 +366,22 @@ class CallFunctionUtil {
 			// 若执行的函数不是pub类型函数，则先本地判断下token，可以提高效率。
 			// if (url.indexOf("/pub/") == -1 && url.indexOf("/pub_") == -1) {
 			// 若执行的函数是kh或sys类型函数，先本地判断下token，可以提高效率。
-			if (url.indexOf("/kh/") > -1 || url.indexOf("/sys/") > -1 || (url.indexOf(".") > -1 && url.indexOf("pub_") == -1 && url.indexOf("/pub/") == -1 && url.indexOf(
-					"/pub.") == -1 && url.indexOf("pub.") !== 0 && url.indexOf("pub_") !== 0)) {
+			let needCheckToken = false;
+			let isCloudObject = url.indexOf(".") > -1 ? true : false;
+			if (isCloudObject) {
+				// 云对象模式有权重之分
+				// 获云对象函数权限类型
+				let cloudObjectRule = that.getCloudObjectRule(url);
+				if (cloudObjectRule.type !== "pub") {
+					needCheckToken = true;
+				}
+			} else {
+				// 云函数模式无权重之分，只要含kh或sys目录则需要检测token
+				if (url.indexOf("/kh/") > -1 || url.indexOf("/sys/") > -1) {
+					needCheckToken = true;
+				}
+			}
+			if (needCheckToken) {
 				if (!vk.checkToken()) {
 					// 若本地token校验未通过，则直接执行 login 拦截器函数
 					return new Promise((resolve, reject) => {
@@ -1070,7 +1084,67 @@ class CallFunctionUtil {
 		// 返回最后一个部分（即文件名）
 		return parts[parts.length - 1];
 	}
-
+	
+	// 获取云对象权限类型
+	// 文档：https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#内置权限
+	getCloudObjectRule(url) {
+		let directoryIndex = url.lastIndexOf("/");
+		let cloudObjectUrl = url.substring(directoryIndex + 1);
+		let lastIndex = cloudObjectUrl.lastIndexOf(".");
+		// 云对象目录名
+		let cloudObjectDirectory = url.substring(0, directoryIndex);
+		// 云对象目录数组结构
+		let cloudObjectDirectoryArray = cloudObjectDirectory.split("/");
+		// 云对象名
+		let cloudObjectName = cloudObjectUrl.substring(0, lastIndex);
+		// 云对象内函数名
+		let functionName = cloudObjectUrl.substring(lastIndex + 1);
+		
+		// 默认权重0，kh类型
+		let rule = {
+			type: "kh",
+			weight: 0
+		}
+		// 权重1：判断目录
+		if (cloudObjectDirectoryArray.indexOf("sys") > -1) {
+			rule.type = "sys";
+			rule.weight = 1;
+		} else if (cloudObjectDirectoryArray.indexOf("kh") > -1) {
+			rule.type = "kh";
+			rule.weight = 1;
+		} else if (cloudObjectDirectoryArray.indexOf("pub") > -1) {
+			rule.type = "pub";
+			rule.weight = 1;
+		}
+		// 权重2：判断云对象名
+		if (cloudObjectName.indexOf("sys.") === 0 || cloudObjectName === "sys") {
+			rule.type = "sys";
+			rule.weight = 2;
+		} else if (cloudObjectName.indexOf("kh.") === 0 || cloudObjectName === "kh") {
+			rule.type = "kh";
+			rule.weight = 2;
+		} else if (cloudObjectName.indexOf("pub.") === 0 || cloudObjectName === "pub") {
+			rule.type = "pub";
+			rule.weight = 2;
+		}
+		// 权重3：判断函数名
+		if (functionName.indexOf("sys_") === 0) {
+			rule.type = "sys";
+			rule.weight = 3;
+		} else if (functionName.indexOf("kh_") === 0) {
+			rule.type = "kh";
+			rule.weight = 3;
+		} else if (functionName.indexOf("pub_") === 0) {
+			rule.type = "pub";
+			rule.weight = 3;
+		}
+		// 判断是否私有函数
+		if (functionName.indexOf("_") === 0) {
+			rule.type = "private";
+			rule.weight = 99;
+		}
+		return rule;
+	}
 
 	// 系统异常重试机制（表单提交时慎用，建议只用在查询请求中，即无任何数据库修改的请求中）
 	callFunctionRetry(obj = {}) {

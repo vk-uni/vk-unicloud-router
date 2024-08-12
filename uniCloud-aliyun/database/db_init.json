@@ -619,6 +619,17 @@
 				"menu_id": "system-uni-opendb-admin-log",
 				"name": "系统操作日志",
 				"parent_id": "system-uni"
+			},
+			{
+				"_id": "system-vk-ws-connection",
+				"sort": 10,
+				"url": "/pages_plugs/system_uni/vk-ws-connection",
+				"_add_time": 1596416400000,
+				"enable": true,
+				"icon": "",
+				"menu_id": "system-vk-ws-connection",
+				"name": "ws连接管理",
+				"parent_id": "system-uni"
 			}
 		],
 		"index": [
@@ -886,6 +897,23 @@
 			{
 				"IndexName": "_add_time",
 				"MgoKeySchema": {"MgoIndexKeys": [{"Name": "_add_time","Direction": "1"}],"MgoIsUnique": false}
+			}
+		]
+	},
+	"vk-ws-connection":{
+		"data": [],
+		"index": [
+			{
+				"IndexName": "_add_time",
+				"MgoKeySchema": {"MgoIndexKeys": [{"Name": "_add_time","Direction": "1"}],"MgoIsUnique": false}
+			},
+			{
+				"IndexName": "user_id",
+				"MgoKeySchema": {"MgoIndexKeys": [{"Name": "user_id","Direction": "1"}],"MgoIsUnique": false}
+			},
+			{
+				"IndexName": "device_id",
+				"MgoKeySchema": {"MgoIndexKeys": [{"Name": "device_id","Direction": "1"}],"MgoIsUnique": false}
 			}
 		]
 	}

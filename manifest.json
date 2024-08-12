@@ -113,9 +113,9 @@
         }
     },
     "networkTimeout": {
-      "request": 60000,
+      "request": 180000,
       "connectSocket": 60000,
-      "uploadFile": 60000,
-      "downloadFile": 60000
+      "uploadFile": 6000000,
+      "downloadFile": 6000000
     }
 }

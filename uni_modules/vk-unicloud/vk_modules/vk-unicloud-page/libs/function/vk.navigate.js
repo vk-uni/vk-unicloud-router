@@ -268,22 +268,39 @@ util.navigateToHome = function(obj = {}) {
 util.navigateToLogin = function(obj = {}) {
 	let vk = uni.vk;
 	let {
-		mode = "reLaunch",
-		redirectUrl
+		redirectUrl, // 当mode为reLaunch或redirectTo时，指定登录成功后跳转的地址，redirectUrl的优先级高于needBack
+		needBack, // 当mode为reLaunch或redirectTo时，登录成功是否需要返回当前页面
+		mode = "reLaunch", // 可选值为 navigateTo redirectTo reLaunch
+		query, // 传递给登录页的参数
 	} = obj;
-	
+
 	let url = config.login.url;
-	if (redirectUrl) {
+	let { pagePath, fullPath } = vk.pubfn.getCurrentPage();
+	// 如果已经在登录页面则不跳转
+	if (pagePath === url) {
+		return false
+	}
+	if (mode !== "navigateTo") {
 		let uniIdRedirectUrl;
 		if (typeof redirectUrl === "string") {
 			uniIdRedirectUrl = encodeURIComponent(redirectUrl);
-		} else {
-			let { fullPath } = vk.pubfn.getCurrentPage();
+		} else if (needBack) {
 			uniIdRedirectUrl = encodeURIComponent(fullPath);
 		}
-		url += `?uniIdRedirectUrl=${uniIdRedirectUrl}`;
+		if (uniIdRedirectUrl) {
+			// 如果url中有参数则用&连接，否则用?连接
+			url += url.indexOf("?") > -1 ? `&` : `?`;
+			url += `uniIdRedirectUrl=${uniIdRedirectUrl}`;
+		}
 	}
-	vk[mode](url);
+	if (query) {
+		url += url.indexOf("?") > -1 ? `&` : `?`;
+		url += query;
+	}
+	vk[mode]({
+		...obj,
+		url
+	});
 };
 
 /**
