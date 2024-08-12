@@ -7,7 +7,6 @@
 * 【优化】vk.baseDao.select 不再并发查询数据库，避免数据库连接数飙升 [传送门](https://vkdoc.fsq.pub/client/uniCloud/db/api.html#vk-basedao-select-%E6%9F%A5%E5%A4%9A%E6%9D%A1%E8%AE%B0%E5%BD%95-%E5%85%B7%E6%9C%89%E5%88%86%E9%A1%B5%E5%8A%9F%E8%83%BD)
 * 【优化】云端 vk.request 默认打开自动重定向功能 [传送门](https://vkdoc.fsq.pub/client/jsapi.html#vk-request-%E4%BA%91%E7%AB%AF%E8%B0%83%E7%94%A8)
 
+**特别注意**
 
-
-
-
+* 本次更新需要替换项目的 `/router/service/admin/system_uni/ws-connection/` 目录
