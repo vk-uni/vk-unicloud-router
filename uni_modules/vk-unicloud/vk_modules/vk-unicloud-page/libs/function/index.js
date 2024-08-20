@@ -1441,7 +1441,7 @@ pubfn.dateDiff2 = function(startTime, str = "1秒") {
  * @param {Number} n 需要转换的数字
  * vk.pubfn.numStr(n);
  */
-pubfn.numStr = function(n) {
+pubfn.numStr = function(n, needSymbol = false) {
 	if (typeof n == "string") {
 		n = parseFloat(n);
 	}
@@ -1463,6 +1463,9 @@ pubfn.numStr = function(n) {
 	} else if (n >= 100000000) {
 		let n1 = Math.floor(n / 10000000);
 		str = n1 / 10 + "亿"
+	}
+	if (needSymbol && n >= 1000 && n % 10 > 0) {
+		str += "+";
 	}
 	return str;
 };

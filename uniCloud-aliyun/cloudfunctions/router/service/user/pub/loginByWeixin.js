@@ -81,15 +81,14 @@ module.exports = {
 			expiresIn: accessTokenExpired, // 用户accessToken过期时间
 			encryptedKey, // 加密信息
 		} = code2SessionRes;
-
+		
 		// 设置额外返回给前端的数据
 		extraRes = {
 			encryptedKey,
 			openid, // 用户的openid
 			unionid, // 用户的unionid
 		};
-
-		if (["h5-weixin", "app-plus"].indexOf(platform) > -1) {
+		if (["h5", "h5-weixin", "app-plus"].indexOf(platform) > -1) {
 			// h5 和 app 共用 app 的 getUserInfo 接口
 			let getUserInfoRes = await vk.openapi.weixin.app.auth.getUserInfo({
 				access_token: accessToken,

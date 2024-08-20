@@ -38,11 +38,6 @@ module.exports = {
 			orArr.push({
 				[`${provider}_openid.${platform}`]: openid
 			});
-			if (appid) {
-				orArr.push({
-					[`${provider}_openid.${platform}_${appid}`]: openid
-				});
-			}
 		}
 		// 查找用户是否存在
 		let userInfo = await vk.daoCenter.userDao.findByWhereJson(_.or(orArr));

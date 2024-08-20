@@ -249,7 +249,7 @@ class CallFunctionUtil {
 							url: config.login.url,
 							events: {
 								// 监听登录成功后的事件
-								loginSuccess: function(data) {
+								loginSuccess: (data) => {
 									let num = 2;
 									let pages = getCurrentPages();
 									if (pages.length >= num) {
@@ -261,12 +261,12 @@ class CallFunctionUtil {
 											// 重新执行页面初始化函数
 											that.init(that.options);
 										} else {
-											// 重新执行一次云函数调用
-											callFunction(params);
+											// 重新执行一次云函数调用（还是让用户自己点比较好）
+											// callFunction(params);
 										}
 									} else {
-										// 重新执行一次云函数调用
-										callFunction(params);
+										// 重新执行一次云函数调用（还是让用户自己点比较好）
+										// callFunction(params);
 									}
 								}
 							}
@@ -363,9 +363,7 @@ class CallFunctionUtil {
 				}
 			}
 			// 注入自定义全局参数结束-----------------------------------------------------------
-			// 若执行的函数不是pub类型函数，则先本地判断下token，可以提高效率。
-			// if (url.indexOf("/pub/") == -1 && url.indexOf("/pub_") == -1) {
-			// 若执行的函数是kh或sys类型函数，先本地判断下token，可以提高效率。
+			// 若执行的函数不是pub类型函数，先本地判断下token，可以提高效率。
 			let needCheckToken = false;
 			let isCloudObject = url.indexOf(".") > -1 ? true : false;
 			if (isCloudObject) {
@@ -659,7 +657,8 @@ class CallFunctionUtil {
 			uniCloud: myCloud,
 			env = "default",
 			secretType,
-			encrypt
+			encrypt,
+			timeout
 		} = obj;
 		if (title) vk.showLoading(title);
 		if (loading) vk.setLoading(true, loading);
@@ -678,6 +677,7 @@ class CallFunctionUtil {
 			}
 			runCloud.callFunction({
 				name: name,
+				timeout,
 				data: {
 					$url: url,
 					data: data,
@@ -729,7 +729,8 @@ class CallFunctionUtil {
 			loading,
 			name,
 			complete,
-			encrypt
+			encrypt,
+			timeout
 		} = obj;
 		if (typeof obj.needAlert === "undefined") obj.needAlert = true;
 		if (!name) name = config.isTest ? config.testFunctionName : config.functionName;
@@ -785,6 +786,7 @@ class CallFunctionUtil {
 			uni.request({
 				method: "POST",
 				url: requestUrl,
+				timeout,
 				header,
 				data,
 				success: (res = {}) => {
@@ -943,7 +945,7 @@ class CallFunctionUtil {
 			needAlert = false;
 			// #ifdef APP-PLUS
 			vk.pubfn.debounce(() => {
-				vk.alert(errMsg, "提示", "确定", ()=>{
+				vk.alert(errMsg, "提示", "确定", () => {
 					vk.navigateToHome();
 				});
 			}, 2000, false, "cloudfunction-network-unauthorized");
@@ -1078,13 +1080,13 @@ class CallFunctionUtil {
 	}
 
 	// 获取文件名
-	getFileName(cloudPath="") {
+	getFileName(cloudPath = "") {
 		// 使用split方法分割字符串
 		let parts = cloudPath.split('/');
 		// 返回最后一个部分（即文件名）
 		return parts[parts.length - 1];
 	}
-	
+
 	// 获取云对象权限类型
 	// 文档：https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#内置权限
 	getCloudObjectRule(url) {
@@ -1099,7 +1101,7 @@ class CallFunctionUtil {
 		let cloudObjectName = cloudObjectUrl.substring(0, lastIndex);
 		// 云对象内函数名
 		let functionName = cloudObjectUrl.substring(lastIndex + 1);
-		
+
 		// 默认权重0，kh类型
 		let rule = {
 			type: "kh",
@@ -1156,38 +1158,34 @@ class CallFunctionUtil {
 	}
 	// 重试实现
 	callRetryFn(obj, resolve, reject, retryCount) {
-		let that = this;
-		let debug = that.config.debug;
-		that.callFunction({
+		let debug = this.config.debug;
+		return this.callFunction({
 			...obj,
 			needRetry: retryCount ? true : false, // 判断是否需要重试
-			retry: function(err) {
+			retry: (err) => {
 				obj.runCount = obj.runCount ? obj.runCount + 1 : 1;
 				obj.needRetry = retryCount > obj.runCount ? true : false; // 判断是否需要重试
-				let errorMsg = err.message ? `异常信息：${err.message}` : "";
+				let errMsg = err.message ? `异常信息：${err.message}` : "";
 				if (debug) console.log(`【请求失败】正在第【${obj.runCount}】次重试：${obj.url}`);
 				if (obj.retryInterval) {
-					setTimeout(function() {
-						that._callRetryFn(obj, resolve, reject, retryCount);
+					setTimeout(() => {
+						this._callRetryFn(obj, resolve, reject, retryCount);
 					}, obj.retryInterval);
 				} else {
 					// 如果无延迟，则不写setTimeout，因为setTimeout 即使time为0，也有一定延迟。
-					that._callRetryFn(obj, resolve, reject, retryCount);
+					this._callRetryFn(obj, resolve, reject, retryCount);
 				}
 			}
-		});
+		}).then(resolve).catch(reject);
 	}
 
 	_callRetryFn(obj, resolve, reject, retryCount) {
 		if (obj.runCount < retryCount) {
 			this.callRetryFn(obj, resolve, reject, retryCount);
 		} else {
-			this.callFunction(obj).catch((err) => {
-				reject();
-			});
+			this.callFunction(obj).then(resolve).catch(reject);
 		}
 	}
-
 
 }
 

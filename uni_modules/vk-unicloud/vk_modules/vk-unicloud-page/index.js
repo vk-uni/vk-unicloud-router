@@ -47,7 +47,9 @@ var vk = {
 	 */
 	callFunction:     callFunctionUtil.callFunction,
 	getToken:         callFunctionUtil.getToken,
+	saveToken:        callFunctionUtil.saveToken,
 	checkToken:       callFunctionUtil.checkToken,
+	deleteToken:      callFunctionUtil.deleteToken,
 	uploadFile:       callFunctionUtil.uploadFile,
 	getConfig:        callFunctionUtil.getConfig,
 	emitRefreshToken: callFunctionUtil.emitRefreshToken,
