@@ -1,3 +1,10 @@
+## 2.18.15（2024-08-20）
+* 【修复】vk.request 部分情况下报错的问题（此问题会导致微信登录报错）
+* 【修复】weixin-js-sdk.js 在ssr方式编译时会报错的问题
+
+**特别注意**
+
+* 本次更新需要替换项目的 `/router/service/user/` 目录
 ## 2.18.14（2024-08-20）
 * 【修复】`vk.callFunction` 若设置了 `retryCount` 属性后，`let res = await vk.callFunction` 无法取到值的问题
 * 【优化】`vk.callFunction` 新增 `timeout` 属性，可以单独控制某个请求的超时时间了（不能大于云函数最大超时时间，实际生效需等HBX发新版支持）

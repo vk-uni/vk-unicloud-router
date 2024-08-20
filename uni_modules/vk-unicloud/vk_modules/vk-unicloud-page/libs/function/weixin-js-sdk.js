@@ -887,4 +887,11 @@ function n(o, e) {
 	}
 };
 
-export default n(window);
+let sdk;
+if (typeof window !== "undefined") {
+	sdk = n(window);
+} else {
+	sdk = {};
+}
+
+export default sdk;

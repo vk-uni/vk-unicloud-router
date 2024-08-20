@@ -26,7 +26,12 @@ module.exports = {
 		// 参数非空检测
 		let nullKey = vk.pubfn.isNullOneByObject({ clientInfo, provider, openid });
 		if (nullKey) return { code: -1, msg: '参数 ' + nullKey + ' 不能为空' };
-
+		if (vk.pubfn.isNull(clientInfo.APPID)) {
+			return { code: -1, msg: 'clientInfo内的APPID不能为空' };
+		}
+		if (vk.pubfn.isNull(clientInfo.PLATFORM)) {
+			return { code: -1, msg: 'clientInfo内的PLATFORM不能为空' };
+		}
 		let platform = vk.pubfn.getPlatformForUniId(clientInfo);
 		let orArr = [];
 		if (unionid) {
