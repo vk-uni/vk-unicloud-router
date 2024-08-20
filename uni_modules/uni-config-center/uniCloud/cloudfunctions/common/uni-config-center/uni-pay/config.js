@@ -31,6 +31,7 @@ module.exports = {
 	 * appCertPath        微信支付V3版本需要用到的证书（apiclient_cert.pem）配置示例："appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 	 * appPrivateKeyPath  微信支付V3版本需要用到的证书（apiclient_key.pem）配置示例："appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
 	 * version            启用支付的版本 2代表v2版本 3 代表v3版本，默认是2
+	 * 特别注意：          因node18不支持v2版本的.p12证书，故建议使用v3版本
 	 */
 	"wxpay": {
 		// 微信 - 小程序支付（微信支付申请JSAPI支付）
@@ -43,7 +44,7 @@ module.exports = {
 			"v3Key": "", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
+			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
 		},
 		// 微信 - APP支付（微信支付申请APP支付）
 		"app-plus": {
@@ -55,7 +56,7 @@ module.exports = {
 			"v3Key": "", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
+			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
 		},
 		// 微信 - H5电脑网站二维码支付（微信支付申请Native支付）
 		"h5": {
@@ -67,7 +68,7 @@ module.exports = {
 			"v3Key": "", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
+			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
 		},
 		// 微信 - 公众号支付（微信支付申请JSAPI支付）
 		"h5-weixin": {
@@ -79,7 +80,7 @@ module.exports = {
 			"v3Key": "", // v3的api key
 			"appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
 			"appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
+			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
 		},
 		// 微信 - 手机外部浏览器H5支付（微信支付申请H5支付）
 		"mweb": {
@@ -99,7 +100,7 @@ module.exports = {
 					"wap_name": "网站名称", // 你的H5网站名称
 				}
 			},
-			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本
+			"version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
 		},
 		// 微信 - 转账到零钱（固定v3版本）（微信支付申请企业转账到零钱API）
 		"transfer": {
