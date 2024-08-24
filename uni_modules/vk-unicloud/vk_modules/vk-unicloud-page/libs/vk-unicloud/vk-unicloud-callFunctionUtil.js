@@ -574,10 +574,11 @@ class CallFunctionUtil {
 						resolve(res);
 						if (needSave) {
 							// 保存文件记录到数据库
+							let fileURL = res.fileURL.split("?")[0];
 							vk.userCenter.addUploadRecord({
 								encrypt: obj.encrypt,
 								data: {
-									url: res.fileURL,
+									url: fileURL,
 									name: file.name || this.getFileName(res.cloudPath),
 									size: file.size,
 									file_id: res.fileID,
