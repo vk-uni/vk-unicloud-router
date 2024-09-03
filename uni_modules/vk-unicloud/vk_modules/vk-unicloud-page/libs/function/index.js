@@ -1743,8 +1743,8 @@ pubfn.getListData2 = function(obj = {}) {
 				pageIndex: data.pageIndex,
 				pageSize: data.pageSize
 			};
-			that.state.loadmore = hasMore ? "loadmore" : "nomore"; // 更新状态
 			that.data = vk.pubfn.objectAssign(that.data, data); // 更新数据
+			that.state.loadmore = hasMore ? "loadmore" : "nomore"; // 更新状态
 			if (typeof obj.success == "function") obj.success(data);
 		},
 		fail: function(err) {

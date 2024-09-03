@@ -295,7 +295,7 @@ class CallFunctionUtil {
 		 * @param {Boolean|Object}  obj.loading    若设置为false，即使title有值也不显示遮罩层 文档 [https://vkdoc.fsq.pub/client/pages/callFunction.html#loading](https://vkdoc.fsq.pub/client/pages/callFunction.html#loading)
 		 * @param {Boolean}   [obj.loading=true] - 默认值 true，显示遮罩层
 		 * @param {Boolean}   [obj.loading=false] - 可选值 false，不显示遮罩层
-		 * @param {Object}    [obj.loading={ that:this, name:"loading2"}] - { that:this, name:"loading2"} 高级用法
+		 * @param {Object}    [obj.loading={ that: this, name: "loading2"}] 高级用法，在组件里使用时必须使用此方式传入this和name参数
 		 * @param {Boolean}  obj.isRequest  是否使用云函数url化地址访问云函数，默认false
 		 * @param {String}   obj.env        云空间环境 文档：https://vkdoc.fsq.pub/client/question/q9.html#%E5%89%8D%E7%AB%AF%E8%AF%B7%E6%B1%82%E5%A4%9A%E6%9C%8D%E5%8A%A1%E7%A9%BA%E9%97%B4
 		 * @param {Boolean}  obj.needAlert  为true代表请求错误时，会有弹窗提示，默认为true
@@ -661,11 +661,11 @@ class CallFunctionUtil {
 			encrypt,
 			timeout
 		} = obj;
+		let Logger = {};
 		if (title) vk.showLoading(title);
-		if (loading) vk.setLoading(true, loading);
+		if (loading) Logger.loading = vk.setLoading(true, loading);
 		if (!name) name = config.isTest ? config.testFunctionName : config.functionName;
 		obj.name = name;
-		let Logger = {};
 		if (config.debug) Logger.params = typeof data == "object" ? JSON.parse(JSON.stringify(data)) : data;
 		let promiseAction = new Promise(function(resolve, reject) {
 			if (config.debug) Logger.startTime = Date.now();
@@ -742,7 +742,7 @@ class CallFunctionUtil {
 		let uniIdToken = uni.getStorageSync(config.uniIdTokenKeyName);
 		let tokenExpired = uni.getStorageSync(config.uniIdTokenExpiredKeyName);
 		if (title) vk.showLoading(title);
-		if (loading) vk.setLoading(true, loading);
+		if (loading) Logger.loading = vk.setLoading(true, loading);
 		let promiseAction = new Promise((resolve, reject) => {
 			if (config.debug) Logger.startTime = Date.now();
 			// 拼接functionUrl和url
@@ -841,7 +841,10 @@ class CallFunctionUtil {
 			success
 		} = params;
 		if (title) vk.hideLoading();
-		if (loading) vk.setLoading(false, loading);
+		if (loading) {
+			vk.setLoading(false, Logger.loading);
+			Logger.loading = null;
+		} 
 		if (typeof res.code === "undefined" && typeof res.errCode !== "undefined") res.code = res.errCode;
 		let code = res.code;
 		if (config.debug) Logger.result = typeof res == "object" ? JSON.parse(JSON.stringify(res)) : res;
@@ -907,7 +910,10 @@ class CallFunctionUtil {
 		}
 		if (errorToast) needAlert = false;
 		if (title) vk.hideLoading();
-		if (loading) vk.setLoading(false, loading);
+		if (loading) {
+			vk.setLoading(false, Logger.loading);
+			Logger.loading = null;
+		}
 		let errMsg = "";
 		let sysErr = false;
 		if (typeof res.code !== "undefined") {
@@ -1036,6 +1042,7 @@ class CallFunctionUtil {
 				}
 			}
 			console.log(`%c--------【结束】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
+			Logger = null; // 释放内存
 		}
 		if (typeof complete == "function") complete(res);
 	}
