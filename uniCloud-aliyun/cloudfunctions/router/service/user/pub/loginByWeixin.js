@@ -34,6 +34,9 @@ module.exports = {
 
 		// 标记当前平台的provider
 		const provider = "wx"; // 历史原因，这里用wx，而非weixin
+		
+		// 如果有platform参数，则使用platform参数，否则从context中获取
+		if (data.platform) originalParam.context.PLATFORM = data.platform;
 
 		let platform = vk.pubfn.getPlatformForUniId(originalParam.context);
 
