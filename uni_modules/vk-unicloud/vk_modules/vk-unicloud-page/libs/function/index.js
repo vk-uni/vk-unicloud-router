@@ -310,13 +310,13 @@ pubfn.test = function(str, type = "", allowEmpty = false) {
 		case 'html': //HTML标记
 			return new RegExp(/<("[^"]*"|'[^']*'|[^'">])*>/).test(str);
 		case 'image': //是否图片格式
-			newStr = str.split("?")[0];
+			newStr = str.split("?")[0].toLowerCase();
 			return new RegExp(/\.(jpeg|jpg|gif|png|svg|webp|jfif|bmp|dpg)$/).test(newStr);
 		case 'video': //是否视频格式
-			newStr = str.split("?")[0];
+			newStr = str.split("?")[0].toLowerCase();
 			return new RegExp(/\.(mp4|mpg|mpeg|dat|asf|avi|rm|rmvb|mov|wmv|flv|mkv|m3u8|3gp)$/).test(newStr);
 		case 'audio': //是否音频格式
-			newStr = str.split("?")[0];
+			newStr = str.split("?")[0].toLowerCase();
 			return new RegExp(/\.(mp3)$/).test(newStr);
 		default:
 			return true;
