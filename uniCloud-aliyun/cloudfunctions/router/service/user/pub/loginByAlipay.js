@@ -21,13 +21,11 @@ module.exports = {
 		let { 
 			code,
 			type,
-			myInviteCode,
 			needPermission
 		} = data;
 		res = await uniID.loginByAlipay({
 			code,
 			type,
-			myInviteCode,
 			needPermission
 		});
 		if (res.token) {
