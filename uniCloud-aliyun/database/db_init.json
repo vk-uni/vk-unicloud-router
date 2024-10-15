@@ -934,6 +934,10 @@
 			{
 				"IndexName": "pid",
 				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "pid", "Direction": "1" }], "MgoIsUnique": false }
+			},
+			{
+				"IndexName": "auth_code",
+				"MgoKeySchema": {"MgoIndexKeys": [{"Name": "auth_code","Direction": "1"}],"MgoIsUnique": false}
 			}
 		]
 	},
