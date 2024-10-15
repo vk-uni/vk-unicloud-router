@@ -1,4 +1,3 @@
-* 【重要】修复 `vk.baseDao.select` 因 `2.18.13` 更新引出的当 `pageSize设置为-1或>1000` 时，可能出现查询结果不准确的问题
-* 【修复】`vk.request` 当设置 `responseType: 'arraybuffer'` 时，部分情况下无法正常接受到值的问题
-* 【优化】`vk.callFunction` 设置 `loading:true`，在请求时马上跳页面，loading参数设置不准确的问题
-
+* 【调整】注册接口去除 `myInviteCode` 参数，使用自动生成，防止出现重复的 `myInviteCode`
+* 【修复】`vk.pubfn.test` 在检测图片\视频时未忽略大小写的问题
+* 【新增】内置全局异常过滤器 `errorFilter`，支持将错误信息写入数据库方便搜索排错等等

@@ -71,10 +71,15 @@ class CallFunctionUtil {
 		 */
 		this.saveToken = (res = {}) => {
 			let config = this.config;
+			let nowToken = vk.getStorageSync(config.uniIdTokenKeyName);
+			if (nowToken === res.token) {
+				return false;
+			}
 			vk.setStorageSync(config.uniIdTokenKeyName, res.token);
 			vk.setStorageSync(config.uniIdTokenExpiredKeyName, res.tokenExpired);
 			this.emitRefreshToken(res); // 触发token刷新事件
 			if (this.config.debug) console.log("--------【token已更新】--------");
+			return true;
 		}
 		// 删除token，并删除userInfo缓存
 		this.deleteToken = () => {
@@ -916,14 +921,12 @@ class CallFunctionUtil {
 		}
 		let errMsg = "";
 		let sysErr = false;
-		if (typeof res.code !== "undefined") {
-			if (res.msg) {
-				errMsg = res.msg;
-			} else if (res.errMsg) {
-				errMsg = res.errMsg;
-			} else if (res.message) {
-				errMsg = res.message;
-			}
+		if (res.msg) {
+			errMsg = res.msg;
+		} else if (res.errMsg) {
+			errMsg = res.errMsg;
+		} else if (res.message) {
+			errMsg = res.message;
 		} else {
 			sysErr = true;
 			errMsg = JSON.stringify(res);
@@ -1034,6 +1037,8 @@ class CallFunctionUtil {
 				if (Logger.error.err && Logger.error.err.stack) {
 					console.error("【Error】: ", Logger.error);
 					console.error("【Stack】: ", Logger.error.err.stack);
+				} else if (Logger.error.stack) {
+					console.error("【Error】: ", `${Logger.error.code} ${Logger.error.message}`);
 				} else {
 					errorLog("【Error】: ", Logger.error);
 					if ((typeof Logger.error === "object" && typeof Logger.error.code === "undefined" && typeof Logger.error.success !== "boolean") || (typeof Logger.error !== "object")) {
