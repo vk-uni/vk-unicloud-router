@@ -34,7 +34,7 @@ module.exports = {
 
 		// 标记当前平台的provider
 		const provider = "wx"; // 历史原因，这里用wx，而非weixin
-		
+
 		// 如果有platform参数，则使用platform参数，否则从context中获取
 		if (data.platform) originalParam.context.PLATFORM = data.platform;
 
@@ -84,7 +84,7 @@ module.exports = {
 			expiresIn: accessTokenExpired, // 用户accessToken过期时间
 			encryptedKey, // 加密信息
 		} = code2SessionRes;
-		
+
 		// 设置额外返回给前端的数据
 		extraRes = {
 			encryptedKey,

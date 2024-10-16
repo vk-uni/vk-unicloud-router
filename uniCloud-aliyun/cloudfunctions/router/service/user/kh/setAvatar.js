@@ -25,7 +25,7 @@ module.exports = {
 			try {
 				await vk.deleteFile({
 					provider,
-					fileList: [ userInfo.avatar ]
+					fileList: [userInfo.avatar]
 				});
 			} catch (err) {
 				res.deleteFileErr = err;

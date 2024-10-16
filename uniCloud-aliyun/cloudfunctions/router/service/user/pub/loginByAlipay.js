@@ -18,7 +18,7 @@ module.exports = {
 		let { uid } = data;
 		let res = {};
 		// 业务逻辑开始-----------------------------------------------------------
-		let { 
+		let {
 			code,
 			type,
 			needPermission
