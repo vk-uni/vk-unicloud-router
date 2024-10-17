@@ -25,8 +25,9 @@ module.exports = [{
 		// 可以在此处对异常进行统一处理，如保存到数据库或redis等等
 
 		let needAdd = true; // 是否需要保存到数据库，可自行选择开关
+		let isCloudRun = originalParam.context.RUNTIME_ENV === "cloud"; // 是否云端运行，RUNTIME_ENV参数需升级到HBX4.29及以上版本才有值
 
-		if (needAdd) {
+		if (isCloudRun && needAdd) {
 			// md5哈希值，用于去重时用
 			let md5 = vk.md5(JSON.stringify({
 				message: err.message,
