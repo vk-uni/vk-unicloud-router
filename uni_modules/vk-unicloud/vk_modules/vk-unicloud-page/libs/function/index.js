@@ -433,9 +433,8 @@ pubfn.arr_concat = function(arr1, arr2, flag) {
  * vk.pubfn.getData(dataObj, name);
  */
 pubfn.getData = function(dataObj, name, defaultValue) {
-	let newDataObj;
-	if (pubfn.isNotNull(dataObj)) {
-		newDataObj = JSON.parse(JSON.stringify(dataObj));
+	let newDataObj = dataObj;
+	if (pubfn.isNotNull(newDataObj) || typeof newDataObj === "object") {
 		let k = "",
 			d = ".",
 			l = "[",
@@ -463,13 +462,6 @@ pubfn.getData = function(dataObj, name, defaultValue) {
  * vk.pubfn.setData(dataObj, name, value);
  */
 pubfn.setData = function(dataObj, name, value) {
-	// 通过正则表达式  查找路径数据
-	let dataValue;
-	if (typeof value === "object") {
-		dataValue = pubfn.copyObject(value);
-	} else {
-		dataValue = value;
-	}
 	let regExp = new RegExp("([\\w$-]+)|\\[(:\\d)\\]", "g");
 	const patten = name.match(regExp);
 	// 遍历路径  逐级查找  最后一级用于直接赋值
@@ -479,7 +471,7 @@ pubfn.setData = function(dataObj, name, value) {
 		dataObj = dataObj[keyName];
 	}
 	// 最后一级
-	dataObj[patten[patten.length - 1]] = dataValue;
+	dataObj[patten[patten.length - 1]] = value;
 };
 
 /**
@@ -488,18 +480,15 @@ pubfn.setData = function(dataObj, name, value) {
  */
 pubfn.isNull = function(value) {
 	let key = false;
-	if (
-		typeof value == "undefined" ||
-		Object.prototype.toString.call(value) == "[object Null]" ||
-		JSON.stringify(value) == "{}" ||
-		JSON.stringify(value) == "[]" ||
-		value === "" ||
-		JSON.stringify(value) === undefined
+	if (typeof value == "undefined" || value === null || value === "" 
+		|| (Object.prototype.toString.call(value) === "[object Object]" && Object.keys(value).length === 0) 
+		|| (Object.prototype.toString.call(value) === "[object Array]" && value.length === 0)
 	) {
 		key = true;
 	}
 	return key;
 };
+
 /**
  * 检测参数是否不为空 结果与 vk.pubfn.isNull 相反
  * vk.pubfn.isNotNull(value);
@@ -1005,13 +994,13 @@ pubfn.calcFreightDetail = function(freightItem, weight) {
 
 
 /**
- * 从一个对象中取多个属性,并生成一个全新的对象,会过滤空字符串,空数组,空对象
+ * 从一个对象中取多个属性，并生成一个全新的对象，会过滤空字符串，空数组，空对象
  * @param {Object} obj 对象
  * @param {Array<String>} keys 键名数组
  * vk.pubfn.getNewObject(obj, keys);
  */
 pubfn.getNewObject = function(obj, keys) {
-	let selectedObj = pubfn.copyObject(obj);
+	let selectedObj = obj;
 	let newObject = {};
 	if (keys && keys.length > 0) {
 		for (let i in keys) {
@@ -1819,7 +1808,7 @@ pubfn.getListData = function(obj = {}) {
 
 	if (addTime) form1.addTimeLong = pubfn.toTimeLong(addTime);
 	if (endTime) form1.endTimeLong = pubfn.toTimeLong(endTime);
-	if (obj.data && JSON.stringify(obj.data) != "{}") {
+	if (pubfn.isNotNull(obj.data)) {
 		pubfn.objectAssign(form1, obj.data);
 	}
 	let title = obj.title;
@@ -1921,7 +1910,7 @@ pubfn.getComponentsDynamicData = function(obj = {}) {
 	let form1 = {
 		ids: ids
 	};
-	if (obj.data && JSON.stringify(obj.data) != "{}") {
+	if (pubfn.isNotNull(obj.data)) {
 		pubfn.objectAssign(form1, obj.data);
 	}
 	// 读取缓存开始-----------------------------------------------------------
@@ -2025,6 +2014,12 @@ pubfn.getPlatform = function() {
 	// #endif
 	// #ifdef MP-KUAISHOU
 	platform = "mp-toutiao";
+	// #endif
+	// #ifdef MP-HARMONY
+	platform = "mp-harmony";
+	// #endif
+	// #ifdef APP-HARMONY
+	platform = "app-harmony";
 	// #endif
 	return platform;
 };

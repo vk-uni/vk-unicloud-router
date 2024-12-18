@@ -75,7 +75,7 @@ export default {
 		let obj = {
 			showCancel: true,
 			// #ifndef MP-ALIPAY
-			cancelColor: "#999",
+			cancelColor: "#999999",
 			// #endif
 			title: localeObj.title[locale],
 			confirmText: localeObj.confirmText[locale],
@@ -124,7 +124,7 @@ export default {
 		let obj = {
 			showCancel: true,
 			editable: true,
-			cancelColor: "#999",
+			cancelColor: "#999999",
 			title: localeObj.title[locale],
 			confirmText: localeObj.confirmText[locale],
 			cancelText: localeObj.cancelText[locale],

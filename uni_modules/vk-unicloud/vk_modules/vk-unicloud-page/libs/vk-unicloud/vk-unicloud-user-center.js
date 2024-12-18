@@ -45,14 +45,11 @@ function addLoading(obj, title) {
 function addAppid(obj) {
 	if (!obj.data) obj.data = {};
 	if (!obj.data.appid) {
-		// #ifdef MP-WEIXIN
+		// #ifdef MP-WEIXIN || MP-ALIPAY
 		obj.data.appid = uni.getAccountInfoSync().miniProgram.appId;
 		// #endif
 		// #ifdef MP-TOUTIAO
 		obj.data.appid = uni.getEnvInfoSync().microapp.appId;
-		// #endif
-		// #ifdef MP-ALIPAY
-		obj.data.appid = uni.getAccountInfoSync().miniProgram.appId;
 		// #endif
 	}
 	return obj;
@@ -95,11 +92,13 @@ export default {
 	 * @param {String} uid 用户ID
 	 */
 	login(obj = {}) {
-		addLoading(obj, "login");
-		return callFunction({
-			...obj,
-			url: 'user/pub/login'
-		});
+		return debounce(() => {
+			addLoading(obj, "login");
+			return callFunction({
+				...obj,
+				url: 'user/pub/login'
+			});
+		}, debounceTime, true, "login");
 	},
 	/**
 	 * 登出(退出)
@@ -229,11 +228,13 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	bindMobile(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/kh/bindMobile',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/kh/bindMobile',
+			});
+		}, debounceTime, true, "bindMobile");
 	},
 	/**
 	 * 解绑手机号
@@ -245,11 +246,13 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	unbindMobile(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/kh/unbindMobile',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/kh/unbindMobile',
+			});
+		}, debounceTime, true, "unbindMobile");
 	},
 	/**
 	 * 绑定新的手机号（换绑手机号）
@@ -263,11 +266,13 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	bindNewMobile(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/kh/bindNewMobile',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/kh/bindNewMobile',
+			});
+		}, debounceTime, true, "bindNewMobile");
 	},
 	/**
 	 * 手机号登录(手机号+手机验证码)
@@ -301,11 +306,13 @@ export default {
 	 * @param {Object} requestParam 包含服务供应商和发送的手机号
 	 */
 	sendSmsCode(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/pub/sendSmsCode',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/pub/sendSmsCode',
+			});
+		}, debounceTime, true, "sendSmsCode");
 	},
 	/**
 	 * APP端 手机一键登录
@@ -375,11 +382,13 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	bindEmail(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/kh/bindEmail',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/kh/bindEmail',
+			});
+		}, debounceTime, true, "bindEmail");
 	},
 	/**
 	 * 解绑邮箱
@@ -387,11 +396,13 @@ export default {
 	 * @param {String} code  邮箱收到的验证码
 	 */
 	unbindEmail(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/kh/unbindEmail',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/kh/unbindEmail',
+			});
+		}, debounceTime, true, "unbindEmail");
 	},
 	/**
 	 * 绑定新的邮箱（换绑邮箱）
@@ -401,11 +412,13 @@ export default {
 	 * @param {String} code 新邮箱收到的验证码
 	 */
 	bindNewEmail(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/kh/bindNewEmail',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/kh/bindNewEmail',
+			});
+		}, debounceTime, true, "bindNewEmail");
 	},
 	/**
 	 * 邮箱登录(邮箱+邮箱验证码)
@@ -419,11 +432,13 @@ export default {
 	 * @param {String} tokenExpired token过期时间
 	 */
 	loginByEmail(obj = {}) {
-		addLoading(obj, "login");
-		return callFunction({
-			url: 'user/pub/loginByEmail',
-			...obj
-		});
+		return debounce(() => {
+			addLoading(obj, "login");
+			return callFunction({
+				url: 'user/pub/loginByEmail',
+				...obj
+			});
+		}, debounceTime, true, "login");
 	},
 	/**
 	 * 发送邮件验证码
@@ -437,11 +452,13 @@ export default {
 	 * @param {String} verifyCode 验证码
 	 */
 	sendEmailCode(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/pub/sendEmailCode',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/pub/sendEmailCode',
+			});
+		}, debounceTime, true, "sendEmailCode");
 	},
 	/**
 	 * 根据邮箱+验证码重置密码
@@ -454,11 +471,13 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	resetPasswordByEmail(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/pub/resetPasswordByEmail',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/pub/resetPasswordByEmail',
+			});
+		}, debounceTime, true, "resetPasswordByEmail");
 	},
 	/**
 	 * 设置验证码
@@ -593,23 +612,25 @@ export default {
 	 */
 	bindWeixin(obj = {}) {
 		let that = this;
-		addLoading(obj, "loading");
-		addAppid(obj);
-		let { data = {} } = obj;
-		return that.getWeixinCode(data).then((code) => {
-			// #ifdef H5
-			// H5平台需要区分环境（如微信公众号？网页H5?）
-			data.vk_platform = uni.vk.h5.getEnv();
-			// #endif
-			return callFunction({
-				...obj,
-				url: 'user/kh/bindWeixin',
-				data: {
-					code,
-					...data
-				}
+		return debounce(() => {
+			addLoading(obj, "loading");
+			addAppid(obj);
+			let { data = {} } = obj;
+			return that.getWeixinCode(data).then((code) => {
+				// #ifdef H5
+				// H5平台需要区分环境（如微信公众号？网页H5?）
+				data.vk_platform = uni.vk.h5.getEnv();
+				// #endif
+				return callFunction({
+					...obj,
+					url: 'user/kh/bindWeixin',
+					data: {
+						code,
+						...data
+					}
+				});
 			});
-		});
+		}, debounceTime, true, "bindWeixin");
 	},
 	/**
 	 * 解绑微信
@@ -618,18 +639,20 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	unbindWeixin(obj = {}) {
-		addLoading(obj, "loading");
-		addAppid(obj);
-		let { data = {} } = obj;
-		// #ifdef H5
-		// H5平台需要区分环境（如微信公众号？网页H5?）
-		data.vk_platform = uni.vk.h5.getEnv();
-		obj.data = data;
-		// #endif
-		return callFunction({
-			...obj,
-			url: 'user/kh/unbindWeixin',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			addAppid(obj);
+			let { data = {} } = obj;
+			// #ifdef H5
+			// H5平台需要区分环境（如微信公众号？网页H5?）
+			data.vk_platform = uni.vk.h5.getEnv();
+			obj.data = data;
+			// #endif
+			return callFunction({
+				...obj,
+				url: 'user/kh/unbindWeixin',
+			});
+		}, debounceTime, true, "unbindWeixin");
 	},
 	/**
 	 * 获取小程序绑定的手机号
@@ -639,12 +662,14 @@ export default {
 	 * @param {String} sessionKey
 	 */
 	getPhoneNumber(obj = {}) {
-		addLoading(obj, "loading");
-		addAppid(obj);
-		return callFunction({
-			...obj,
-			url: 'user/pub/getPhoneNumber'
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			addAppid(obj);
+			return callFunction({
+				...obj,
+				url: 'user/pub/getPhoneNumber'
+			});
+		}, debounceTime, true, "getPhoneNumber");
 	},
 	/**
 	 * 通过微信小程序绑定的手机号登录
@@ -839,19 +864,21 @@ export default {
 	 */
 	bindAlipay(obj = {}) {
 		let that = this;
-		addLoading(obj, "loading");
-		addAppid(obj);
-		let { data = {} } = obj;
-		return that.getAlipayCode().then((code) => {
-			return callFunction({
-				...obj,
-				url: 'user/kh/bindAlipay',
-				data: {
-					...data,
-					code: code
-				}
+		return debounce(() => {
+			addLoading(obj, "loading");
+			addAppid(obj);
+			let { data = {} } = obj;
+			return that.getAlipayCode().then((code) => {
+				return callFunction({
+					...obj,
+					url: 'user/kh/bindAlipay',
+					data: {
+						...data,
+						code: code
+					}
+				});
 			});
-		});
+		}, debounceTime, true, "bindAlipay");
 	},
 	/**
 	 * 解绑支付宝
@@ -860,12 +887,14 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	unbindAlipay(obj = {}) {
-		addLoading(obj, "loading");
-		addAppid(obj);
-		return callFunction({
-			...obj,
-			url: 'user/kh/unbindAlipay',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			addAppid(obj);
+			return callFunction({
+				...obj,
+				url: 'user/kh/unbindAlipay',
+			});
+		}, debounceTime, true, "unbindAlipay");
 	},
 	/**
 	 * 生成支付宝小程序码
@@ -1101,19 +1130,21 @@ export default {
 	 */
 	bindQQ(obj = {}) {
 		let that = this;
-		addLoading(obj, "loading");
-		let { data = {} } = obj;
-		return that.getQQCode().then(({ code, accessToken } = {}) => {
-			return callFunction({
-				...obj,
-				url: 'user/kh/bindQQ',
-				data: {
-					...data,
-					code,
-					accessToken
-				}
+		return debounce(() => {
+			addLoading(obj, "loading");
+			let { data = {} } = obj;
+			return that.getQQCode().then(({ code, accessToken } = {}) => {
+				return callFunction({
+					...obj,
+					url: 'user/kh/bindQQ',
+					data: {
+						...data,
+						code,
+						accessToken
+					}
+				});
 			});
-		});
+		}, debounceTime, true, "bindQQ");
 	},
 	/**
 	 * 解绑QQ
@@ -1122,11 +1153,13 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	unbindQQ(obj = {}) {
-		addLoading(obj, "loading");
-		return callFunction({
-			...obj,
-			url: 'user/kh/unbindQQ',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			return callFunction({
+				...obj,
+				url: 'user/kh/unbindQQ',
+			});
+		}, debounceTime, true, "unbindQQ");
 	},
 	/**
 	 * 获取抖音openid
@@ -1276,19 +1309,21 @@ export default {
 	 */
 	bindDouyin(obj = {}) {
 		let that = this;
-		addLoading(obj, "loading");
-		addAppid(obj);
-		let { data = {} } = obj;
-		return that.getDouyinCode(data).then((code) => {
-			return callFunction({
-				...obj,
-				url: 'user/kh/bindDouyin',
-				data: {
-					code,
-					...data
-				}
+		return debounce(() => {
+			addLoading(obj, "loading");
+			addAppid(obj);
+			let { data = {} } = obj;
+			return that.getDouyinCode(data).then((code) => {
+				return callFunction({
+					...obj,
+					url: 'user/kh/bindDouyin',
+					data: {
+						code,
+						...data
+					}
+				});
 			});
-		});
+		}, debounceTime, true, "bindDouyin");
 	},
 	/**
 	 * 解绑抖音
@@ -1297,13 +1332,15 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	unbindDouyin(obj = {}) {
-		addLoading(obj, "loading");
-		addAppid(obj);
-		let { data = {} } = obj;
-		return callFunction({
-			...obj,
-			url: 'user/kh/unbindDouyin',
-		});
+		return debounce(() => {
+			addLoading(obj, "loading");
+			addAppid(obj);
+			let { data = {} } = obj;
+			return callFunction({
+				...obj,
+				url: 'user/kh/unbindDouyin',
+			});
+		}, debounceTime, true, "unbindDouyin");
 	},
 	/**
 	 * 通过抖音小程序绑定的手机号登录
@@ -1364,6 +1401,150 @@ export default {
 		return callFunction({
 			...obj,
 			url: 'user/kh/getDouyinMiniCode',
+		});
+	},
+	/**
+	 * 华为登录获取用户code
+	 */
+	getHuaweiCode(data = {}) {
+		return new Promise((resolve, reject) => {
+			let { encryptedKey } = data;
+			if (encryptedKey) {
+				resolve();
+				return;
+			}
+			// #ifndef MP-HARMONY || APP-HARMONY
+			vk.toast("请在鸿蒙系统中打开");
+			return;
+			// #endif
+	
+			// #ifdef MP-HARMONY || APP-HARMONY
+			uni.login({
+				success(res) {
+					resolve(res.code)
+				},
+				fail(err) {
+					console.error('华为登录失败: ', err)
+					reject(new Error('华为登录失败'))
+				}
+			})
+			// #endif
+		})
+	},
+	/**
+	 * 用户登录（华为账号登录）
+	 * data 请求参数 说明
+	 * @param {String} code 登录返回的code
+	 * @param {String} platform 客户端类型：mp-weixin、app-plus，默认uni-id会自动取客户端类型，但是在云函数url化等场景无法取到客户端类型，可以使用此参数指定
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 * @param {String} token 登录成功之后返回的token信息
+	 * @param {String} tokenExpired token过期时间
+	 */
+	loginByHuawei(obj = {}) {
+		let that = this;
+		return debounce(() => {
+			addLoading(obj, "login");
+			addAppid(obj);
+			let { data = {} } = obj;
+			return that.getHuaweiCode(data).then((code) => {
+				return callFunction({
+					url: 'user/pub/loginByHuawei',
+					...obj,
+					data: {
+						code,
+						...data
+					}
+				});
+			});
+		}, debounceTime, true, "login");
+	},
+	/**
+	 * 绑定华为账号
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 */
+	bindHuawei(obj = {}) {
+		let that = this;
+		return debounce(() => {
+			addLoading(obj, "loading");
+			addAppid(obj);
+			let { data = {} } = obj;
+			return that.getHuaweiCode(data).then((code) => {
+				return callFunction({
+					...obj,
+					url: 'user/kh/bindHuawei',
+					data: {
+						code,
+						...data
+					}
+				});
+			});
+		}, debounceTime, true, "bindHuawei");
+	},
+	/**
+	 * 解绑华为账号
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 */
+	unbindHuawei(obj = {}) {
+		return debounce(() => {
+			addLoading(obj, "loading");
+			addAppid(obj);
+			let { data = {} } = obj;
+			return callFunction({
+				...obj,
+				url: 'user/kh/unbindHuawei',
+			});
+		}, debounceTime, true, "unbindHuawei");
+	},
+	/**
+	 * 通过华为账号绑定的手机号登录
+	 * data 请求参数 说明
+	 * @param {String} encryptedData
+	 * @param {String} iv
+	 * @param {String} sessionKey
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 * @param {String} token 登录成功之后返回的token信息
+	 * @param {String} tokenExpired token过期时间
+	 */
+	loginByHuaweiPhoneNumber(obj = {}) {
+		return debounce(() => {
+			addLoading(obj, "login");
+			addAppid(obj);
+			return callFunction({
+				url: 'user/pub/loginByHuaweiPhoneNumber',
+				...obj
+			});
+		}, debounceTime, true, "login");
+	},
+	/**
+	 * 获取华为openid
+	 * res 返回参数说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 * @param {String} openid 用户openid
+	 * @param {String} unionid 用户unionid，可以取到此值时返回
+	 */
+	code2SessionHuawei(obj = {}) {
+		let that = this;
+		addLoading(obj, "loading");
+		addAppid(obj);
+		let { data = {} } = obj;
+		return that.getHuaweiCode(data).then((code) => {
+			return callFunction({
+				...obj,
+				url: 'user/pub/code2SessionHuawei',
+				data: {
+					code,
+					...data,
+				}
+			});
 		});
 	},
 };

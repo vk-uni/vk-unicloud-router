@@ -24,8 +24,10 @@ module.exports = {
 			res = await vk.openapi.weixin.decrypt.getPhoneNumber(data);
 		} else if (platform === "mp-toutiao") {
 			res = await vk.openapi.douyin.decrypt.getPhoneNumber(data);
+		} else if (platform === "mp-harmony") {
+			res = await vk.openapi.huawei.decrypt.getPhoneNumber(data);
 		} else {
-			res = { code: -1, msg: "暂不支持平台 ${platform}" };
+			res = { code: -1, msg: `暂不支持平台 ${platform}` };
 		}
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;

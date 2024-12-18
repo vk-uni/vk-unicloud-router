@@ -238,6 +238,7 @@ util.getOriginalPage = function() {
  * vk.navigate.setOriginalPage(originalPage);
  */
 util.setOriginalPage = function(originalPage) {
+	if (originalPage === null) originalPage = "";
 	uni.vk.navigate.originalPage = originalPage; // 兼容老版本
 	if (typeof uni.vk.getVuex === "function") {
 		// 有安装vuex则使用vuex
