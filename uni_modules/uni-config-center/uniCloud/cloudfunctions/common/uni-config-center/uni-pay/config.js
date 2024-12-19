@@ -228,5 +228,26 @@ module.exports = {
 			"salt": "", // salt，从支付信息 - 支付设置中获取
 			"sandbox": false, // 是否是沙箱环境（正式上线时必须配置为false）
 		}
+	},
+	// 华为支付
+	"huawei": {
+		// 华为 - 元服务支付
+		"mp-harmony": {
+			"appId": "", // 应用的appId
+			"mchId": "", // 商户号
+			"mchAuthId": "", // 商户证书编号
+			"mchPrivateKey": "", // 商户私钥内容
+			"platformPublicKey": "", // 华为支付公钥
+			"clientType": "mp-harmony" // 固定 mp-harmony 请勿修改
+		},
+		// 华为 - APP支付
+		"app-harmony": {
+			"appId": "", // 应用的appId
+			"mchId": "", // 商户号
+			"mchAuthId": "", // 商户证书编号
+			"mchPrivateKey": "", // 商户私钥内容
+			"platformPublicKey": "", // 华为支付公钥
+			"clientType": "app-harmony" // 固定 app-harmony 请勿修改
+		}
 	}
 }
