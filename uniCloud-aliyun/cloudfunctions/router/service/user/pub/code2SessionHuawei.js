@@ -2,7 +2,7 @@ module.exports = {
 	/**
 	 * 获取华为openid
 	 * @url user/pub/code2SessionHuawei 前端调用的url参数地址
-	 * @description 支持抖音小程序
+	 * @description 支持鸿蒙App和鸿蒙元服务
 	 * data 请求参数 说明
 	 * @param {String} code 登录返回的code
 	 * res 返回参数说明

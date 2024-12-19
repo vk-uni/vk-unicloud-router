@@ -2,7 +2,7 @@ module.exports = {
 	/**
 	 * 用户登录 - 华为登录
 	 * @url user/pub/loginByHuawei 前端调用的url参数地址
-	 * @description 支持鸿蒙元服务登录
+	 * @description 支持鸿蒙App和鸿蒙元服务
 	 * data 请求参数 说明
 	 * @param {String} code 登录返回的code
 	 * @param {String} type 指定操作类型，可选值为login、register，不传此参数时表现为已注册则登录，未注册则进行注册
