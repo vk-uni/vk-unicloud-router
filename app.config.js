@@ -63,8 +63,7 @@ export default {
 		 * 注意: list内是通配符表达式，非正则表达式
 		 */
 		mode: 0,
-		// ['shareAppMessage', 'shareTimeline'],
-		menus: ['shareAppMessage'],
+		menus: ['shareAppMessage'], // ['shareAppMessage', 'shareTimeline'], // menus内的数组可多选，shareAppMessage 转发给朋友，shareTimeline 分享到朋友圈，需要mode为1或2才会生效
 		list: [
 			"/pages/index/*",
 			"/pages/goods/*",
