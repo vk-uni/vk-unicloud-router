@@ -79,6 +79,10 @@ module.exports = [{
 					token: res.token,
 					tokenExpired: res.tokenExpired
 				};
+				// 删除原始token（因为已经被vk_uni_token替代）
+				delete res.token;
+				delete res.tokenExpired;
+				if (res.msg || res.errMsg) delete res.message; // 删除多余的message字段
 			}
 		}
 		return res;
