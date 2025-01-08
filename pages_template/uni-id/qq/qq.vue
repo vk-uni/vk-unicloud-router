@@ -20,7 +20,7 @@
 			vk = uni.vk;
 		},
 		methods: {
-			// QQ登陆
+			// QQ登录
 			loginByQQ(type){
 				vk.userCenter.loginByQQ({
 					data:{

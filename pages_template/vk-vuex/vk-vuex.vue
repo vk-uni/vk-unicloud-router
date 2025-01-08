@@ -65,7 +65,7 @@
 					}
 				});
 			},
-			// 用户登陆
+			// 用户登录
 			login(){
 				var form1 = this.form1;
 				vk.userCenter.login({
@@ -73,7 +73,7 @@
 					success: (data) => {
 						// 登录成功后将用户信息写入$store
 						vk.setVuex('$user.userInfo', data.userInfo);
-						vk.alert("登陆成功!");
+						vk.alert("登录成功!");
 					}
 				});
 			},

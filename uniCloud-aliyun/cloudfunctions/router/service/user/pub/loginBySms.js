@@ -1,8 +1,8 @@
 module.exports = {
 	/**
-	 * 手机号登陆(手机号+手机验证码)
+	 * 手机号登录（手机号+手机验证码）
 	 * @url user/pub/loginBySms 前端调用的url参数地址
-	 * @description 手机号登陆(手机号+手机验证码)
+	 * @description 手机号登录（手机号+手机验证码）
 	 * data 请求参数 说明
 	 * @param {String} mobile 手机号
 	 * @param {String} code 验证码

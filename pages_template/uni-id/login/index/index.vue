@@ -132,7 +132,7 @@
 					//loading:false,
 					success: (data) => {
 						console.log("data",data);
-						vk.toast("登陆成功!");
+						vk.toast("登录成功");
 						setTimeout(() => {
 							// 跳转到首页,或页面返回
 							that.login_success(data);
@@ -177,7 +177,7 @@
 				let that = this;
 				vk.userCenter.loginByWeixin({
 					success: (data) => {
-						vk.toast("登陆成功!");
+						vk.toast("登录成功");
 						setTimeout(() => {
 							// 跳转到首页,或页面返回
 							that.login_success(data);

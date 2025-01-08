@@ -67,7 +67,7 @@
 				});
 				// #endif
 			},
-			// 微信登陆
+			// 微信登录
 			loginByWeixin(type){
 				let that = this;
 				vk.userCenter.loginByWeixin({

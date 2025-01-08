@@ -36,14 +36,14 @@
 					}
 				});
 			},
-			// 用户登陆
+			// 用户登录
 			login(){
 				let that = this;
 				var form1 = that.form1;
 				vk.userCenter.login({
 					data:form1,
 					success: (data) => {
-						vk.alert("登陆成功!");
+						vk.alert("登录成功");
 					}
 				});
 			},

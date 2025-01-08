@@ -54,7 +54,7 @@
 					},
 				});
 			},
-			// 微信登陆
+			// 微信登录
 			loginByWeixin(type) {
 				if (!this.options.code) {
 					vk.toast("请先获取code");

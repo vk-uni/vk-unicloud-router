@@ -19,7 +19,7 @@ export default {
 		vk = uni.vk;
 	},
 	methods: {
-		// 支付宝登陆
+		// 支付宝登录
 		loginByAlipay(type) {
 			vk.userCenter.loginByAlipay({
 				data: {
