@@ -23,6 +23,15 @@ const localeObj = {
 		"en": "Please enter"
 	}
 };
+
+function getLocale() {
+	let vk = uni.vk;
+	let locale = vk.getLocale();
+	if (["zh-Hans", "zh-Hant", "en"].indexOf(locale) === -1) {
+		locale = "en";
+	}
+	return locale;
+}
 export default {
 	/**
 	vk.alert("内容");
@@ -32,7 +41,7 @@ export default {
 	 */
 	alert: function(a = " ", b, c, d) {
 		let vk = uni.vk;
-		let locale = vk.getLocale();
+		let locale = getLocale();
 		let obj = {
 			title: localeObj.title[locale],
 			confirmText: localeObj.confirmText[locale],
@@ -71,7 +80,7 @@ export default {
 	 */
 	confirm: function(a, b, c, d, e) {
 		let vk = uni.vk;
-		let locale = vk.getLocale();
+		let locale = getLocale();
 		let obj = {
 			showCancel: true,
 			// #ifndef MP-ALIPAY
@@ -120,7 +129,7 @@ export default {
 	 */
 	prompt: function(a, b, c, d, e, f) {
 		let vk = uni.vk;
-		let locale = vk.getLocale();
+		let locale = getLocale();
 		let obj = {
 			showCancel: true,
 			editable: true,

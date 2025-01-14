@@ -2291,7 +2291,7 @@ pubfn.blobToFile = function(blob, fileName) {
  });
  */
 pubfn.requestSubscribeMessage = function(obj) {
-	// #ifdef MP-WEIXIN
+	// #ifdef MP-WEIXIN || MP-HARMONY
 	return uni.requestSubscribeMessage(obj);
 	// #endif
 };
