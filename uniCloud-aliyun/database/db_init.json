@@ -75,7 +75,7 @@
 			},
 			{
 				"IndexName": "role",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "role", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "role", "Direction": "1", "Type": "array" }], "MgoIsUnique": false }
 			},
 			{
 				"IndexName": "register_date",
@@ -104,7 +104,7 @@
 			},
 			{
 				"IndexName": "state",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "state", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "state", "Direction": "1", "Type": "int" }], "MgoIsUnique": false }
 			}
 		]
 	},
@@ -191,7 +191,7 @@
 			},
 			{
 				"IndexName": "permission",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "permission", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "permission", "Direction": "1", "Type": "array" }], "MgoIsUnique": false }
 			},
 			{
 				"IndexName": "role_name",
@@ -827,11 +827,11 @@
 			},
 			{
 				"IndexName": "sort",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "sort", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "sort", "Direction": "1", "Type": "int" }], "MgoIsUnique": false }
 			},
 			{
 				"IndexName": "show",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "show", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "show", "Direction": "1", "Type": "bool" }], "MgoIsUnique": false }
 			},
 			{
 				"IndexName": "name",
@@ -870,12 +870,8 @@
 				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "user_id", "Direction": "1" }], "MgoIsUnique": false }
 			},
 			{
-				"IndexName": "sort",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "sort", "Direction": "1" }], "MgoIsUnique": false }
-			},
-			{
 				"IndexName": "status",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "status", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "status", "Direction": "1", "Type": "int" }], "MgoIsUnique": false }
 			},
 			{
 				"IndexName": "type",
@@ -904,7 +900,7 @@
 			},
 			{
 				"IndexName": "sort",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "sort", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "sort", "Direction": "1", "Type": "int" }], "MgoIsUnique": false }
 			}
 		]
 	},
@@ -921,7 +917,7 @@
 			},
 			{
 				"IndexName": "user_order_success",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "user_order_success", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "user_order_success", "Direction": "1", "Type": "bool" }], "MgoIsUnique": false }
 			},
 			{
 				"IndexName": "transaction_id",
@@ -929,7 +925,7 @@
 			},
 			{
 				"IndexName": "total_fee",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "total_fee", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "total_fee", "Direction": "1", "Type": "int" }], "MgoIsUnique": false }
 			},
 			{
 				"IndexName": "pid",
@@ -937,7 +933,7 @@
 			},
 			{
 				"IndexName": "auth_code",
-				"MgoKeySchema": {"MgoIndexKeys": [{"Name": "auth_code","Direction": "1"}],"MgoIsUnique": false}
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "auth_code", "Direction": "1" }], "MgoIsUnique": false }
 			}
 		]
 	},
