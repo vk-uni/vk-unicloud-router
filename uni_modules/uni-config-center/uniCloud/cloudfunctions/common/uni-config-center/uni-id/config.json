@@ -23,6 +23,9 @@
 			"huawei": {
 				"clientId": "",
 				"clientSecret": ""
+			},
+			"apple": {
+				"bundleId": ""
 			}
 		}
 	},
