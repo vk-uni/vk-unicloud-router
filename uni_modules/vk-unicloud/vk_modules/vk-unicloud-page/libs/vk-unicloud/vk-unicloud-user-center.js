@@ -341,7 +341,7 @@ export default {
 			uni.login({
 				provider: 'univerify',
 				univerifyStyle: obj.univerifyStyle,
-				success: (res) =>{
+				success: (res) => {
 					let dataJson = Object.assign(obj.data, res.authResult);
 					callFunction({
 						url: 'user/pub/loginByUniverify',
@@ -357,7 +357,7 @@ export default {
 						}
 					});
 				},
-				fail: (err)=>{
+				fail: (err) => {
 					if (typeof obj.fail === "function") obj.fail(err);
 					reject(err);
 				},
@@ -1417,7 +1417,7 @@ export default {
 			vk.toast("请在鸿蒙系统中打开");
 			return;
 			// #endif
-	
+
 			// #ifdef MP-HARMONY || APP-HARMONY
 			uni.login({
 				success(res) {
@@ -1547,4 +1547,57 @@ export default {
 			});
 		});
 	},
+	/**
+	 * 苹果登录获取用户userInfo
+	 */
+	getAppleCode(data = {}) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let { encryptedKey } = data;
+				if (encryptedKey) {
+					resolve();
+					return;
+				}
+				const provider = 'apple';
+				const loginRes = await uni.login({
+					provider
+				});
+				const getUserInfoRes = await uni.getUserInfo({
+					provider
+				});
+				resolve(getUserInfoRes.userInfo);
+			} catch (err) {
+				console.error('苹果登录失败: ', err);
+				reject(err);
+				return;
+			}
+		});
+	},
+	/**
+	 * 用户登录（苹果账号登录）
+	 * data 请求参数 说明
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 * @param {String} token 登录成功之后返回的token信息
+	 * @param {String} tokenExpired token过期时间
+	 */
+	loginByApple(obj = {}) {
+		let that = this;
+		return debounce(() => {
+			addLoading(obj, "login");
+			addAppid(obj);
+			let { data = {} } = obj;
+			return that.getAppleCode(data).then((userInfo) => {
+				return callFunction({
+					url: 'user/pub/loginByApple',
+					...obj,
+					data: {
+						identityToken: userInfo.identityToken,
+						fullName: userInfo.fullName,
+						...data
+					}
+				});
+			});
+		}, debounceTime, true, "login");
+	}
 };

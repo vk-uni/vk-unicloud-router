@@ -1,8 +1,8 @@
 module.exports = {
 	/**
-	 * 用户登录(支付宝授权)
+	 * 用户登录（支付宝授权）
 	 * @url user/pub/loginByAlipay 前端调用的url参数地址
-	 * @description 用户登录(支付宝授权)
+	 * @description 用户登录（支付宝授权）
 	 * data 请求参数 说明
 	 * @param {String} code 支付宝登录返回的code
 	 * @param {String} type login:登录 register:注册

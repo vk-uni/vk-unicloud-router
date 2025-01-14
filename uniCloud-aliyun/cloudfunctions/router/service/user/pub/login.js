@@ -1,8 +1,8 @@
 module.exports = {
 	/**
-	 * 用户登录(账号+密码)
+	 * 用户登录（账号+密码）
 	 * @url user/pub/login 前端调用的url参数地址
-	 * @description 用户登录(账号+密码)
+	 * @description 用户登录（账号+密码）
 	 * data 请求参数 说明
 	 * @param {String} username 用户名
 	 * @param {String} password 密码
@@ -18,7 +18,7 @@ module.exports = {
 		let { uid } = data;
 		let res = {};
 		// 业务逻辑开始-----------------------------------------------------------
-		// 用户登录(账号+密码)
+		// 用户登录（账号+密码）
 		if (typeof data.username === "number") data.username = String(data.username).trim();
 		if (typeof data.password === "number") data.password = String(data.password).trim();
 
