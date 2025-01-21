@@ -16,108 +16,110 @@
 </template>
 
 <script>
-var vk = uni.vk;
-export default {
-	data() {
-		return {
-			options: {}
-		};
-	},
-	onLoad(options) {
-		vk = uni.vk;
-		this.options = options || {};
-		this.init(options);
-	},
-	methods: {
-		// 初始化
-		init(options) {
-			if(this.options.code){
-				vk.toast("已获取到code，请点击相应操作。");
-				return false;
-			}
+	let vk = uni.vk;
+	export default {
+		data() {
+			return {
+				options: {}
+			};
 		},
-		getWeixinCode(scope){
-			let appid = ""; // 填写公众号的appid
-			let redirect_uri = window.location.href.split("?")[0];
-			let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=${scope}&state=STATE#wechat_redirect`;
-			window.location.href = url;
+		onLoad(options) {
+			vk = uni.vk;
+			this.options = options || {};
+			this.init(options);
 		},
-		code2SessionWeixin() {
-			let that = this;
-			if(!that.options.code){
-				vk.toast("请先获取code");
-				return false;
-			}
-			vk.userCenter.code2SessionWeixin({
-				data:{
-					code: that.options.code,
-					state: that.options.state,
-				},
-				success: (data) => {
-					vk.alert(JSON.stringify(data));
-				},
-			});
-		},
-		// 微信登录
-		loginByWeixin(type){
-			let that = this;
-			if(!that.options.code){
-				vk.toast("请先获取code");
-				return false;
-			}
-			vk.userCenter.loginByWeixin({
-				data:{
-					code: that.options.code,
-					state: that.options.state,
-					type
-				},
-				success: (data) => {
-					vk.alert(data.msg);
-					that.data = data;
+		methods: {
+			// 初始化
+			init(options) {
+				if (this.options.code) {
+					vk.toast("已获取到code，请点击相应操作。");
+					return false;
 				}
-			});
-		},
-		// 绑定微信
-		bindWeixin(){
-			let that = this;
-			if(!that.options.code){
-				vk.toast("请先获取code");
-				return false;
-			}
-			vk.userCenter.bindWeixin({
-				data:{
-					code: that.options.code
-				},
-				success: (data) => {
-					vk.alert("绑定成功");
-					that.data = data;
+			},
+			getWeixinCode(scope) {
+				let appid = ""; // 填写公众号的appid
+				let redirect_uri = window.location.href.split("?")[0];
+				let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=${scope}&state=STATE#wechat_redirect`;
+				window.location.href = url;
+			},
+			code2SessionWeixin() {
+				let that = this;
+				if (!that.options.code) {
+					vk.toast("请先获取code");
+					return false;
 				}
-			});
-		},
-		// 解绑微信
-		unbindWeixin(){
-			let that = this;
-			vk.userCenter.unbindWeixin({
-				success: (data) => {
-					vk.alert("解绑成功");
-					that.data = data;
+				vk.userCenter.code2SessionWeixin({
+					data: {
+						code: that.options.code,
+						state: that.options.state,
+					},
+					success: (data) => {
+						vk.alert(JSON.stringify(data));
+					},
+				});
+			},
+			// 微信登录
+			loginByWeixin(type) {
+				let that = this;
+				if (!that.options.code) {
+					vk.toast("请先获取code");
+					return false;
 				}
-			});
-		},
-	}
-};
+				vk.userCenter.loginByWeixin({
+					data: {
+						code: that.options.code,
+						state: that.options.state,
+						type
+					},
+					success: (data) => {
+						vk.alert(data.msg);
+						that.data = data;
+					}
+				});
+			},
+			// 绑定微信
+			bindWeixin() {
+				let that = this;
+				if (!that.options.code) {
+					vk.toast("请先获取code");
+					return false;
+				}
+				vk.userCenter.bindWeixin({
+					data: {
+						code: that.options.code
+					},
+					success: (data) => {
+						vk.alert("绑定成功");
+						that.data = data;
+					}
+				});
+			},
+			// 解绑微信
+			unbindWeixin() {
+				let that = this;
+				vk.userCenter.unbindWeixin({
+					success: (data) => {
+						vk.alert("解绑成功");
+						that.data = data;
+					}
+				});
+			},
+		}
+	};
 </script>
 
 <style lang="scss" scoped>
-.content {
-	padding: 30rpx;
-}
-.content button {
-	margin-bottom: 30rpx;
-}
-.tips {
-	font-size: 28rpx;
-	color: #999999;
-	margin-bottom: 32rpx;
-}
+	.content {
+		padding: 30rpx;
+	}
+
+	.content button {
+		margin-bottom: 30rpx;
+	}
+
+	.tips {
+		font-size: 28rpx;
+		color: #999999;
+		margin-bottom: 32rpx;
+	}
 </style>

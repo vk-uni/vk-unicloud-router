@@ -1,7 +1,7 @@
 /**
  * 时间工具类
  */
-var util = {};
+let util = {};
 util.getTargetTimezone = function(val) {
 	if (typeof val === "number") {
 		return val;

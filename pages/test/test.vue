@@ -12,7 +12,7 @@
 </template>
 
 <script>
-	var vk = uni.vk;
+	let vk = uni.vk;
 	export default {
 		data() {
 			// 页面数据变量

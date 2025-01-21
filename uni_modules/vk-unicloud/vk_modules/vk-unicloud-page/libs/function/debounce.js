@@ -17,7 +17,7 @@ function debounce(fn, time = 500, isImmediate = true, timeoutName = "default") {
 	if (timeoutArr[timeoutName] !== null) clearTimeout(timeoutArr[timeoutName]);
 	// 立即执行一次
 	if (isImmediate) {
-		var callNow = !timeoutArr[timeoutName];
+		let callNow = !timeoutArr[timeoutName];
 		timeoutArr[timeoutName] = setTimeout(() => {
 			timeoutArr[timeoutName] = null;
 		}, time);

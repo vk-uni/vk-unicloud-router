@@ -3,8 +3,8 @@ const dbName = {
 	user: "uni-id-users", // 用户
 };
 
-var dao = {};
-var util = {};
+let dao = {};
+let util = {};
 // 初始化
 dao.init = function(obj) {
 	util = obj;

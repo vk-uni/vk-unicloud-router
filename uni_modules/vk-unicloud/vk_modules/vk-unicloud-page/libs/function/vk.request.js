@@ -1,4 +1,4 @@
-var requestUtil = {};
+let requestUtil = {};
 
 
 requestUtil.config = {
@@ -17,7 +17,7 @@ requestUtil.config = {
 		]
 	},
 };
-var counterNum = 0;
+let counterNum = 0;
 /**
  * request 请求库
  * 文档 [https://vkdoc.fsq.pub/client/jsapi.html#vk-request-前端调用](https://vkdoc.fsq.pub/client/jsapi.html#vk-request-前端调用)

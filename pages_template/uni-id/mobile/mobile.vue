@@ -34,7 +34,7 @@
 </template>
 
 <script>
-	var vk = uni.vk;
+	let vk = uni.vk;
 	export default {
 		data() {
 			return {
@@ -63,7 +63,7 @@
 					})
 					return
 				}
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.sendSmsCode({
 					data:{
 						mobile: form1.mobile,
@@ -84,7 +84,7 @@
 					return
 				}
 				that.getCode();
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.setVerifyCode({
 					data:{
 						mobile: form1.mobile,
@@ -99,7 +99,7 @@
 			// 登录(手机号+验证码)
 			loginBySms() {
 				let that = this;
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.loginBySms({
 					data:form1,
 					success: (data) => {
@@ -110,7 +110,7 @@
 			// 绑定手机号
 			bindMobile(){
 				let that = this;
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.bindMobile({
 					data:form1,
 					success: (data) => {
@@ -121,7 +121,7 @@
 			// 解绑手机
 			unbindMobile(){
 				let that = this;
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.unbindMobile({
 					data:form1,
 					success: (data) => {
@@ -132,7 +132,7 @@
 			// 手机验证码充值账号密码
 			resetPasswordByMobile(){
 				let that = this;
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.resetPasswordByMobile({
 					data:form1,
 					success: (data) => {

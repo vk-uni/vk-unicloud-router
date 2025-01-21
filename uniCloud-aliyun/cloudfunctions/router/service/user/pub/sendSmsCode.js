@@ -1,4 +1,4 @@
-var everyDaylimit = 12; // 限制同一个手机号每天次数
+let everyDaylimit = 12; // 限制同一个手机号每天次数
 module.exports = {
 	/**
 	 * 发送短信的验证码

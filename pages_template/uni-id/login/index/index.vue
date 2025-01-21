@@ -46,7 +46,7 @@
 </template>
 
 <script>
-	var vk = uni.vk;
+	let vk = uni.vk;
 	export default {
 		data() {
 			// 页面数据变量
@@ -126,7 +126,7 @@
 					return;
 				}
 				// 登录操作
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.login({
 					data:form1,
 					//loading:false,
@@ -158,7 +158,7 @@
 					return false;
 				}
 				// 跳转到首页,或页面返回
-				var pages = getCurrentPages();
+				let pages = getCurrentPages();
 				if(pages.length > 1
 					&& pages[pages.length-2]
 					&& pages[pages.length-2].route

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-	var vk = uni.vk;
+	let vk = uni.vk;
 	export default {
 		data() {
 			return {
@@ -57,7 +57,7 @@
 		methods: {
 			// 用户注册
 			register(){
-				var form1 = this.form1;
+				let form1 = this.form1;
 				vk.userCenter.register({
 					data:form1,
 					success: (data) => {
@@ -67,7 +67,7 @@
 			},
 			// 用户登录
 			login(){
-				var form1 = this.form1;
+				let form1 = this.form1;
 				vk.userCenter.login({
 					data:form1,
 					success: (data) => {

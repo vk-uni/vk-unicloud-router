@@ -1,4 +1,4 @@
-var updateManager = {};
+let updateManager = {};
 /**
  * 本API返回全局唯一的版本更新管理器对象： updateManager，用于管理小程序更新。
  * vk.updateManager.updateReady();

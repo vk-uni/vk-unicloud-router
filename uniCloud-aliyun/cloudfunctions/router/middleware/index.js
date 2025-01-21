@@ -2,8 +2,8 @@
 const modulesPath = __dirname + "/modules";
 const fs = require('fs');
 const fileList = fs.readdirSync(modulesPath);
-var moduleList = [];
-var modulesNames = [];
+let moduleList = [];
+let modulesNames = [];
 
 fileList.map((file, index) => {
 	if (file.indexOf(".js") > -1) {
@@ -25,7 +25,7 @@ modulesNames.map((modulesName, index) => {
 	}
 });
 
-var middlewareList = [];
+let middlewareList = [];
 moduleList.map((moduleItem, index) => {
 	middlewareList = middlewareList.concat(moduleItem);
 });

@@ -3,7 +3,7 @@
  * author	VK
  */
 import callFunctionUtil from './vk-unicloud-callFunctionUtil.js'
-var { callFunction, config, saveToken, deleteToken } = callFunctionUtil;
+let { callFunction, config, saveToken, deleteToken } = callFunctionUtil;
 import debounce from '../function/debounce.js'
 
 const debounceTime = 1000; // 防抖时长

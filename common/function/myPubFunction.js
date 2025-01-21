@@ -1,7 +1,7 @@
 /**
  * 自定义公共函数
  */
-var myfn = {};
+let myfn = {};
 /**
  * 测试函数test1
  * vk.myfn.test1();

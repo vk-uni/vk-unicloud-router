@@ -1,4 +1,4 @@
-var isOnLaunch = true;
+let isOnLaunch = true;
 export default {
 	data() {
 		return {}

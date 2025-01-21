@@ -1,7 +1,7 @@
-var vk = {};
-var counterNum = 0;
-var uniCloudEnvs = {}; // uniCloud 环境列表
-var lastToLoginTime = 0;
+let vk = {};
+let counterNum = 0;
+let uniCloudEnvs = {}; // uniCloud 环境列表
+let lastToLoginTime = 0;
 
 import cloudStorage from '../../libs/cloud-storage/index.js'
 

@@ -1,7 +1,7 @@
 /**
  * 通用公共函数
  */
-var pubfn = {};
+let pubfn = {};
 // 防抖
 import debounce from './debounce.js'
 // 限流

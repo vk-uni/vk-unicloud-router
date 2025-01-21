@@ -38,8 +38,7 @@
 </template>
 
 <script>
-var vk = uni.vk;
-var weixinAuthService;
+let vk = uni.vk;
 export default {
   data() {
     return {
@@ -325,13 +324,13 @@ export default {
         return '';
       }
       //console.log(mbPosition,myPosition);
-      var res = {};
-      var m = 0;
-      var km = 0;
-      var lng1 = myPosition.longitude;
-      var lat1 = myPosition.latitude;
-      var lng2 = mbPosition.longitude;
-      var lat2 = mbPosition.latitude;
+      let res = {};
+      let m = 0;
+      let km = 0;
+      let lng1 = myPosition.longitude;
+      let lat1 = myPosition.latitude;
+      let lng2 = mbPosition.longitude;
+      let lat2 = mbPosition.latitude;
       m = (Math.sqrt((lng1 - lng2) * (lng1 - lng2) + (lat1 - lat2) * (lat1 - lat2)) / 180) * Math.PI * 6300000;
       m = m.toFixed(1);
       km = (m / 1000).toFixed(2);

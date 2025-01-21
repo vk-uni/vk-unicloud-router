@@ -17,7 +17,7 @@ async test(){
 	});
 }
  */
-var importObject = function(name, importObjectOptions = {}) {
+let importObject = function(name, importObjectOptions = {}) {
 	const newObj = new Proxy(importObject, {
 		get: function(target, key, receiver) {
 			/**

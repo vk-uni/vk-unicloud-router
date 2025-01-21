@@ -30,11 +30,11 @@
 </template>
 
 <script>
-	var vk = uni.vk;
+	let vk = uni.vk;
 	export default {
 		data() {
 			return {
-				form1:{
+				form1: {
 					email: '',
 					code: ''
 				}
@@ -58,10 +58,10 @@
 					})
 					return
 				}
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.sendEmailCode({
-					data:{
-						serviceType:"qq",
+					data: {
+						serviceType: "qq",
 						email: form1.email,
 						type: type,
 					},
@@ -80,9 +80,9 @@
 					return
 				}
 				that.getCode();
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.setVerifyCode({
-					data:{
+					data: {
 						email: form1.email,
 						code: form1.code,
 						type: type,
@@ -95,31 +95,31 @@
 			// 邮箱登录
 			loginByEmail() {
 				let that = this;
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.loginByEmail({
-					data:form1,
+					data: form1,
 					success: (data) => {
 						vk.alert("登录成功");
 					}
 				});
 			},
 			// 绑定邮箱
-			bindEmail(){
+			bindEmail() {
 				let that = this;
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.bindEmail({
-					data:form1,
+					data: form1,
 					success: (data) => {
 						vk.alert("绑定成功");
 					}
 				});
 			},
 			// 解绑邮箱
-			unbindEmail(){
+			unbindEmail() {
 				let that = this;
-				var form1 = that.form1;
+				let form1 = that.form1;
 				vk.userCenter.unbindEmail({
-					data:form1,
+					data: form1,
 					success: (data) => {
 						vk.alert("解绑成功");
 					}
@@ -133,6 +133,7 @@
 	.content {
 		padding: 15px;
 	}
+
 	.content input {
 		height: 46px;
 		border: solid 1px #DDDDDD;
@@ -141,6 +142,7 @@
 		padding: 0px 15px;
 		display: block;
 	}
+
 	.content button {
 		margin-bottom: 15px;
 		margin-left: auto;
@@ -148,6 +150,7 @@
 		padding-left: 14px;
 		padding-right: 14px;
 	}
+
 	.content navigator {
 		display: inline-block;
 		color: #007AFF;
@@ -156,6 +159,7 @@
 		line-height: 24px;
 		margin-bottom: 15px;
 	}
+
 	.tips {
 		text-align: center;
 		line-height: 20px;
@@ -163,7 +167,8 @@
 		color: #999999;
 		margin-bottom: 20px;
 	}
-	.title{
+
+	.title {
 		font-size: 36rpx;
 		margin-bottom: 20rpx;
 	}

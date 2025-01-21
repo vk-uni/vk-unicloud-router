@@ -1,10 +1,10 @@
-var vkmail;
+let vkmail;
 try {
 	vkmail = require('vk-mail');
 } catch (err) {
 	console.error("请先添加公共模块：vk-mail（右键对应的云函数，点击管理公共模块或扩展库依赖，勾选vk-mail依赖）");
 }
-var everyDaylimit = 30; // 限制同一个邮箱每天次数
+let everyDaylimit = 30; // 限制同一个邮箱每天次数
 module.exports = {
 	/**
 	 * 发送邮箱验证码

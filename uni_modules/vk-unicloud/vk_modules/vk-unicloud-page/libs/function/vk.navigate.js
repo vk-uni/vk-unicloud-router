@@ -2,7 +2,7 @@
  * 函数 - 页面导航
  */
 // #ifdef VUE2
-var config;
+let config;
 try {
 	config = require('@/app.config.js');
 	if (typeof config.default === "object") {
@@ -18,8 +18,8 @@ import config from '@/app.config.js'
 // #endif
 
 
-var util = {};
-var lastNavigate = {
+let util = {};
+let lastNavigate = {
 	url: "",
 	time: 0
 };

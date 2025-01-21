@@ -1,5 +1,5 @@
-var uniIdConfig;
-var uniPayConfig;
+let uniIdConfig;
+let uniPayConfig;
 try {
 	uniIdConfig = require('../uni-id/config.json');
 } catch(err) {
