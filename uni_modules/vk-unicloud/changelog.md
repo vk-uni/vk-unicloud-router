@@ -1,3 +1,7 @@
+## 2.19.3（2025-01-22）
+* 【修复】运行报错 'localStorage' has already been declared 的问题
+
+* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.19.2（2025-01-21）
 * 【新增】微信小程序平台发货管理和物流助手API [传送门](https://vkdoc.fsq.pub/client/uniCloud/plus/weixin.html#order)
 * 【新增】苹果账号登录 [传送门](https://vkdoc.fsq.pub/client/vk.userCenter.html#loginbyapple)
