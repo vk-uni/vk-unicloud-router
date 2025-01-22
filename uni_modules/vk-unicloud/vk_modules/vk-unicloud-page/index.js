@@ -39,7 +39,7 @@ import h5                 from './libs/function/vk.h5'
 
 
 
-let vk = {
+const vk = {
 	userCenter,
 	callFunctionUtil,
 	/**

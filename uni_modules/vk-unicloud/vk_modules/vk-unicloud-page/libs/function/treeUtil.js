@@ -1,6 +1,6 @@
 
 import deepClone from './deepClone'
-let util = {};
+const util = {};
 /**
  * 将树形结构转成数组结构
  * @param {Array} treeData  数据源

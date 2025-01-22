@@ -1,7 +1,7 @@
 /**
  * 百度API
  */
-let baidu = {};
+const baidu = {};
 let vk = {};
 let baiduOpenApiAccessTokenCacheName = "vk_openapi_baidu_open_token";
 baidu.init = function(util={}) {

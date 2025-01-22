@@ -9,13 +9,13 @@
  * 获取缓存
  * vk.getStorageSync(key);
  */
-let localStorage = {};
+const storage = {};
 /**
  * 将 data 存储在本地缓存中指定的 key 中，会覆盖掉原来该 key 对应的内容，这是一个同步接口。
  * @param {String} key 本地缓存中的指定的 key
  * @param {Any} data 需要存储的内容，只支持原生类型、及能够通过 JSON.stringify 序列化的对象
  */
-localStorage.setStorageSync = function(key, data) {
+storage.setStorageSync = function(key, data) {
 	uni.setStorageSync(key, data);
 	watchLocalStorage({ type: "set", key, data });
 };
@@ -24,7 +24,7 @@ localStorage.setStorageSync = function(key, data) {
  * 从本地缓存中异步获取指定 key 对应的内容。
  * @param {String} key 本地缓存中的指定的 key
  */
-localStorage.getStorageSync = function(key) {
+storage.getStorageSync = function(key) {
 	let data = uni.getStorageSync(key);
 	// get 没有必要监听
 	// watchLocalStorage({ type:"get", key, data });
@@ -34,7 +34,7 @@ localStorage.getStorageSync = function(key) {
 /**
  * 同步获取当前 storage 的相关信息。
  */
-localStorage.getStorageInfoSync = function() {
+storage.getStorageInfoSync = function() {
 	let info = uni.getStorageInfoSync();
 	let sizeInfo = calcSize(Number(info.currentSize), 1024, 3, ["KB", "MB", "GB"]);
 	info.sizeInfo = sizeInfo;
@@ -45,14 +45,14 @@ localStorage.getStorageInfoSync = function() {
  * 从本地缓存中同步移除指定 key。
  * @param {String} key 本地缓存中的指定的 key
  */
-localStorage.removeStorageSync = function(key) {
+storage.removeStorageSync = function(key) {
 	uni.removeStorageSync(key);
 	watchLocalStorage({ type: "remove", key });
 };
 /**
  * 从本地缓存中异步移除指定 key。
  */
-localStorage.removeStorage = function(obj) {
+storage.removeStorage = function(obj) {
 	uni.removeStorage({
 		key: obj.key,
 		success: (res) => {
@@ -69,13 +69,13 @@ localStorage.removeStorage = function(obj) {
  * @param {String} key 本地缓存中的指定的 key
  * vk.clearStorageSync();
  */
-localStorage.clearStorageSync = function(key) {
+storage.clearStorageSync = function(key) {
 	if (key) {
 		let { keys } = uni.getStorageInfoSync();
 		if (keys) {
 			keys.map((keyName) => {
 				if (keyName.indexOf(key) == 0) {
-					localStorage.removeStorage({
+					storage.removeStorage({
 						key: keyName
 					});
 				}
@@ -87,7 +87,7 @@ localStorage.clearStorageSync = function(key) {
 	}
 };
 
-export default localStorage;
+export default storage;
 
 
 
@@ -125,7 +125,7 @@ function calcSize(length = 0, ary, precision, arr) {
 };
 
 function watchLocalStorage(obj) {
-	if (typeof localStorage.watch === "function") {
-		localStorage.watch(obj);
+	if (typeof storage.watch === "function") {
+		storage.watch(obj);
 	}
 }

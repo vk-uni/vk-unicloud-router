@@ -3,7 +3,7 @@
  * 全局过滤器
  */
 import pubfn from './index.js'
-let util = {};
+const util = {};
 // 将时间显示成1秒前、1天前
 util.dateDiff = function(starttime, showType) {
 	return pubfn.dateDiff(starttime, showType);

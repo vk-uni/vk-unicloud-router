@@ -3,7 +3,7 @@
  */
 import baidu from './baidu'
 
-let openapi = {};
+const openapi = {};
 openapi.baidu = baidu;
 openapi.init = function(util){
 	openapi.baidu.init(util);

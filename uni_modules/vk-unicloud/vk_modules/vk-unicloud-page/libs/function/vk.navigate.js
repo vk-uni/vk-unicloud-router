@@ -18,7 +18,7 @@ import config from '@/app.config.js'
 // #endif
 
 
-let util = {};
+const util = {};
 let lastNavigate = {
 	url: "",
 	time: 0

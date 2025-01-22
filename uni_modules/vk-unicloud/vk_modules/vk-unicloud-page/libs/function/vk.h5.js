@@ -2,7 +2,7 @@
 /**
  * H5专用的一些函数，会涉及到window等H5专用的内置对象。
  */
-let h5 = {};
+const h5 = {};
 
 // 引入 微信公众号 js_sdk 包
 import wx from './weixin-js-sdk'

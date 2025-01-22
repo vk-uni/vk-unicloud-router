@@ -12,7 +12,7 @@
  * 获取缓存
  * vk.getSessionStorageSync(key);
  */
-let storage = {};
+const storage = {};
 /**
  * 将 data 存储在本地缓存中指定的 key 中，会覆盖掉原来该 key 对应的内容，这是一个同步接口。
  * @param {String} key 本地缓存中的指定的 key
