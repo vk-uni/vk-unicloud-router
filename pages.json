@@ -195,6 +195,11 @@
 		// #ifndef MP-ALIPAY
 		"navigationBarBackgroundColor": "#F8F8F8",
 		// #endif
+		// #ifdef APP || WEB
+		"rpxCalcMaxDeviceWidth": 750,
+		"rpxCalcBaseDeviceWidth": 375,
+		"rpxCalcIncludeWidth": 750,
+		// #endif
 		"backgroundColor": "#F8F8F8"
 	}
 }
