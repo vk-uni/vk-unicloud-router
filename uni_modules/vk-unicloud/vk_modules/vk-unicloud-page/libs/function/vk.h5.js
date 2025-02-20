@@ -194,6 +194,7 @@ h5.init = function(obj = {}) {
 			"chooseCard", // 拉取适用卡券列表并获取用户选择信息
 			"openCard", // 查看微信卡包中的卡券接口
 			"chooseWXPay", // 发起微信支付
+			"requestMerchantTransfer", // 商家转账 - 用户确认收款
 		];
 	}
 	const env = vk.h5.getEnv();

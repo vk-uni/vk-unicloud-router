@@ -37,6 +37,7 @@ function addLoading(obj, title) {
 		} else {
 			locale = localeObj["zh-Hans"];
 		}
+		if (!locale) locale = localeObj["en"];
 		obj.title = locale[title] || "loading...";
 	}
 	return obj;

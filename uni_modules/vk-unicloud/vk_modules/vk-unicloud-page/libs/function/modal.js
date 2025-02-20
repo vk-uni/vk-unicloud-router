@@ -35,7 +35,7 @@ function getLocale() {
 export default {
 	/**
 	vk.alert("内容");
-	vk.alert("内容","提示","好的",function(){
+	vk.alert("内容", "提示", "好的", () => {
 
 	});
 	 */
@@ -47,7 +47,10 @@ export default {
 			confirmText: localeObj.confirmText[locale],
 			placeholderText: localeObj.placeholderText[locale],
 			content: a,
-			showCancel: false
+			showCancel: false,
+			fail: (err) => {
+				console.error('alert-err: ', err);
+			}
 		};
 		if (typeof d === 'function') {
 			obj.title = b;
@@ -68,6 +71,9 @@ export default {
 			obj.content = obj.content + "";
 		} else if (typeof obj.content === 'object') {
 			obj.content = JSON.stringify(obj.content);
+		}
+		if (obj.confirmText && obj.confirmText.length > 4) {
+			obj.confirmText = obj.confirmText.substring(0, 4); // 对齐微信小程序按钮最多4个字
 		}
 		return uni.showModal(obj);
 	},
@@ -118,14 +124,20 @@ export default {
 				}
 			}
 		}
+		if (obj.confirmText && obj.confirmText.length > 4) {
+			obj.confirmText = obj.confirmText.substring(0, 4); // 对齐微信小程序按钮最多4个字
+		}
+		if (obj.cancelText && obj.cancelText.length > 4) {
+			obj.cancelText = obj.cancelText.substring(0, 4); // 对齐微信小程序按钮最多4个字
+		}
 		return uni.showModal(obj);
 	},
 	/**
-	vk.prompt("请输入","提示","确定","取消",function(res){
-		if(res.confirm){
+	vk.prompt("请输入", "提示", "确定", "取消", (res) => {
+		if (res.confirm) {
 			console.log(res.content);
 		}
-	},"输入框内初始内容");
+	}, "输入框内初始内容");
 	 */
 	prompt: function(a, b, c, d, e, f) {
 		let vk = uni.vk;
@@ -164,6 +176,12 @@ export default {
 				obj.success = b;
 				obj.content = c;
 			}
+		}
+		if (obj.confirmText && obj.confirmText.length > 4) {
+			obj.confirmText = obj.confirmText.substring(0, 4); // 对齐微信小程序按钮最多4个字
+		}
+		if (obj.cancelText && obj.cancelText.length > 4) {
+			obj.cancelText = obj.cancelText.substring(0, 4); // 对齐微信小程序按钮最多4个字
 		}
 		// #ifndef MP-ALIPAY
 		if (!obj.content) {

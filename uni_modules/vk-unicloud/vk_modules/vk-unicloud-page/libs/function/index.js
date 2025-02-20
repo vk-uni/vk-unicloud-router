@@ -228,6 +228,7 @@ pubfn.validator = function(type) {
  * email 邮箱
  * money 金额(小数点只允许2位)
  * url 网址
+ * domain 域名
  * ip IP地址
  * date 日期 2020-08-03
  * time 时间 12:12:12
@@ -280,6 +281,8 @@ pubfn.test = function(str, type = "", allowEmpty = false) {
 			return new RegExp(/^\d*(?:\.\d{0,2})?$/).test(str);
 		case 'url': //网址
 			return new RegExp(/^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/).test(str);
+		case 'domain': //域名
+			return new RegExp(/^(?!:\/\/)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/).test(str);
 		case 'ip': //IP
 			return new RegExp(/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/).test(
 				str);
