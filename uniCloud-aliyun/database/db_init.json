@@ -767,7 +767,7 @@
 			},
 			{
 				"IndexName": "platform",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "platform", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "platform", "Direction": "1", "Type": "array" }], "MgoIsUnique": false }
 			},
 			{
 				"IndexName": "type",
