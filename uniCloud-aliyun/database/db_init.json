@@ -67,7 +67,7 @@
 			},
 			{
 				"IndexName": "inviter_uid",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "inviter_uid", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "inviter_uid", "Direction": "1", "Type": "array" }], "MgoIsUnique": false }
 			},
 			{
 				"IndexName": "invite_time",
