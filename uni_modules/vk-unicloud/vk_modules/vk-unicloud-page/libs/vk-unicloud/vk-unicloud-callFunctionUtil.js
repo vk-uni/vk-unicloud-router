@@ -569,7 +569,7 @@ class CallFunctionUtil {
 			Logger.startTime = Date.now();
 			Logger.filePath = filePath;
 			let promiseRes = new Promise((resolve, reject) => {
-				if (title) vk.showLoading(title);
+				if (title) vk.showLoading(title, "request");
 				cloudStorage[provider].uploadFile(obj)
 					.then((res) => {
 						// 返回值统一增加provider
@@ -620,7 +620,7 @@ class CallFunctionUtil {
 						reject(err);
 					})
 					.finally(() => {
-						if (title) vk.hideLoading();
+						if (title) vk.hideLoading("request");
 						let config = this.config;
 						Logger.endTime = Date.now();
 						Logger.runTime = (Logger.endTime - Logger.startTime);
@@ -667,7 +667,7 @@ class CallFunctionUtil {
 			timeout
 		} = obj;
 		let Logger = {};
-		if (title) vk.showLoading(title);
+		if (title) vk.showLoading(title, "request");
 		if (loading) Logger.loading = vk.setLoading(true, loading);
 		if (!name) name = config.isTest ? config.testFunctionName : config.functionName;
 		obj.name = name;
@@ -746,7 +746,7 @@ class CallFunctionUtil {
 		if (config.debug) Logger.params = typeof data == "object" ? JSON.parse(JSON.stringify(data)) : data;
 		let uniIdToken = uni.getStorageSync(config.uniIdTokenKeyName);
 		let tokenExpired = uni.getStorageSync(config.uniIdTokenExpiredKeyName);
-		if (title) vk.showLoading(title);
+		if (title) vk.showLoading(title, "request");
 		if (loading) Logger.loading = vk.setLoading(true, loading);
 		let promiseAction = new Promise((resolve, reject) => {
 			if (config.debug) Logger.startTime = Date.now();
@@ -845,11 +845,11 @@ class CallFunctionUtil {
 			loading,
 			success
 		} = params;
-		if (title) vk.hideLoading();
+		if (title) vk.hideLoading("request");
 		if (loading) {
 			vk.setLoading(false, Logger.loading);
 			Logger.loading = null;
-		} 
+		}
 		if (typeof res.code === "undefined" && typeof res.errCode !== "undefined") res.code = res.errCode;
 		let code = res.code;
 		if (config.debug) Logger.result = typeof res == "object" ? JSON.parse(JSON.stringify(res)) : res;
@@ -914,7 +914,7 @@ class CallFunctionUtil {
 			needAlert = (typeof fail === "function") ? false : true;
 		}
 		if (errorToast) needAlert = false;
-		if (title) vk.hideLoading();
+		if (title) vk.hideLoading("request");
 		if (loading) {
 			vk.setLoading(false, Logger.loading);
 			Logger.loading = null;

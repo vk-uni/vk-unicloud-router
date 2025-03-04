@@ -24,6 +24,8 @@ const localeObj = {
 	}
 };
 
+let loadingCounterObj = {};
+
 function getLocale() {
 	let vk = uni.vk;
 	let locale = vk.getLocale();
@@ -323,7 +325,7 @@ export default {
 			}
 		});
 	},
-	showLoading: function(obj = {}) {
+	showLoading: function(obj = {}, name) {
 		if (typeof obj == "string") {
 			let title = obj;
 			obj = {
@@ -335,9 +337,21 @@ export default {
 			obj.mask = true;
 		}
 		uni.showLoading(obj);
+		if (name) {
+			if (!loadingCounterObj[name]) loadingCounterObj[name] = 0;
+			loadingCounterObj[name]++;
+		}
 	},
-	hideLoading: function() {
-		uni.hideLoading();
+	hideLoading: function(name) {
+		if (name && loadingCounterObj[name] > 0) {
+			loadingCounterObj[name]--;
+			if (loadingCounterObj[name] <= 0) {
+				loadingCounterObj[name] = 0;
+				uni.hideLoading();
+			}
+		} else {
+			uni.hideLoading();
+		}
 	},
 	// 设置当前页面的loading变量的值
 	setLoading: function(loading = true, obj = true) {
@@ -347,21 +361,42 @@ export default {
 				let pages = getCurrentPages();
 				let page = pages[pages.length - 1];
 				let that = page.$vm;
-				that.loading = loading;
-				return { that, name: "loading" };
+				let name = "loading";
+				updateCustomLoading({ loading, name, that });
+				return { that, name };
 			} else if (typeof obj === "object") {
 				let { data, name, that } = obj;
 				if (!data) data = that;
-				vk.pubfn.setData(data, name, loading);
+				updateCustomLoading({ loading, name, that: data });
 				return { that, name };
 			} else if (typeof obj === "string") {
 				let pages = getCurrentPages();
 				let page = pages[pages.length - 1];
 				let that = page.$vm;
 				let name = obj;
-				vk.pubfn.setData(that, name, loading);
+				updateCustomLoading({ loading, name, that });
 				return { that, name };
 			}
 		} catch (err) {}
 	},
+}
+
+function updateCustomLoading(obj = {}) {
+	let vk = uni.vk;
+	let {
+		loading,
+		name,
+		that
+	} = obj;
+	if (loading) {
+		if (!loadingCounterObj[name]) loadingCounterObj[name] = 0;
+		loadingCounterObj[name]++;
+		vk.pubfn.setData(that, name, loading);
+	} else {
+		loadingCounterObj[name]--;
+		if (loadingCounterObj[name] <= 0) {
+			loadingCounterObj[name] = 0;
+			vk.pubfn.setData(that, name, loading);
+		}
+	}
 }
