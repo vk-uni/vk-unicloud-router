@@ -11,27 +11,28 @@
  * ##### `admin端`  框架文档：https://vkdoc.fsq.pub/admin/
  * ##### 框架学习Q群：`22466457` 欢迎萌新和大佬来使用和共同改进框架
  */
-import userCenter         from './libs/vk-unicloud/vk-unicloud-user-center'
-import callFunctionUtil   from './libs/vk-unicloud/vk-unicloud-callFunctionUtil'
-import pubfn              from './libs/function/index'
-import modal              from './libs/function/modal'
-import navigate           from './libs/function/vk.navigate'
-import localStorage       from './libs/function/vk.localStorage'
-import sessionStorage     from './libs/function/vk.sessionStorage'
-import openapi            from './libs/openapi/index'
-import requestUtil        from './libs/function/vk.request'
-import importObject       from './libs/function/vk.importObject'
-import filters            from './libs/function/vk.filters'
-import eventManager       from './libs/function/vk.eventManager'
+import userCenter           from './libs/vk-unicloud/vk-unicloud-user-center'
+import callFunctionUtil     from './libs/vk-unicloud/vk-unicloud-callFunctionUtil'
+import pubfn                from './libs/function/index'
+import modal                from './libs/function/modal'
+import navigate             from './libs/function/vk.navigate'
+import localStorage         from './libs/function/vk.localStorage'
+import sessionStorage       from './libs/function/vk.sessionStorage'
+import openapi              from './libs/openapi/index'
+import requestUtil          from './libs/function/vk.request'
+import importObject         from './libs/function/vk.importObject'
+import filters              from './libs/function/vk.filters'
+import eventManager         from './libs/function/vk.eventManager'
 
-import mixin              from './libs/mixin/mixin.js'
-import initPermission     from './libs/function/permission'
-import storeMixin         from './libs/store/mixin/mixin'
-import initGlobalError    from './libs/store/libs/error'
-import consoleLog         from './libs/install/console.log'
-import updateManager      from './libs/function/updateManager'
-import crypto             from './libs/function/vk.crypto'
-import connectWebSocket   from './libs/function/vk.connectWebSocket'
+import mixin                from './libs/mixin/mixin.js'
+import initPermission       from './libs/function/permission'
+import storeMixin           from './libs/store/mixin/mixin'
+import initGlobalError      from './libs/store/libs/error'
+import consoleLog           from './libs/install/console.log'
+import updateManager        from './libs/function/updateManager'
+import crypto               from './libs/function/vk.crypto'
+import connectWebSocket     from './libs/function/vk.connectWebSocket'
+import setCustomClientInfo  from './libs/function/vk.setCustomClientInfo'
 
 // #ifdef H5
 import h5                 from './libs/function/vk.h5'
@@ -129,7 +130,9 @@ const vk = {
 	// 客户端加密函数
 	crypto,
 	// webSocket
-	connectWebSocket
+	connectWebSocket,
+	// 设置自定义客户端信息
+	setCustomClientInfo
 };
 
 
