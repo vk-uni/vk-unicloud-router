@@ -24,7 +24,7 @@ module.exports = {
 		let { formData = {} } = data;
 		let { category_id } = formData;
 		if (category_id == "null") {
-			whereJson["category_id"] = _.in([null, "null"]);
+			whereJson["category_id"] = "null"; // 这里是字符串null是为了索引生效
 		}
 		if (role.indexOf("admin") === -1) {
 			// 如果不是admin角色用户，则只能查看自己上传的

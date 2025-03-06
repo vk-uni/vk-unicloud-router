@@ -64,6 +64,8 @@ module.exports = {
 		};
 		if (vk.pubfn.isNotNull(category_id)) {
 			dataJson["category_id"] = category_id;
+		} else {
+			dataJson["category_id"] = "null"; // 这里设置为字符串null是为了索引生效
 		}
 		await vk.baseDao.add({
 			dbName: "vk-files",
