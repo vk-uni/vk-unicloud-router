@@ -937,6 +937,8 @@ class CallFunctionUtil {
 			sysErr = true;
 		} else if ([404, 500].indexOf(res.code) > -1 && errMsg.indexOf("云函数") > -1) {
 			sysErr = true;
+		} else if (res.code === "SYS_ERR" && ["request:fail", "request:fail "].indexOf(errMsg) > -1) {
+			sysErr = true;
 		} else if ((res.code === 501 && errMsg.indexOf("timeout for 10000ms") > -1) || (res.code === "SYS_ERR" && errMsg.indexOf(": request:ok") > -1)) {
 			errMsg = globalErrorCode["cloudfunction-unusual-timeout"] || "请求超时，但请求还在执行，请重新进入页面。";
 		} else if (typeof errMsg.toLowerCase === "function" && (errMsg.toLowerCase().indexOf("timeout") > -1 || errMsg.toLowerCase().indexOf("etimedout") > -1)) {

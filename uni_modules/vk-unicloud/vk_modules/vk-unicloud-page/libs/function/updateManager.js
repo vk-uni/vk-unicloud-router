@@ -28,7 +28,7 @@ function updateManagerByMP(obj = {}) {
 		// console.log(res.hasUpdate);
 	});
 
-	updateManager.onUpdateReady(function(res) {
+	updateManager.onUpdateReady(function() {
 		uni.showModal({
 			title,
 			content,
@@ -56,6 +56,6 @@ function updateManagerByMP(obj = {}) {
 		// 新的版本下载失败
 		console.error("onUpdateFailed", res);
 		if (typeof obj.fail === "function") obj.fail(res);
-		if (typeof obj.complete === "function") obj.complete();
+		if (typeof obj.complete === "function") obj.complete(res);
 	});
 }
