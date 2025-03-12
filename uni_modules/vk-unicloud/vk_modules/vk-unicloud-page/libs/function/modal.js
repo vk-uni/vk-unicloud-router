@@ -388,14 +388,16 @@ function updateCustomLoading(obj = {}) {
 		name,
 		that
 	} = obj;
+	const keyName = "___loadingCounterObj";
+	if (!that[keyName]) that[keyName] = {};
+	if (typeof that[keyName][name] !== "number") that[keyName][name] = 0;
 	if (loading) {
-		if (!loadingCounterObj[name]) loadingCounterObj[name] = 0;
-		loadingCounterObj[name]++;
+		that[keyName][name]++;
 		vk.pubfn.setData(that, name, loading);
 	} else {
-		loadingCounterObj[name]--;
-		if (loadingCounterObj[name] <= 0) {
-			loadingCounterObj[name] = 0;
+		that[keyName][name]--;
+		if (that[keyName][name] <= 0) {
+			that[keyName][name] = 0;
 			vk.pubfn.setData(that, name, loading);
 		}
 	}
