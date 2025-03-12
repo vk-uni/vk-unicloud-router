@@ -1,3 +1,13 @@
+## 2.19.4（2025-03-11）
+* 【调整】websocket 在非 uniapp 端建立链接时，默认使用非加密策略
+* 【修复】非中英文客户端可能触发语言包缺失的异常问题
+* 【新增】前端新增API `vk.setCustomClientInfo()` [传送门](https://vkdoc.fsq.pub/client/pages/updateRequestGlobalParam.html#set-custom-client-info)
+* 【新增】云端云对象新增API `this.getCustomClientInfo()` [传送门](https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#get-custom-client-info)
+* 【新增】vk.pubfn.test 新增支持域名格式合法性校验功能
+* 【优化】uni-id-users 表的 inviter_uid 字段索引修改为 array 类型，兼容支付宝云规范
+* 【优化】opendb-app-versions 表的 platform 字段索引修改为 array 类型，兼容支付宝云规范
+* 【优化】同时发起多个 vk.callFunction 请求时的 loading 状态处理，loading 将在所有请求完成后再统一关闭，避免中途消失问题，提升用户体验
+* 【优化】vk.request 新增 useProxy 参数，当设为 true 时，在阿里云云开发环境中请求将自动通过代理服务器发送
 ## 2.19.3（2025-01-22）
 * 【修复】运行报错 'localStorage' has already been declared 的问题
 ## 2.19.2（2025-01-21）
