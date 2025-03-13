@@ -1,1 +1,1 @@
-* 【修复】运行报错 'localStorage' has already been declared 的问题
+* 【修复】2.19.4 版本引出的 loading 显示和关闭的时机错误问题
