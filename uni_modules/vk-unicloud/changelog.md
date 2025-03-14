@@ -1,3 +1,7 @@
+## 2.19.6（2025-03-14）
+* 【修复】2.19.4版本引出的当设置了 retryCount 时，loading 可能无法被正常关闭的问题
+
+* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.19.5（2025-03-13）
 * 【修复】2.19.4 版本引出的 loading 显示和关闭的时机错误问题
 

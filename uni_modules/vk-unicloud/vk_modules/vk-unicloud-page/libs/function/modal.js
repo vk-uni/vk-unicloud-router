@@ -338,7 +338,7 @@ export default {
 		}
 		uni.showLoading(obj);
 		if (name) {
-			if (!loadingCounterObj[name]) loadingCounterObj[name] = 0;
+			if (typeof loadingCounterObj[name] !== "number") loadingCounterObj[name] = 0;
 			loadingCounterObj[name]++;
 		}
 	},

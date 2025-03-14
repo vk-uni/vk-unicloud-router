@@ -904,6 +904,9 @@ class CallFunctionUtil {
 				if (!obj.hookResult || (typeof obj.hookResult === "function" && !obj.hookResult(err))) {
 					Logger.sysFail = true;
 					if (typeof params.retry == "function") params.retry(res, params);
+					// 自2.19.4版本开始，新增了loading计数器的概念，故重试会增加loading计数器，所以这里需要减去一次loading计数器
+					if (title) vk.hideLoading("request");
+					if (loading) vk.setLoading(false, Logger.loading);
 					return false;
 				}
 			}
