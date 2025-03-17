@@ -8,6 +8,9 @@ const install = Vue => {
 		}
 		if (!debug) {
 			console.log = function(...obj) {};
+			console.group = function(...obj) {};
+			console.groupCollapsed = function(...obj) {};
+			console.groupEnd = function(...obj) {};
 		}
 	}
 }

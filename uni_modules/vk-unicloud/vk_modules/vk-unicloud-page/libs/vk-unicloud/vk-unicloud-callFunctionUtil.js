@@ -36,6 +36,7 @@ class CallFunctionUtil {
 			},
 			// 日志风格
 			logger: {
+				mode: 0, // 0 正常（默认展开） 1 简洁（默认折叠）
 				colorArr: [
 					"#0095ff",
 					"#67C23A"
@@ -633,7 +634,21 @@ class CallFunctionUtil {
 							"aliyun": "阿里云oss"
 						};
 						let providerName = providerObj[provider] || provider;
-						console.log(`%c--------【开始】【${providerName}-文件上传】--------`, 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
+						let logMode = config.logger.mode || 0; // 0 正常 1 简洁（折叠）
+						// #ifndef WEB || MP
+						logMode = 0;
+						// #endif
+						// #ifdef WEB || MP
+						if (logMode === 1) {
+							let requestStatus = "成功"; // 0 请求成功 1 请求失败情况1 2 请求失败情况2
+							if (Logger.error) {
+								requestStatus = "异常";
+								colorStr = "#fa3534";
+							}
+							console.groupCollapsed(`%c--------【${requestStatus}】【${providerName}-文件上传】【${Logger.runTime}ms】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
+						} 
+						// #endif
+						if (logMode === 0) console.log(`%c--------【开始】【${providerName}-文件上传】--------`, 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
 						console.log("【本地文件】: ", Logger.filePath);
 						console.log("【返回数据】: ", Logger.result);
 						console.log("【预览地址】: ", Logger.result && Logger.result.url);
@@ -641,6 +656,9 @@ class CallFunctionUtil {
 						console.log("【上传时间】: ", vk.pubfn.timeFormat(Logger.startTime, "yyyy-MM-dd hh:mm:ss"));
 						if (Logger.error) console.error("【error】:", Logger.error);
 						console.log(`%c--------【结束】【${providerName}-文件上传】--------`, 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
+						// #ifdef WEB || MP
+						if (logMode === 1) console.groupEnd();
+						// #endif
 						if (typeof obj.complete == "function") obj.complete();
 					});
 			});
@@ -1032,7 +1050,26 @@ class CallFunctionUtil {
 			if (encrypt) {
 				functionType = functionType + "加密";
 			}
-			console.log(`%c--------【开始】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
+			let logMode = config.logger.mode || 0; // 0 正常 1 简洁（折叠）
+			// #ifndef WEB || MP
+			logMode = 0;
+			// #endif
+			// #ifdef WEB || MP
+			if (logMode === 1) {
+				let requestStatus = "成功"; // 0 请求成功 1 请求失败情况1 2 请求失败情况2
+				if (Logger.error) {
+					if ((Logger.error.err && Logger.error.err.stack) || Logger.error.stack) {
+						requestStatus = "异常";
+						colorStr = "#fa3534";
+					} else {
+						requestStatus = "提示";
+						colorStr = "#ff9900";
+					}
+				}
+				console.groupCollapsed(`%c--------【${requestStatus}】${Logger.label}【${functionType}请求】【${name}】【${url}】【${Logger.runTime}ms】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
+			} 
+			// #endif
+			if (logMode === 0) console.log(`%c--------【开始】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
 			console.log("【请求参数】: ", Logger.params);
 			console.log("【返回数据】: ", Logger.result);
 			console.log("【总体耗时】: ", Logger.runTime, "毫秒【含页面渲染】");
@@ -1052,6 +1089,9 @@ class CallFunctionUtil {
 				}
 			}
 			console.log(`%c--------【结束】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
+			// #ifdef WEB || MP
+			if (logMode === 1) console.groupEnd();
+			// #endif
 			Logger = null; // 释放内存
 		}
 		if (typeof complete == "function") complete(res);

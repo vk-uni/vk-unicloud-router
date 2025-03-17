@@ -7,12 +7,13 @@ const h5 = {};
 // 引入 微信公众号 js_sdk 包
 import wx from './weixin-js-sdk'
 h5.wx = wx;
+h5.wxReady = false;
 
 /**
  * 获取当前H5所在的环境
 let env = vk.h5.getEnv();
 if (env === "h5-weixin") {
-	
+
 }
  */
 h5.getEnv = function() {
@@ -47,7 +48,7 @@ h5.getEnv = function() {
  * 获取当前H5所在的环境（多参数版）
 let env = vk.h5.getEnvInfo();
 if (env.isPCWeixin) {
-	
+
 }
  */
 h5.getEnvInfo = function() {
@@ -76,10 +77,10 @@ h5.getEnvInfo = function() {
 	const isDevDouyin = isDouyin && /toutiaodevtools/i.test(ua);
 	// 百度
 	const isBaidu = /baidu/i.test(ua);
-	const isMpBaidu = isBaidu && isMiniProgram ? true : false; 
+	const isMpBaidu = isBaidu && isMiniProgram ? true : false;
 	const isH5Baidu = isBaidu && !isMiniProgram ? true : false;
 	const isDevBaidu = isBaidu && /swandevtools/i.test(ua);
-	
+
 	let env = {
 		isMiniProgram, // 小程序
 		isWeixin,      // 微信
@@ -208,6 +209,7 @@ h5.init = function(obj = {}) {
 				signature,
 				jsApiList
 			}, config));
+			vk.h5.wxReady = true;
 			wx.error((err) => {
 				console.error(err);
 			});

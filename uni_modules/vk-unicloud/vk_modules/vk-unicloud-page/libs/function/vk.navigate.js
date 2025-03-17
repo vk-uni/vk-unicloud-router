@@ -446,43 +446,42 @@ util.navigateToMiniProgram = function(obj) {
 
 /**
  * 检测是否可以分享(内部方法)
- util.checkAllowShare({
-	 url:url,
- });
+let allowShare = vk.navigate.checkAllowShare({
+	url: url,
+});
  */
 util.checkAllowShare = function(obj) {
 	let vk = uni.vk;
 	let { url, success } = obj;
 	let pagesRule = config.checkSharePages || {};
 	if (pagesRule && pagesRule.mode > 0) {
+		if (url === "/") {
+			url = config.index.url;
+		}
 		let res = util.checkWildcardTest({
 			url,
 			pagesRule
 		});
-		// #ifdef MP
-		let supported = true; // 是否支持该API
-		// #ifdef MP-MP-BAIDU
-		supported = false; // 百度小程序不支持
+		// console.log('res.key: ', res.key)
+		// #ifdef MP-WEIXIN || MP-ALIPAY || MP-TOUTIAO || MP-QQ || MP-KUAISHOU || MP-JD
+		let menus = pagesRule.menus || ['shareAppMessage', 'shareTimeline'];
+		// #ifdef MP-TOUTIAO
+		menus = ['share', 'record'];
 		// #endif
-		if (supported) {
-			let menus = pagesRule.menus || ['shareAppMessage', 'shareTimeline'];
-			// #ifdef MP-TOUTIAO
-			menus = ['share', 'record'];
-			// #endif
-			if (res.key) {
-				//console.log("允许分享");
-				uni.showShareMenu({
-					withShareTicket: false,
-					menus
-				});
-			} else {
-				//console.log("禁止分享");
-				uni.hideShareMenu({
-					menus
-				});
-			}
+		if (res.key) {
+			//console.log("允许分享");
+			uni.showShareMenu({
+				withShareTicket: false,
+				menus
+			});
+		} else {
+			//console.log("禁止分享");
+			uni.hideShareMenu({
+				menus
+			});
 		}
 		// #endif
+		return res.key;
 	}
 };
 
