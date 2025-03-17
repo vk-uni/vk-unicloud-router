@@ -1066,7 +1066,7 @@ class CallFunctionUtil {
 						colorStr = "#ff9900";
 					}
 				}
-				console.groupCollapsed(`%c--------【${requestStatus}】${Logger.label}【${functionType}请求】【${name}】【${url}】【${Logger.runTime}ms】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
+				if (typeof console.groupCollapsed === "function") console.groupCollapsed(`%c--------【${requestStatus}】${Logger.label}【${functionType}请求】【${name}】【${url}】【${Logger.runTime}ms】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
 			} 
 			// #endif
 			if (logMode === 0) console.log(`%c--------【开始】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
@@ -1090,7 +1090,7 @@ class CallFunctionUtil {
 			}
 			console.log(`%c--------【结束】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
 			// #ifdef WEB || MP
-			if (logMode === 1) console.groupEnd();
+			if (logMode === 1 && typeof console.groupEnd === "function") console.groupEnd();
 			// #endif
 			Logger = null; // 释放内存
 		}
