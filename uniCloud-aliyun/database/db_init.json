@@ -785,7 +785,7 @@
 			},
 			{
 				"IndexName": "stable_publish",
-				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "stable_publish", "Direction": "1" }], "MgoIsUnique": false }
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "stable_publish", "Direction": "1", "Type": "bool" }], "MgoIsUnique": false }
 			}
 		]
 	},
