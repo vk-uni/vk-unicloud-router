@@ -22,15 +22,17 @@ module.exports = {
 			ip,
 			ua,
 			os,
+			device_id,
 			platform,
 			context = {},
 			state = 1,
-			dcloud_appid
+			dcloud_appid,
 		} = event;
 		if (context) {
 			ip = context.CLIENTIP;
 			ua = context.CLIENTUA;
 			os = context.OS;
+			device_id = context.DEVICEID;
 			platform = context.PLATFORM;
 			dcloud_appid = context.APPID;
 		}
@@ -50,6 +52,7 @@ module.exports = {
 						ip,
 						ua,
 						os,
+						device_id,
 						platform,
 						state,
 						dcloud_appid,
