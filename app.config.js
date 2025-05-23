@@ -117,7 +117,7 @@ export default {
 				// 自定义域名，如：cdn.example.com（填你在扩展存储绑定的域名，若云端已设置 uni-config-center/vk-unicloud/index.js 内的 vk.service.cloudStorage.extStorage.domain 则此处可不填）
 				domain: "",
 				// 上传时，是否按用户id进行分组储存
-				groupUserId: false,
+				groupUserId: true,
 			},
 			// 阿里云oss
 			// 密钥和签名信息（由于签名的获取比较麻烦,建议初学者使用上传到unicloud或extStorage的方案，上传到阿里云OSS是给有特殊需求的用户使用）
@@ -136,7 +136,7 @@ export default {
 				// oss外网访问地址，也可以是阿里云cdn地址
 				host: "https://xxx.xxx.com",
 				// 上传时，是否按用户id进行分组储存
-				groupUserId: false,
+				groupUserId: true,
 			}
 		}
 	},
