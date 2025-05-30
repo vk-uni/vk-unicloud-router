@@ -789,7 +789,16 @@ export default {
 	/**
 	 * 获取支付宝code
 	 */
-	getAlipayCode() {
+	getAlipayCode(obj = {}) {
+		let { data = {} } = obj;
+		// #ifdef APP-PLUS
+		if (data.code) {
+			return new Promise((resolve, reject) => {
+				resolve(data.code);
+			});
+		}
+		// #endif
+		
 		// #ifdef APP-PLUS || MP-ALIPAY
 		return new Promise((resolve, reject) => {
 			uni.login({
@@ -818,7 +827,7 @@ export default {
 			addLoading(obj, "login");
 			addAppid(obj);
 			let { data = {} } = obj;
-			return that.getAlipayCode().then((code) => {
+			return that.getAlipayCode(obj).then((code) => {
 				return callFunction({
 					url: 'user/pub/loginByAlipay',
 					...obj,
@@ -846,7 +855,7 @@ export default {
 		addLoading(obj, "loading");
 		addAppid(obj);
 		let { data = {} } = obj;
-		return that.getAlipayCode().then((code) => {
+		return that.getAlipayCode(obj).then((code) => {
 			return callFunction({
 				...obj,
 				url: 'user/pub/code2SessionAlipay',
@@ -869,7 +878,7 @@ export default {
 			addLoading(obj, "loading");
 			addAppid(obj);
 			let { data = {} } = obj;
-			return that.getAlipayCode().then((code) => {
+			return that.getAlipayCode(obj).then((code) => {
 				return callFunction({
 					...obj,
 					url: 'user/kh/bindAlipay',
