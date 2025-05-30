@@ -18,7 +18,7 @@ module.exports = {
 		if (vk.pubfn.isNullOne(role_id)) {
 			return { code: -1, msg: 'role_id不能为空' };
 		}
-		res = uniID.deleteRole({
+		res = await uniID.deleteRole({
 			roleID: role_id
 		});
 		res.msg = res.message;

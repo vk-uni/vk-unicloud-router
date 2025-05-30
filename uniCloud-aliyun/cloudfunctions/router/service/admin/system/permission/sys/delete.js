@@ -29,7 +29,7 @@ module.exports = {
 		if (num > 0) {
 			return { code: -1, msg: '该项含有子项，请先删除子项！' };
 		}
-		res = uniID.deletePermission({
+		res = await uniID.deletePermission({
 			permissionID: permission_id
 		});
 		res.msg = res.message;

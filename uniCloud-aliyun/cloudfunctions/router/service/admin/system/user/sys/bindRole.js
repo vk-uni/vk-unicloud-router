@@ -17,7 +17,7 @@ module.exports = {
 		let res = { code: 0, msg: '' };
 		// 业务逻辑开始----------------------------------------------------------- 
 		let { user_id, roleList, reset } = data;
-		res = uniID.bindRole({
+		res = await uniID.bindRole({
 			uid: user_id,
 			roleList,
 			reset
