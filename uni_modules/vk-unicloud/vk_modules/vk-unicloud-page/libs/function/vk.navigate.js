@@ -498,4 +498,111 @@ util.$off = function(...obj) {
 	return uni.$off(...obj);
 };
 
+/**
+ * 跳转到抽奖页
+vk.navigateToLuckyDraw({
+	path: `pages/activity/detail/detail?_id=${activity_id}`
+});
+ */
+util.navigateToLuckyDraw = function(obj = {}) {
+	let vk = uni.vk;
+	// #ifndef APP-PLUS || MP-WEIXIN || WEB
+	vk.alert('请在微信小程序中打开');
+	// #endif
+	const mpConfig = {
+		appid: "wx2c55b235ad6553e3", // 抽奖服务小程序的appid（请勿修改）
+		ghId: "gh_fbd003114768", // 抽奖服务小程序的原始ID（请勿修改）
+	};
+	let {
+		path, // 页面地址
+		envVersion = "release", // 小程序版本，正式版为release，开发版为develop，体验版为trial
+		extraData,
+		shortLink,
+		noRelaunchIfPathUnchanged,
+		allowFullScreen,
+		success,
+		fail,
+		complete,
+		openEmbedded
+	} = obj;
+	const successCallback = (res) => {
+		if (typeof success === "function") success(res);
+		if (typeof complete === "function") complete(res);
+	};
+	const failCallback = (err) => {
+		if (typeof fail === "function") fail(err);
+		if (typeof complete === "function") complete(err);
+	};
+	// #ifdef WEB
+	let pathArr = path.split("?");
+	let page = pathArr[0];
+	let query = pathArr[1];
+	let url = `weixin://dl/business/?appid=${mpConfig.appid}&path=${page}&env_version=${envVersion}`;
+	if (query) {
+		query = encodeURIComponent(query);
+		url += `&query=${query}`;
+	}
+	window.location.href = url;
+	successCallback({
+		errMsg: "navigateToMiniProgram:ok"
+	});
+	// #endif
+
+	// #ifdef APP-PLUS
+	plus.share.getServices(res => {
+		let sweixin = null;
+		for (let i in res) {
+			if (res[i].id === 'weixin') {
+				sweixin = res[i];
+				break;
+			}
+		}
+		if (sweixin) {
+			let typeObj = {
+				"release": 0,
+				"develop": 1,
+				"trial": 2
+			};
+			sweixin.launchMiniProgram({
+				id: mpConfig.ghId, // 需在微信开放平台绑定的小程序原始ID
+				type: typeObj[envVersion], // 0-正式版，1-开发版，2-体验版
+				path
+			}, successCallback, failCallback);
+		} else {
+			vk.alert("跳转失败：未安装微信");
+		}
+	});
+	// #endif
+
+	// #ifdef MP-WEIXIN
+	const openMiniProgram = openEmbedded ? uni.openEmbeddedMiniProgram : uni.navigateToMiniProgram;
+	openMiniProgram({
+		appId: mpConfig.appid,
+		path,
+		extraData,
+		envVersion,
+		shortLink,
+		noRelaunchIfPathUnchanged,
+		allowFullScreen,
+		success,
+		complete,
+		fail: (err) => {
+			failCallback(err);
+			let subMsg = err.errMsg || err.message;
+			if (subMsg && subMsg.indexOf("cancel") > -1) {
+				return;
+			}
+			if (subMsg && subMsg.indexOf("jump miniprogram banded") > -1) {
+				subMsg = `当前小程序不具备打开其他小程序的能力`;
+			}
+			let errMsg = "跳转失败";
+			if (subMsg) {
+				errMsg += `：${subMsg}`;
+			}
+			console.error(errMsg);
+		}
+	});
+	// #endif
+};
+
 export default util;

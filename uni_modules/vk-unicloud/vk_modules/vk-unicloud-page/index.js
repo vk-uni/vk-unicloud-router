@@ -88,6 +88,8 @@ const vk = {
 	navigateToLogin:         navigate.navigateToLogin,
 	// 跳转到小程序
 	navigateToMiniProgram:   navigate.navigateToMiniProgram,
+	// 跳转到抽奖小程序
+	navigateToLuckyDraw:     navigate.navigateToLuckyDraw,
 	// 触发全局的自定义事件，附加参数都会传给监听器回调函数。
 	$emit:                   navigate.$emit,
 	// 监听全局的自定义事件，事件由 uni.$emit 触发，回调函数会接收事件触发函数的传入参数。
