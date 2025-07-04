@@ -2,7 +2,9 @@
 	<view class="app">
 		<button type="default" @tap="code2Session">code2Session</button>
 		<button type="default" @tap="getMiniCode">生成带参数的小程序码</button>
-		<view style="text-align: center;" v-if="imageUrl"><image :src="imageUrl" style="width: 400rpx;height: 400rpx;"></image></view>
+		<view style="text-align: center;" v-if="imageUrl">
+			<image :src="imageUrl" style="width: 400rpx;height: 400rpx;"></image>
+		</view>
 		<view>
 			<text space="ensp">{{ JSON.stringify(data, null, 2) }}</text>
 		</view>

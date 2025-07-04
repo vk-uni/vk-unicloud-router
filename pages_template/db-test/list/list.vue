@@ -39,136 +39,142 @@
 </template>
 
 <script>
-let vk = uni.vk;
-export default {
-	data() {
-		// 页面数据变量
-		return {
-			action: "template/db_api/pub/getList", // 获取list数据的云函数请求路径
-			// init请求返回的数据
-			data: {
-				list: [], // 列表数据
-				pageKey: true, // 是否还能加载下一页
-				loadmore: "loading"
+	let vk = uni.vk;
+	export default {
+		data() {
+			// 页面数据变量
+			return {
+				action: "template/db_api/pub/getList", // 获取list数据的云函数请求路径
+				// init请求返回的数据
+				data: {
+					list: [], // 列表数据
+					pageKey: true, // 是否还能加载下一页
+					loadmore: "loading"
+				},
+				// 表单请求数据
+				form1: {
+					addTime: "",
+					endTime: "",
+					searchvalue: "",
+					pageIndex: 1, //当前页码
+					pageSize: 10 //每页显示数量
+				},
+				scrollTop: 0
+			};
+		},
+		onPageScroll(e) {
+			this.scrollTop = e.scrollTop;
+		},
+		// 监听 - 页面每次【加载时】执行(如：前进)
+		onLoad(options = {}) {
+			vk = uni.vk;
+			this.options = options;
+			this.init(options);
+		},
+		// 监听 - 页面【首次渲染完成时】执行。注意如果渲染速度快，会在页面进入动画完成前触发
+		onReady() {},
+		// 监听 - 页面每次【显示时】执行(如：前进和返回) (页面每次出现在屏幕上都触发，包括从下级页面点返回露出当前页面)
+		onShow() {},
+		// 监听 - 页面每次【隐藏时】执行(如：返回)
+		onHide() {},
+		// 监听 - 页面下拉刷新
+		onPullDownRefresh() {
+			setTimeout(() => {
+				uni.stopPullDownRefresh();
+			}, 1000);
+		},
+		// 监听 - 页面触底部
+		onReachBottom(options) {
+			this.nextPage();
+		},
+		// 监听 - 窗口尺寸变化(仅限:App、微信小程序)
+		onResize() {},
+		// 监听 - 点击右上角转发时
+		onShareAppMessage(options) {},
+		// 函数
+		methods: {
+			// 页面数据初始化函数
+			init(options) {
+				console.log("init: ", options);
+				this.getList({
+					success: () => {}
+				});
 			},
-			// 表单请求数据
-			form1: {
-				addTime: "",
-				endTime: "",
-				searchvalue: "",
-				pageIndex: 1, //当前页码
-				pageSize: 10 //每页显示数量
+			pageTo(path) {
+				vk.navigateTo(path);
 			},
-			scrollTop: 0
-		};
-	},
-	onPageScroll(e) {
-		this.scrollTop = e.scrollTop;
-	},
-	// 监听 - 页面每次【加载时】执行(如：前进)
-	onLoad(options = {}) {
-		vk = uni.vk;
-		this.options = options;
-		this.init(options);
-	},
-	// 监听 - 页面【首次渲染完成时】执行。注意如果渲染速度快，会在页面进入动画完成前触发
-	onReady() {},
-	// 监听 - 页面每次【显示时】执行(如：前进和返回) (页面每次出现在屏幕上都触发，包括从下级页面点返回露出当前页面)
-	onShow() {},
-	// 监听 - 页面每次【隐藏时】执行(如：返回)
-	onHide() {},
-	// 监听 - 页面下拉刷新
-	onPullDownRefresh() {
-		setTimeout(() => {
-			uni.stopPullDownRefresh();
-		}, 1000);
-	},
-	// 监听 - 页面触底部
-	onReachBottom(options) {
-		this.nextPage();
-	},
-	// 监听 - 窗口尺寸变化(仅限:App、微信小程序)
-	onResize() {},
-	// 监听 - 点击右上角转发时
-	onShareAppMessage(options) {},
-	// 函数
-	methods: {
-		// 页面数据初始化函数
-		init(options) {
-			console.log("init: ", options);
-			this.getList({
-				success: () => {}
-			});
-		},
-		pageTo(path) {
-			vk.navigateTo(path);
-		},
-		// 查询list数据
-		getList(obj = {}) {
-			let that = this;
-			vk.pubfn.getListData({
-				that: that,
-				url: that.action,
-				success: obj.success
-			});
-		},
-		// 加载下一页数据
-		nextPage() {
-			let that = this;
-			if (that.data.loadmore == "loadmore") {
-				that.data.loadmore = "loading";
-				that.form1.pageIndex++;
+			// 查询list数据
+			getList(obj = {}) {
+				let that = this;
+				vk.pubfn.getListData({
+					that: that,
+					url: that.action,
+					success: obj.success
+				});
+			},
+			// 加载下一页数据
+			nextPage() {
+				let that = this;
+				if (that.data.loadmore == "loadmore") {
+					that.data.loadmore = "loading";
+					that.form1.pageIndex++;
+					that.getList();
+				}
+			},
+			// 搜索
+			onSearch(e) {
+				let that = this;
+				console.log("搜索", that.form1.searchvalue);
+				that.form1.pageIndex = 1;
+				that.data.pageKey = true;
 				that.getList();
+			},
+			// 列的点击事件
+			itemBtn(item) {
+				console.log("点击", item);
+				vk.toast("点击" + item._id.substring(20));
 			}
 		},
-		// 搜索
-		onSearch(e) {
-			let that = this;
-			console.log("搜索", that.form1.searchvalue);
-			that.form1.pageIndex = 1;
-			that.data.pageKey = true;
-			that.getList();
-		},
-		// 列的点击事件
-		itemBtn(item) {
-			console.log("点击", item);
-			vk.toast("点击" + item._id.substring(20));
-		}
-	},
-	// 计算属性
-	computed: {}
-};
+		// 计算属性
+		computed: {}
+	};
 </script>
 <style lang="scss" scoped>
-page {
-	background-color: #f8f8f8;
-	min-height: 100vh;
-}
-/* list 开始 */
-.vk-list-view {
-	background-color: #f8f8f8;
-}
-.vk-list-view .list-view {
-	padding: 0rpx 0rpx 20rpx 0rpx;
-}
-.vk-list-view .list-search {
-	background-color: #ffffff;
-	padding: 20rpx 30rpx;
-}
-.vk-list-view .list-head-desc-text {
-	font-size: 28rpx;
-	color: #999;
-	padding: 20rpx 30rpx 0rpx 30rpx;
-	padding-bottom: 0;
-	line-height: 52rpx;
-	width: 100%;
-}
-.vk-list-view .list-head-text-num {
-	font-weight: bold;
-	color: black;
-	font-size: 26rpx;
-	margin-left: 10rpx;
-	margin-right: 10rpx;
-}
-/* list 结束 */
+	page {
+		background-color: #f8f8f8;
+		min-height: 100vh;
+	}
+
+	/* list 开始 */
+	.vk-list-view {
+		background-color: #f8f8f8;
+	}
+
+	.vk-list-view .list-view {
+		padding: 0rpx 0rpx 20rpx 0rpx;
+	}
+
+	.vk-list-view .list-search {
+		background-color: #ffffff;
+		padding: 20rpx 30rpx;
+	}
+
+	.vk-list-view .list-head-desc-text {
+		font-size: 28rpx;
+		color: #999;
+		padding: 20rpx 30rpx 0rpx 30rpx;
+		padding-bottom: 0;
+		line-height: 52rpx;
+		width: 100%;
+	}
+
+	.vk-list-view .list-head-text-num {
+		font-weight: bold;
+		color: black;
+		font-size: 26rpx;
+		margin-left: 10rpx;
+		margin-right: 10rpx;
+	}
+
+	/* list 结束 */
 </style>

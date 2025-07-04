@@ -471,6 +471,18 @@
 				"enable": true,
 				"match_mode": 1,
 				"parent_id": "system-uni"
+			},
+			{
+				"_id": "system-uni-vk-lucky-draw",
+				"_add_time": 1596416400000,
+				"permission_id": "system-uni-vk-lucky-draw",
+				"permission_name": "抽奖活动管理",
+				"comment": "",
+				"url": ["plugs/lucky-draw/admin/sys.luckyDraw.*"],
+				"sort": 9,
+				"enable": true,
+				"match_mode": 1,
+				"parent_id": "system-uni"
 			}
 		],
 		"index": [
@@ -675,6 +687,17 @@
 				"icon": "",
 				"menu_id": "system-vk-ws-connection",
 				"name": "ws连接管理",
+				"parent_id": "system-uni"
+			},
+			{
+				"_id": "system-vk-lucky-draws",
+				"menu_id": "system-vk-lucky-draws",
+				"sort": 12,
+				"url": "/pages_plugs/system_uni/lucky-draw/list",
+				"_add_time": 1596416400000,
+				"enable": true,
+				"icon": "vk-icon-present",
+				"name": "抽奖活动",
 				"parent_id": "system-uni"
 			}
 		],
@@ -991,6 +1014,26 @@
 			{
 				"IndexName": "status",
 				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "status", "Direction": "1", "Type": "int" }], "MgoIsUnique": false }
+			}
+		]
+	},
+	"vk-lucky-draw-activity": {
+		"data": [],
+		"index": [{
+				"IndexName": "_add_time",
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "_add_time", "Direction": "-1", "Type": "long" }], "MgoIsUnique": false }
+			},
+			{
+				"IndexName": "activity_id",
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "activity_id", "Direction": "1" }], "MgoIsUnique": true }
+			},
+			{
+				"IndexName": "sort",
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "sort", "Direction": "1", "Type": "int" }], "MgoIsUnique": false }
+			},
+			{
+				"IndexName": "enable",
+				"MgoKeySchema": { "MgoIndexKeys": [{ "Name": "enable", "Direction": "1", "Type": "bool" }], "MgoIsUnique": false }
 			}
 		]
 	}

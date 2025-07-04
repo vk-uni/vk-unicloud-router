@@ -2,9 +2,6 @@
 	<view class="content">
 		<view style="margin-bottom: 20rpx;font-size: 32rpx;">
 			<view>
-				<text>当前集成的</text><text style="font-weight: bold;margin: 0 10rpx;">uni-id</text>版本：<text style="font-weight: bold;">3.3.28</text>
-			</view>
-			<view>
 				<text>当前运行的</text><text style="font-weight: bold;margin: 0 10rpx;">vue</text>版本：
 				<text style="font-weight: bold;">
 					<!-- #ifdef VUE2 -->
@@ -38,7 +35,8 @@
 		<view style="margin-bottom: 20rpx;">插件版本1.4.4 新增 Vuex状态管理</view>
 		<button type="default" @click="pageTo('../../vk-vuex/vk-vuex')">Vuex状态管理演示示例</button>
 		<button type="default" @click="pageTo('../login/index/index')">登录注册找回密码页面模板</button>
-		
+		<view style="margin-bottom: 20rpx;">三方工具对接</view>
+		<button type="default" @click="vk.navigateTo('../../plugs/lucky-draw/lucky-draw')">抽奖活动小助手（新）</button>
 		<view style="margin-bottom: 20rpx;">各大小程序API扩展</view>
 		<button type="default" @click="vk.navigateTo('../../openapi/weixin/weixin')">微信小程序API</button>
 		<!-- #ifdef H5 -->
@@ -48,6 +46,7 @@
 		<button type="default" @click="vk.navigateTo('../../openapi/douyin/douyin')">抖音小程序API</button>
 		<button type="default" @click="vk.navigateTo('../../openapi/alipay/alipay')">支付宝小程序API</button>
 		<button type="default" @click="vk.navigateTo('../../openapi/baidu/baidu')">百度开放平台API</button>
+		
 
 	</view>
 </template>
