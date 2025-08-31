@@ -68,7 +68,7 @@ module.exports = {
 		let code = vk.pubfn.random(6);
 
 		// 通过手机号登录或注册
-		await uniID.setVerifyCode({ mobile, code, expiresIn: 60, type: "login" });
+		await uniID.setVerifyCode({ mobile, code, expiresIn: 60, type: type ? type : "login" });
 		res = await uniID.loginBySms({ mobile, code, type, password, inviteCode, needPermission });
 
 		if (!res.token) return res;

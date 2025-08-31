@@ -4,7 +4,7 @@
 module.exports = {
 	/**
 	 * 万能第三方账号 - 登录
-	 * 调用示例可直接参云函数 user/pub/loginByDouyin 内的写法
+	 * 调用示例可直接参考云函数 user/pub/loginByDouyin 内的写法
 	 */
 	login: async (data, util) => {
 		let { config, vk, db, _ } = util;
@@ -98,7 +98,7 @@ module.exports = {
 	},
 	/**
 	 * 万能第三方账号 - 绑定
-	 * 调用示例可直接参云函数 user/kh/bindDouyin 内的写法
+	 * 调用示例可直接参考云函数 user/kh/bindDouyin 内的写法
 	 */
 	bind: async (data, util) => {
 		let { config, vk, db, _ } = util;
@@ -192,7 +192,7 @@ module.exports = {
 	},
 	/**
 	 * 万能第三方账号 - 解绑
-	 * 调用示例可直接参云函数 user/kh/unbindDouyin 内的写法
+	 * 调用示例可直接参考云函数 user/kh/unbindDouyin 内的写法
 	 */
 	unbind: async (data, util) => {
 		let { config, vk, db, _ } = util;

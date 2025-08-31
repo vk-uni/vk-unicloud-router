@@ -1,6 +1,6 @@
 module.exports = {
 	/**
-	 * 解绑邮箱
+	 * 解绑手机号
 	 * @url user/kh/unbindMobile 前端调用的url参数地址
 	 * @description 当前登录用户解绑手机号
 	 * data 请求参数 说明

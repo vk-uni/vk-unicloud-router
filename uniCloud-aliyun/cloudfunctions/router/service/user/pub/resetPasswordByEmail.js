@@ -11,7 +11,7 @@ module.exports = {
 	 * @param {String} msg 详细信息
 	 */
 	main: async (event) => {
-		let { data = {}, util, originalParam } = event;
+		let { data = {}, util, originalParam, uniIdToken } = event;
 		let { uniID, config, pubFun, vk, db, _ } = util;
 		let {
 			_id,
@@ -44,7 +44,8 @@ module.exports = {
 		// 重置密码
 		res = await uniID.resetPwd({
 			uid: userInfo._id,
-			password
+			password,
+			token: uniIdToken ? [uniIdToken] : [], // 保留当前登录的token
 		});
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;
