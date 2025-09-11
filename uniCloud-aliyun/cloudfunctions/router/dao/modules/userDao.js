@@ -16,14 +16,14 @@ dao.init = function(obj) {
  * data 请求参数说明
  * @param {String} user_id 用户ID
  */
-dao.findById = async (user_id) => {
+dao.findById = async (user_id, fieldJson = { token: false, password: false }) => {
 	let { vk, db, _ } = util;
 	let res = {};
 	// 数据库操作开始-----------------------------------------------------------
 	res = await vk.baseDao.findById({
 		dbName: dbName.user,
 		id: user_id,
-		fieldJson: { token: false, password: false },
+		fieldJson
 	});
 	// 数据库操作结束-----------------------------------------------------------
 	return res;
@@ -38,7 +38,7 @@ let userInfo = await vk.daoCenter.userDao.findByWhereJson({
 	
 });
  */
-dao.findByWhereJson = async (whereJson, fieldJson={ token: false, password: false }) => {
+dao.findByWhereJson = async (whereJson, fieldJson = { token: false, password: false }) => {
 	let { vk, db, _ } = util;
 	let res = {};
 	// 数据库操作开始-----------------------------------------------------------
@@ -598,7 +598,7 @@ dao.resetPwd = async (data) => {
 };
 
 /**
- * 获取一个未被使用的8位数分享码
+ * 获取一个未被使用的7位数分享码
  * 调用示例
 await vk.daoCenter.userDao.getValidInviteCode();
  */
@@ -631,6 +631,120 @@ dao.getValidInviteCode = async (data = {}) => {
 	}, 10); // 最大重试10次
 	// 数据库操作结束-----------------------------------------------------------
 	return inviteCode;
+};
+
+/**
+ * 注销账号
+ * 调用示例
+await vk.daoCenter.userDao.closeAccount({
+	uid: "用户id",
+	delay: 0, // 延迟注销时间（单位为秒），0表示立即注销，若设置大于0，则需要在定时任务中再次执行注销账号，且不传delay参数
+});
+ */
+dao.closeAccount = async (data = {}) => {
+	const { vk, _ } = util;
+	let { uid, delay = 0 } = data;
+	if (vk.pubfn.isNull(uid)) return { code: -1, msg: "参数uid不能为空" };
+	const userInfo = await dao.findById(uid, { token: false });
+	if (vk.pubfn.isNull(userInfo)) return { code: -1, msg: "要注销的用户不存在" };
+	const nowTime = Date.now();
+	const closeStatus = 4;
+	if (userInfo.status === closeStatus && userInfo.close_account) {
+		if (!userInfo.close_account.confirmed) {
+			// 判断是否过了注销冷静期
+			if (nowTime > userInfo.close_account.close_time) {
+				delay = 0;
+			} else {
+				return { code: 0, msg: `该账号已提交过注销申请，账号将在${vk.pubfn.timeFormat(userInfo.close_account.close_time, "yyyy-MM-dd hh:mm")}后自动注销`, close_account: userInfo.close_account };
+			}
+		} else {
+			return { code: -1, msg: "该账号已注销" };
+		}
+	}
+	let dataJson;
+	const close_time = nowTime + (delay * 1000); // 实际注销时间
+	if (delay > 0) {
+		// 延时注销
+		dataJson = {
+			status: closeStatus, // 用户状态：0 正常 1 禁用 2 审核中 3 审核拒绝 4 已注销
+			close_account: _.set({
+				confirmed: 0, // 是否已确认注销：0 未确认（代表在冷静期） 1 已确认（代表已注销）
+				apply_time: nowTime, // 注销申请时间
+				close_time, // 实际注销时间
+				status: userInfo.status // 注销前的状态
+			})
+		}
+	} else {
+		// 立即注销
+		// 指定需要删除的字段
+		const baseRemoveKeys = ['username', 'password', 'my_invite_code', 'token', 'mobile', 'mobile_confirmed', 'email', 'email_confirmed'];
+		// 再删除 _openid 或 _unionid 结尾的字段
+		const reg = new RegExp('(_openid|_unionid)$');
+		const removeKeys = [
+			...baseRemoveKeys,
+			...Object.keys(userInfo).filter(key => reg.test(key))
+		];
+		const { removeFields, backup } = removeKeys.reduce((acc, key) => {
+			acc.removeFields[key] = _.remove();
+			acc.backup[key] = userInfo[key];
+			return acc;
+		}, { removeFields: {}, backup: {} });
+		dataJson = {
+			status: closeStatus, // 用户状态：0 正常 1 禁用 2 审核中 3 审核拒绝 4 已注销
+			close_account: _.set({
+				confirmed: 1, // 是否已确认注销：0 未确认（代表在冷静期） 1 已确认（代表已注销）
+				apply_time: nowTime, // 注销申请时间
+				close_time: nowTime, // 实际注销时间
+				status: userInfo.status, // 注销前的状态
+				backup
+			}),
+			...removeFields
+		}
+	}
+	// 修改数据库
+	const num = await vk.baseDao.updateById({
+		dbName: dbName.user,
+		id: uid,
+		dataJson
+	});
+	if (num === 0) return { code: -1, msg: "注销账号失败" };
+	return {
+		code: 0,
+		msg: delay > 0 ? `注销申请成功，账号将在${vk.pubfn.timeFormat(close_time, "yyyy-MM-dd hh:mm")}后自动注销` : "注销成功",
+		destroyed: delay > 0 ? false : true
+	};
+};
+
+/**
+ * 取消注销账号（仅限在冷静期内）
+ * 调用示例
+await vk.daoCenter.userDao.openAccount({
+	uid: "用户id"
+});
+ */
+dao.openAccount = async (data = {}) => {
+	const { vk, _ } = util;
+	const { uid, delay = 0 } = data;
+	if (vk.pubfn.isNull(uid)) return { code: -1, msg: "参数uid不能为空" };
+	const userInfo = await dao.findById(uid, { token: false });
+	if (vk.pubfn.isNull(userInfo)) return { code: -1, msg: "用户不存在" };
+	const closeStatus = 4;
+	if (userInfo.status !== closeStatus) return { code: -1, msg: "该账号未注销，无需恢复" };
+	if (userInfo.close_account) {
+		if (userInfo.close_account.confirmed) return { code: -1, msg: "该账号已注销，无法恢复" };
+		if (Date.now() > userInfo.close_account.close_time) return { code: -1, msg: "该账号已过注销冷静期，无法恢复" };
+	}
+	// 修改数据库
+	const num = await vk.baseDao.updateById({
+		dbName: dbName.user,
+		id: uid,
+		dataJson: {
+			status: userInfo.close_account.status, // 恢复注销前的状态
+			close_account: _.remove()
+		}
+	});
+	if (num === 0) return { code: -1, msg: "恢复账号失败" };
+	return { code: 0, msg: "恢复账号成功" };
 };
 
 module.exports = dao;
