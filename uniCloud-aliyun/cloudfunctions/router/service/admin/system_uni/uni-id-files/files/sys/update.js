@@ -1,7 +1,7 @@
 module.exports = {
 	/**
 	 * 修改
-	 * @url admin/system_uni/uni-id-files/files/kh/update 前端调用的url参数地址
+	 * @url admin/system_uni/uni-id-files/files/sys/update 前端调用的url参数地址
 	 * data 请求参数 说明
 	 * @param {String} display_name 		显示在后台的文件名称
 	 * @param {String} category_id 		分类id
@@ -21,7 +21,8 @@ module.exports = {
 			display_name,
 			category_id,
 			cover_image,
-			status = 0
+			status = 0,
+			description
 		} = data;
 		// 参数非空检测
 		if (vk.pubfn.isNullOne(_id)) {
@@ -33,7 +34,8 @@ module.exports = {
 			display_name,
 			category_id,
 			cover_image,
-			status
+			status,
+			description
 		};
 		let { role = [] } = userInfo;
 		if (role.indexOf("admin") === -1) {

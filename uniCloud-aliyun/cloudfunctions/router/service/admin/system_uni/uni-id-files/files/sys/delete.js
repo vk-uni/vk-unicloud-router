@@ -1,7 +1,7 @@
 module.exports = {
 	/**
 	 * 删除
-	 * @url admin/system_uni/uni-id-files/files/kh/delete 前端调用的url参数地址
+	 * @url admin/system_uni/uni-id-files/files/sys/delete 前端调用的url参数地址
 	 * data 请求参数 说明
 	 * @param {String,Array<String>} _id 		id 或id数组
 	 * res 返回参数说明
