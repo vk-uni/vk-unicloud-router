@@ -26,6 +26,54 @@ const localeObj = {
 		"login": "login...",
 		"register": "register...",
 		"create": "create...",
+	},
+	"de": {
+		"loading": "Laden...",
+		"login": "Anmelden...",
+		"register": "Registrieren...",
+		"create": "Erstellen...",
+	},
+	"es": {
+		"loading": "Cargando...",
+		"login": "Iniciando sesión...",
+		"register": "Registrando...",
+		"create": "Creando...",
+	},
+	"fr": {
+		"loading": "Chargement...",
+		"login": "Connexion...",
+		"register": "Inscription...",
+		"create": "Création...",
+	},
+	"it": {
+		"loading": "Caricamento...",
+		"login": "Accesso...",
+		"register": "Registrazione...",
+		"create": "Creazione...",
+	},
+	"ja": {
+		"loading": "読み込み中...",
+		"login": "ログイン中...",
+		"register": "登録中...",
+		"create": "作成中...",
+	},
+	"pl": {
+		"loading": "Ładowanie...",
+		"login": "Logowanie...",
+		"register": "Rejestracja...",
+		"create": "Tworzenie...",
+	},
+	"pt": {
+		"loading": "Carregando...",
+		"login": "Entrando...",
+		"register": "Registrando...",
+		"create": "Criando...",
+	},
+	"uk": {
+		"loading": "loading...", // Завантаження... 单词太长，故用loading...
+		"login": "Вхід...",
+		"register": "Реєстрація...",
+		"create": "Створення...",
 	}
 };
 
@@ -217,6 +265,48 @@ export default {
 		return callFunction({
 			...obj,
 			url: 'user/pub/checkToken',
+		});
+	},
+	/**
+	 * 注销账号
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 */
+	closeAccount(obj) {
+		addLoading(obj, "loading");
+		return callFunction({
+			...obj,
+			url: 'user/kh/closeAccount',
+			success: (res) => {
+				if (res.destroyed) {
+					deleteToken();
+				}
+				if (typeof obj.success == "function") obj.success(res);
+			}
+		});
+	},
+	/**
+	 * 恢复账号（取消注销）
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 */
+	openAccount(obj) {
+		addLoading(obj, "loading");
+		return callFunction({
+			...obj,
+			url: 'user/kh/openAccount',
+		});
+	},
+	/**
+	 * 获取注销冷静期状态
+	 * @param {Number} code 错误码，0表示成功
+	 * @param {String} msg 详细信息
+	 */
+	getCoolingStatus(obj) {
+		addLoading(obj, "loading");
+		return callFunction({
+			...obj,
+			url: 'user/pub/getCoolingStatus',
 		});
 	},
 	/**
@@ -711,7 +801,7 @@ export default {
 		addAppid(obj);
 		// 如果env_version传auto，则自动获取当前小程序版本
 		if (obj.data && obj.data.env_version === "auto") {
-			obj.data.env_version = vk.pubfn.getMiniProgramEnvVersion();
+			obj.data.env_version = uni.vk.pubfn.getMiniProgramEnvVersion();
 		}
 		return callFunction({
 			...obj,
@@ -732,7 +822,7 @@ export default {
 		addAppid(obj);
 		// 如果env_version传auto，则自动获取当前小程序版本
 		if (obj.data && obj.data.env_version === "auto") {
-			obj.data.env_version = vk.pubfn.getMiniProgramEnvVersion();
+			obj.data.env_version = uni.vk.pubfn.getMiniProgramEnvVersion();
 		}
 		return callFunction({
 			...obj,
@@ -754,7 +844,7 @@ export default {
 		addAppid(obj);
 		// 如果env_version传auto，则自动获取当前小程序版本
 		if (obj.data && obj.data.env_version === "auto") {
-			obj.data.env_version = vk.pubfn.getMiniProgramEnvVersion();
+			obj.data.env_version = uni.vk.pubfn.getMiniProgramEnvVersion();
 		}
 		return callFunction({
 			...obj,
@@ -771,7 +861,7 @@ export default {
 	getWeiXinJsapiSign(obj = {}) {
 		// 此接口仅微信公众号可调用
 		// #ifdef H5
-		let env = vk.h5.getEnv();
+		let env = uni.vk.h5.getEnv();
 		if (env === "h5-weixin") {
 			if (!obj.data) {
 				obj.data = {};
@@ -1263,7 +1353,7 @@ export default {
 				return;
 			}
 			// #ifndef MP-TOUTIAO
-			vk.toast("请在抖音小程序中打开");
+			uni.vk.toast("请在抖音小程序中打开");
 			return;
 			// #endif
 
@@ -1424,7 +1514,7 @@ export default {
 				return;
 			}
 			// #ifndef MP-HARMONY || APP-HARMONY
-			vk.toast("请在鸿蒙系统中打开");
+			uni.vk.toast("请在鸿蒙系统中打开");
 			return;
 			// #endif
 
@@ -1467,6 +1557,9 @@ export default {
 						...data
 					}
 				});
+			}).catch((err) => {
+				if (typeof obj.fail === "function") obj.fail(err);
+				if (typeof obj.complete === "function") obj.complete(err);
 			});
 		}, debounceTime, true, "login");
 	},

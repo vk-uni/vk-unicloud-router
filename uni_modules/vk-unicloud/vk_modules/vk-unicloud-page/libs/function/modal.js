@@ -5,22 +5,54 @@ const localeObj = {
 	title: {
 		"zh-Hans": "提示",
 		"zh-Hant": "提示",
-		"en": "Tips"
+		"en": "Tips",
+		"de": "Hinweis",
+		"es": "Consejo",
+		"fr": "Conseil",
+		"it": "Suggerimento",
+		"ja": "ヒント",
+		"pl": "Wskazówka",
+		"pt": "Dica",
+		"uk": "Підказка"
 	},
 	confirmText: {
 		"zh-Hans": "确定",
 		"zh-Hant": "確定",
-		"en": "OK"
+		"en": "OK",
+		"de": "OK",
+		"es": "Aceptar",
+		"fr": "OK",
+		"it": "OK",
+		"ja": "OK",
+		"pl": "OK",
+		"pt": "OK",
+		"uk": "OK"
 	},
 	cancelText: {
 		"zh-Hans": "取消",
 		"zh-Hant": "取消",
-		"en": "Cancel"
+		"en": "Cancel",
+		"de": "Abbrechen",
+		"es": "Cancelar",
+		"fr": "Annuler",
+		"it": "Annulla",
+		"ja": "キャンセル",
+		"pl": "Anuluj",
+		"pt": "Cancelar",
+		"uk": "Скасувати"
 	},
 	placeholderText: {
 		"zh-Hans": "请输入",
 		"zh-Hant": "請輸入",
-		"en": "Please enter"
+		"en": "Please enter",
+		"de": "Bitte eingeben",
+		"es": "Por favor ingrese",
+		"fr": "Veuillez saisir",
+		"it": "Si prega di inserire",
+		"ja": "入力してください",
+		"pl": "Proszę wprowadzić",
+		"pt": "Por favor insira",
+		"uk": "Будь ласка, введіть"
 	}
 };
 

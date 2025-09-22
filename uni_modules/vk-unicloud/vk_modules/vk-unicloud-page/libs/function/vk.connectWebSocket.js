@@ -6,7 +6,15 @@ const WebSocketPool = {
 	// 根据url获取连接
 	getConnection(obj = {}) {
 		let { url, channel } = obj;
-		return this.connections.find(item => item.url === url && item.channel === channel);
+		return this.connections.find(item => (item.url === url || item.wsUrl === url) && item.channel === channel);
+	},
+	getCloudObjectUrl(url) {
+		// 从url中获取?后面名为url的参数的值
+		let urlObj = vk.pubfn.queryStringToJson(url.split("?")[1]);
+		if (urlObj && urlObj.url) {
+			return urlObj.url;
+		}
+		throw new Error("WebSocket连接地址错误");
 	},
 	// 预添加连接
 	preAddConnection(obj = {}) {
@@ -28,7 +36,7 @@ const WebSocketPool = {
 	// 添加连接
 	addConnection(connection = {}) {
 		// 移除预添加的连接
-		const index = this.connections.findIndex(item => item.url === connection.url && item.channel === connection.channel);
+		const index = this.connections.findIndex(item => item.url === connection.wsUrl && item.channel === connection.channel);
 		// 添加连接
 		this.connections.push(connection);
 		if (index > -1) {
@@ -45,7 +53,7 @@ const WebSocketPool = {
 			this.connections.splice(index, 1);
 		}
 	}
-		
+
 };
 /**
  * 连接 WebSocket 的函数
@@ -79,7 +87,7 @@ async function connectWebSocket(obj = {}) {
 		// 因为创建 WebSocket 连接是异步的，所以这里需要提前加入到连接池中，避免重复创建
 		WebSocketPool.preAddConnection({ url, channel });
 	}
-	
+	let wsUrl = url;
 	let webSocket;
 	if (title) vk.showLoading(title);
 	if (url.indexOf("wss://") === 0) {
@@ -91,8 +99,7 @@ async function connectWebSocket(obj = {}) {
 			complete: () => {}
 		});
 		// 从url中获取?后面名为url的参数的值
-		let urlObj = vk.pubfn.queryStringToJson(url.split("?")[1]);
-		url = urlObj.url;
+		url = WebSocketPool.getCloudObjectUrl(url);
 	} else {
 		if (typeof uniCloud.connectWebSocket === "undefined") {
 			if (title) vk.hideLoading();
@@ -107,22 +114,23 @@ async function connectWebSocket(obj = {}) {
 			}
 		});
 	}
-	
+
 	// 创建vkWebSocket实例对象
 	const vkWebSocket = new WebSocketService({
 		webSocket,
+		wsUrl,
 		url,
 		data,
 		title,
 		encrypt,
 		channel
 	});
-	
+
 	if (cache) {
 		// 添加到连接池
 		WebSocketPool.addConnection(vkWebSocket);
 	}
-	
+
 	return vkWebSocket;
 }
 
@@ -130,6 +138,7 @@ class WebSocketService {
 	constructor(obj = {}) {
 		let {
 			webSocket,
+			wsUrl,
 			url,
 			data,
 			title,
@@ -137,6 +146,7 @@ class WebSocketService {
 			channel
 		} = obj;
 		this.webSocket = webSocket;
+		this.wsUrl = wsUrl;
 		this.url = url;
 		this.data = data;
 		this.encrypt = encrypt;
@@ -146,6 +156,7 @@ class WebSocketService {
 		this.status = 0;
 		this.awaitConnect = new Promise((resolve, reject) => {
 			this.success = resolve;
+			this.fail = reject;
 		});
 		this.encryptMode = "aes-256-ecb";
 		this.callbackStack = {
@@ -297,7 +308,7 @@ class WebSocketService {
 		// 关闭 WebSocket 连接
 		if (this.webSocket) {
 			this.webSocket.close(obj);
-		} 
+		}
 		this.webSocket = null;
 		this.url = null;
 		this.data = null;
@@ -307,6 +318,8 @@ class WebSocketService {
 		this.status = null;
 		this.awaitConnect = null;
 		this.encryptMode = null;
+		this.success = null;
+		this.fail = null;
 		// 清空回调
 		for (let i in this.callbackStack) {
 			this.callbackStack[i] = [];

@@ -9,32 +9,33 @@ updateManager.updateReady = function(obj) {
 	// #endif
 };
 
-
 export default updateManager;
-
 
 function updateManagerByMP(obj = {}) {
 	let {
 		title = "更新提示",
-		content = "新版本已经准备好，点击更新！",
-		autoUpdate = true,
-		showCancel = false,
-		confirmText = "一键更新"
+			content = "新版本已经准备好，点击更新！",
+			autoUpdate = true,
+			showCancel = false,
+			confirmText = "一键更新"
 	} = obj;
+	if (typeof uni.getUpdateManager !== "function") {
+		return;
+	}
 	const updateManager = uni.getUpdateManager();
 
-	updateManager.onCheckForUpdate(function(res) {
+	updateManager.onCheckForUpdate((res) => {
 		// 请求完新版本信息的回调
 		// console.log(res.hasUpdate);
 	});
 
-	updateManager.onUpdateReady(function() {
+	updateManager.onUpdateReady(() => {
 		uni.showModal({
 			title,
 			content,
 			showCancel,
 			confirmText,
-			success(res) {
+			success: (res) => {
 				if (res.confirm) {
 					if (typeof obj.success === "function") {
 						obj.success({
@@ -47,12 +48,11 @@ function updateManagerByMP(obj = {}) {
 						updateManager.applyUpdate();
 					}
 				}
-			},
-
+			}
 		});
 	});
 
-	updateManager.onUpdateFailed(function(res) {
+	updateManager.onUpdateFailed((res) => {
 		// 新的版本下载失败
 		console.error("onUpdateFailed", res);
 		if (typeof obj.fail === "function") obj.fail(res);

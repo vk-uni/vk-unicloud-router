@@ -523,6 +523,7 @@ class CallFunctionUtil {
 			let that = this;
 			let config = that.config;
 			if (!obj.filePath && obj.file && obj.file.path) obj.filePath = obj.file.path;
+			if (!obj.filePath && obj.file && obj.file.url) obj.filePath = obj.file.url;
 			if (obj.errorToast) obj.needAlert = false;
 			// 获取文件类型(image:图片 video:视频 other:其他)
 			obj.fileType = that.getFileType(obj);

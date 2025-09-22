@@ -639,11 +639,12 @@ dao.getValidInviteCode = async (data = {}) => {
 await vk.daoCenter.userDao.closeAccount({
 	uid: "用户id",
 	delay: 0, // 延迟注销时间（单位为秒），0表示立即注销，若设置大于0，则需要在定时任务中再次执行注销账号，且不传delay参数
+	reason: "", // 注销原因
 });
  */
 dao.closeAccount = async (data = {}) => {
 	const { vk, _ } = util;
-	let { uid, delay = 0 } = data;
+	let { uid, delay = 0, reason } = data;
 	if (vk.pubfn.isNull(uid)) return { code: -1, msg: "参数uid不能为空" };
 	const userInfo = await dao.findById(uid, { token: false });
 	if (vk.pubfn.isNull(userInfo)) return { code: -1, msg: "要注销的用户不存在" };
@@ -671,7 +672,8 @@ dao.closeAccount = async (data = {}) => {
 				confirmed: 0, // 是否已确认注销：0 未确认（代表在冷静期） 1 已确认（代表已注销）
 				apply_time: nowTime, // 注销申请时间
 				close_time, // 实际注销时间
-				status: userInfo.status // 注销前的状态
+				status: userInfo.status ,// 注销前的状态
+				reason // 注销原因
 			})
 		}
 	} else {
@@ -696,6 +698,7 @@ dao.closeAccount = async (data = {}) => {
 				apply_time: nowTime, // 注销申请时间
 				close_time: nowTime, // 实际注销时间
 				status: userInfo.status, // 注销前的状态
+				reason, // 注销原因
 				backup
 			}),
 			...removeFields

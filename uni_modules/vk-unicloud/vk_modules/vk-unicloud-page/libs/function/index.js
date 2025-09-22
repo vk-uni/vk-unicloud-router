@@ -2454,11 +2454,9 @@ pubfn.getMiniProgramEnvVersion = function() {
 	try {
 		const info = uni.getAccountInfoSync();
 		return info.miniProgram.envVersion;
-	} catch (err) {
-		console.error('getMiniProgramEnvVersionErr: ', err)
-	}
+	} catch (err) {}
 	// #endif
-	return undefined;
+	return process.env.NODE_ENV !== 'production'  ? 'develop' : 'release';
 };
 
 // 前端专属结束 -----------------------------------------------------------
