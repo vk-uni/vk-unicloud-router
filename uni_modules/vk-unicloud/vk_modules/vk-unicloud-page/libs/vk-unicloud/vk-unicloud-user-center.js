@@ -303,7 +303,7 @@ export default {
 	 * @param {String} msg 详细信息
 	 */
 	getCoolingStatus(obj) {
-		addLoading(obj, "loading");
+		addLoading(obj);
 		return callFunction({
 			...obj,
 			url: 'user/pub/getCoolingStatus',
