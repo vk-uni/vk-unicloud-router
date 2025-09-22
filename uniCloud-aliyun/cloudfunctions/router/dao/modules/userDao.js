@@ -719,7 +719,7 @@ dao.closeAccount = async (data = {}) => {
 };
 
 /**
- * 取消注销账号（仅限在冷静期内）
+ * 恢复账号（仅限账号未确认注销时）
  * 调用示例
 await vk.daoCenter.userDao.openAccount({
 	uid: "用户id"
@@ -735,7 +735,6 @@ dao.openAccount = async (data = {}) => {
 	if (userInfo.status !== closeStatus) return { code: -1, msg: "该账号未注销，无需恢复" };
 	if (userInfo.close_account) {
 		if (userInfo.close_account.confirmed) return { code: -1, msg: "该账号已注销，无法恢复" };
-		if (Date.now() > userInfo.close_account.close_time) return { code: -1, msg: "该账号已过注销冷静期，无法恢复" };
 	}
 	// 修改数据库
 	const num = await vk.baseDao.updateById({
