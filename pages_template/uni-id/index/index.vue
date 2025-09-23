@@ -29,6 +29,7 @@
 		<view style="margin-bottom: 20rpx;">小白也能轻松上手的数据库API</view>
 		<button type="default" @click="pageTo('../../db-test/db-test')">数据库API</button>
 		<button type="default" @click="pageTo('../util/util')">通用方法</button>
+		<button type="default" @click="pageTo('../closeAccount/closeAccount')">账号注销与恢复</button>
 		
 		<view style="margin-bottom: 20rpx;">插件版本1.8.7 新增 APP手机一键登录</view>
 		<button type="default" @click="pageTo('../univerify/univerify')">手机一键登录</button>

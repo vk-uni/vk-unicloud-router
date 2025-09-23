@@ -7,6 +7,7 @@ import cloudStorage from '../../libs/cloud-storage/index.js'
 
 class CallFunctionUtil {
 	constructor() {
+		// 注意：此处的配置会被项目根目录的 app.config.js 覆盖，无需修改此处的配置
 		this.config = {
 			// 是否开启测试环境的云函数，true：使用测试环境，false：使用正式环境，默认true
 			isTest: false,
@@ -28,6 +29,10 @@ class CallFunctionUtil {
 			// 客户端登录页面地址
 			login: {
 				url: '/pages_template/uni-id/login/index/index'
+			},
+			// 账户注销页面
+			closeAccount: {
+				url: '/pages_template/uni-id/closeAccount/closeAccount'
 			},
 			// 请求配置
 			request: {
@@ -646,8 +651,9 @@ class CallFunctionUtil {
 								requestStatus = "异常";
 								colorStr = "#fa3534";
 							}
-							console.groupCollapsed(`%c--------【${requestStatus}】【${providerName}-文件上传】【${Logger.runTime}ms】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
-						} 
+							console.groupCollapsed(`%c--------【${requestStatus}】【${providerName}-文件上传】【${Logger.runTime}ms】--------`,
+								`color: ${colorStr};font-size: 12px;font-weight: bold;`);
+						}
 						// #endif
 						if (logMode === 0) console.log(`%c--------【开始】【${providerName}-文件上传】--------`, 'color: ' + colorStr + ';font-size: 12px;font-weight: bold;');
 						console.log("【本地文件】: ", Logger.filePath);
@@ -973,6 +979,12 @@ class CallFunctionUtil {
 			errMsg = globalErrorCode["cloudfunction-reaches-burst-limit"] || "系统繁忙，请稍后再试。";
 		} else if (res.code === "InternalServerError") {
 			sysErr = true;
+		} else if ((res.code === "uni-id-user-account-closed" || res.errCode === "uni-id-user-account-closed") && config.closeAccount && config.closeAccount.url) {
+			sysErr = true;
+			needAlert = false;
+			vk.pubfn.debounce(() => {
+				vk.reLaunch(config.closeAccount.url);
+			}, 2000, true, "user-account-closed");
 		} else if (res.code === "SYS_ERR" && errMsg.indexOf("似乎已断开与互联网的连接") > -1) {
 			errMsg = globalErrorCode["cloudfunction-network-unauthorized"];
 			sysErr = true;
@@ -1067,8 +1079,10 @@ class CallFunctionUtil {
 						colorStr = "#ff9900";
 					}
 				}
-				if (typeof console.groupCollapsed === "function") console.groupCollapsed(`%c--------【${requestStatus}】${Logger.label}【${functionType}请求】【${name}】【${url}】【${Logger.runTime}ms】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
-			} 
+				if (typeof console.groupCollapsed === "function") console.groupCollapsed(
+					`%c--------【${requestStatus}】${Logger.label}【${functionType}请求】【${name}】【${url}】【${Logger.runTime}ms】--------`,
+					`color: ${colorStr};font-size: 12px;font-weight: bold;`);
+			}
 			// #endif
 			if (logMode === 0) console.log(`%c--------【开始】${Logger.label}【${functionType}请求】【${name}】【${url}】--------`, `color: ${colorStr};font-size: 12px;font-weight: bold;`);
 			console.log("【请求参数】: ", Logger.params);

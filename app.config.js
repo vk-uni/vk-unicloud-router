@@ -17,6 +17,10 @@ export default {
 	error: {
 		url: '/pages/error/404/404'
 	},
+	// 账户注销页面
+	closeAccount: {
+		url: '/pages_template/uni-id/closeAccount/closeAccount'
+	},
 	// 前端默认时区（中国为8）
 	targetTimezone:8, 
 	// 日志风格（注意：只在开发调试模式下生效，正式发布后不会打印日志）
@@ -156,24 +160,31 @@ export default {
 	// 自定义拦截器
 	interceptor: {
 
-		// login:function(obj){
+		// login(obj) {
 		// 	let { vk, params, res } = obj;
 		// 	//console.log("params:",params);
 		// 	//console.log("res:",res);
-		// 	if(!params.noAlert){
+		// 	if (!params.noAlert) {
 		// 		vk.alert(res.msg);
 		// 	}
 		// 	console.log("跳自己的登录页面");
 		// 	// 上方代码可自己修改，写成你自己的逻辑处理。
 		// },
-
-		// fail:function(obj){
+		
+		// fail(obj) {
 		// 	let { vk, params, res } = obj;
 		// 	//console.log("params:",params);
 		// 	//console.log("res:",res);
-		// 	return false;// 返回false则取消框架内置fail的逻辑,返回true则会继续执行框架内置fail的逻辑
+		// 	return false; // 返回false则取消框架内置fail的逻辑，返回true则会继续执行框架内置fail的逻辑
 		// 	// 上方代码可自己修改，写成你自己的逻辑处理。
 		// }
+		
+		// navigateTo(obj) {
+		// 	let { pagePath } = obj;
+		// 	console.log("pagePath:", pagePath);
+		// 	return false; // 返回false则取消跳转，返回true则继续跳转
+		// 	// 上方代码可自己修改，写成你自己的逻辑处理。
+		// },
 
 	}
 }

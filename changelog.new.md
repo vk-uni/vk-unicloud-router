@@ -1,6 +1,6 @@
 * 【重要】新增中间件 loginFilter，可控制开启或关闭登录注册相关接口
 * 【新增】vk.userCenter.closeAccount 注销账号
-* 【新增】vk.userCenter.openAccount 恢复账号（仅限注销冷静期内）
+* 【新增】vk.userCenter.openAccount 恢复账号（仅限未二次确认注销时）
 * 【新增】vk.userCenter.getCoolingStatus 获取注销冷静期状态
 * 【修复】vk.updateManager.updateReady 在不支持的小程序平台运行时会报错的问题
 * 【修复】发送短信时可能会报签名错误的问题

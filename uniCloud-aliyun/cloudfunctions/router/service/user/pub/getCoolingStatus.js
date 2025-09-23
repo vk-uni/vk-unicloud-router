@@ -15,6 +15,10 @@ module.exports = {
 			res.nickname = userInfo.nickname;
 			res.avatar = userInfo.avatar;
 			res.close_account = userInfo.close_account;
+			if (res.close_account && !res.close_account.confirmed) {
+				// 计算倒计时（单位毫秒）
+				res.duration = userInfo.close_account.close_time - Date.now()
+			}
 		}
 		// 业务逻辑结束-----------------------------------------------------------
 		return res;

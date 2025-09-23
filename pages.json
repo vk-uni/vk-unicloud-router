@@ -111,6 +111,12 @@
 				}
 			},
 			{
+				"path": "uni-id/closeAccount/closeAccount",
+				"style": {
+					"navigationBarTitleText": "账号注销"
+				}
+			},
+			{
 				"path": "vk-vuex/vk-vuex",
 				"style": {
 					"navigationBarTitleText": "vuex演示示例"
