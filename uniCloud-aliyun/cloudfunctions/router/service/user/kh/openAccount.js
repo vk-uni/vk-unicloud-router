@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
 	/**
-	 * 取消注销账号
+	 * 恢复账号（仅限账号未确认注销时）
 	 * @url user/kh/openAccount 前端调用的url参数地址
 	 * data 请求参数
 	 * @param {String} params1  参数1
