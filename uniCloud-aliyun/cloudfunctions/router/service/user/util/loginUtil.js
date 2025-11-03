@@ -33,23 +33,15 @@ module.exports = {
 			return { code: -1, msg: 'clientInfo内的PLATFORM不能为空' };
 		}
 		let platform = vk.pubfn.getPlatformForUniId(clientInfo);
-		let orArr = [];
-		if (unionid) {
-			orArr.push({
-				[`${provider}_unionid`]: unionid
-			});
-		}
-		if (openid) {
-			orArr.push({
-				[`${provider}_openid.${platform}`]: openid
-			});
-		}
+
 		// 查找用户是否存在
-		let userInfo = await getCurrentAppUser({
-			whereJson: _.or(orArr),
-			clientInfo
+		let userInfo = await getUser({
+			clientInfo,
+			provider,
+			unionid,
+			openid
 		}, util);
-		
+
 		// 定义openid和unionid存在userInfo的哪个字段中
 		let fieldInfo = {
 			[`${provider}_openid`]: {
@@ -144,17 +136,12 @@ module.exports = {
 				return { code: 1, msg: `当前账号已绑定${providerName}，请勿重复绑定` };
 			}
 		}
-
-		let whereJson = {};
-		if (appid) {
-			whereJson[`${provider}_openid.${platform}_${appid}`] = openid;
-		} else {
-			whereJson[`${provider}_openid.${platform}`] = openid;
-		}
-		
-		let currentAppUser = await getCurrentAppUser({
-			whereJson,
-			clientInfo
+		// 查找用户是否存在
+		let currentAppUser = await getUser({
+			clientInfo,
+			provider,
+			unionid,
+			openid
 		}, util);
 
 		if (currentAppUser) {
@@ -249,7 +236,34 @@ module.exports = {
 	}
 }
 
-async function getCurrentAppUser (obj = {}, util) {
+async function getUser(obj = {}, util) {
+	let { vk, _ } = util;
+	let {
+		clientInfo,
+		provider,
+		unionid,
+		openid
+	} = obj;
+	let platform = vk.pubfn.getPlatformForUniId(clientInfo);
+	let orArr = [];
+	if (unionid) {
+		orArr.push({
+			[`${provider}_unionid`]: unionid
+		});
+	}
+	if (openid) {
+		orArr.push({
+			[`${provider}_openid.${platform}`]: openid
+		});
+	}
+	let userInfo = await getCurrentAppUser({
+		whereJson: _.or(orArr),
+		clientInfo
+	}, util);
+	return userInfo;
+}
+
+async function getCurrentAppUser(obj = {}, util) {
 	let { vk } = util;
 	let {
 		whereJson,
