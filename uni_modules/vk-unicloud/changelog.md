@@ -1,3 +1,8 @@
+## 2.20.2（2025-11-07）
+* 【修复】vk.pubfn.snake2camelJson、vk.pubfn.camel2snakeJson 函数不支持深层嵌套转换的问题
+* 【优化】绑定微信逻辑细节（需替换框架内置目录 `/router/service/user/util`）
+
+* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.20.0（2025-09-26）
 * 【重要】新增中间件 loginFilter，可控制开启或关闭登录注册相关接口
 * 【新增】vk.userCenter.closeAccount 注销账号 [传送门](https://vkdoc.fsq.pub/client/vk.userCenter.html#closeaccount)

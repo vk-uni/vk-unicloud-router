@@ -46,7 +46,7 @@ pubfn.queryParams = queryParams;
 pubfn.jsonToQueryString = queryStringUtil.jsonToQueryString;
 /**
  * url参数转对象
- * @param {*} url 
+ * @param {*} url
  * let obj = vk.pubfn.queryStringToJson(url);
  */
 pubfn.queryStringToJson = queryStringUtil.queryStringToJson;
@@ -483,9 +483,9 @@ pubfn.setData = function(dataObj, name, value) {
  */
 pubfn.isNull = function(value) {
 	let key = false;
-	if (typeof value == "undefined" || value === null || value === "" 
-		|| (Object.prototype.toString.call(value) === "[object Object]" && Object.keys(value).length === 0) 
-		|| (Object.prototype.toString.call(value) === "[object Array]" && value.length === 0)
+	if (typeof value == "undefined" || value === null || value === "" ||
+		(Object.prototype.toString.call(value) === "[object Object]" && Object.keys(value).length === 0) ||
+		(Object.prototype.toString.call(value) === "[object Array]" && value.length === 0)
 	) {
 		key = true;
 	}
@@ -1144,47 +1144,59 @@ pubfn.createOrderNo = function(prefix = "", num = 25) {
 	return prefix + fullTime + pubfn.random(randomNum);
 };
 
-const isSnakeCase = new RegExp('_(\\w)', 'g');
-const isCamelCase = new RegExp('[A-Z]', 'g');
 
 function parseObjectKeys(obj, type) {
-	let parserReg;
+	// 处理 null 和非对象类型
+	if (obj === null || typeof obj !== 'object') {
+		return obj;
+	}
+
+	if (Array.isArray(obj)) {
+		return obj.map(item => parseObjectKeys(item, type));
+	}
+
 	let parser;
+	let parserReg;
+
 	switch (type) {
 		case 'snake2camel':
-			parser = pubfn.snake2camel
-			parserReg = isSnakeCase
-			break
+			parser = pubfn.snake2camel;
+			parserReg = new RegExp('_(\\w)');
+			break;
 		case 'camel2snake':
-			parser = pubfn.camel2snake
-			parserReg = isCamelCase
-			break
+			parser = pubfn.camel2snake;
+			parserReg = new RegExp('[A-Z]');
+			break;
+		default:
+			return obj;
 	}
+
+	const result = {};
+
 	for (const key in obj) {
 		if (Object.prototype.hasOwnProperty.call(obj, key)) {
-			if (parserReg.test(key)) {
-				const keyCopy = parser(key)
-				obj[keyCopy] = obj[key]
-				delete obj[key]
-				if (Object.prototype.toString.call((obj[keyCopy])) === '[object Object]') {
-					obj[keyCopy] = parseObjectKeys(obj[keyCopy], type)
-				} else if (Array.isArray(obj[keyCopy])) {
-					obj[keyCopy] = obj[keyCopy].map((item) => {
-						return parseObjectKeys(item, type)
-					})
-				}
+			const newKey = parserReg.test(key) ? parser(key) : key;
+			const value = obj[key];
+
+			// 递归处理对象和数组
+			if (value !== null && typeof value === 'object') {
+				result[newKey] = parseObjectKeys(value, type);
+			} else {
+				result[newKey] = value;
 			}
 		}
 	}
-	return obj
+
+	return result;
 }
+
 /**
  * 字符串 - 蛇形转驼峰
  * @param {String} value
  * vk.pubfn.snake2camel(value);
  */
 pubfn.snake2camel = function(value) {
-	return value.replace(isSnakeCase, (_, c) => (c ? c.toUpperCase() : ''))
+	return value.replace(new RegExp('_(\\w)', 'g'), (_, c) => (c ? c.toUpperCase() : ''))
 }
 /**
  * 字符串 - 驼峰转蛇形
@@ -1192,7 +1204,7 @@ pubfn.snake2camel = function(value) {
  * vk.pubfn.camel2snake(value);
  */
 pubfn.camel2snake = function(value) {
-	return value.replace(isCamelCase, str => '_' + str.toLowerCase())
+	return value.replace(new RegExp('[A-Z]', 'g'), str => '_' + str.toLowerCase())
 }
 
 /**
@@ -2456,7 +2468,85 @@ pubfn.getMiniProgramEnvVersion = function() {
 		return info.miniProgram.envVersion;
 	} catch (err) {}
 	// #endif
-	return process.env.NODE_ENV !== 'production'  ? 'develop' : 'release';
+	return process.env.NODE_ENV !== 'production' ? 'develop' : 'release';
+};
+
+/**
+ * 解析Excel文件数据（只支持xlsx格式）仅h5支持
+vk.pubfn.parseXlsxFile({ 
+	file, 
+	index, mode 
+})
+.then((result) => {
+	console.log('result: ', result);
+})
+.catch((err) => {
+	console.error('err: ', err);
+});
+ * @param {Object} file - Excel文件对象
+ * @param {Number} index - 工作表索引，默认0
+ * @param {Number} mode - 返回格式：1-返回对象数组，2-返回二维数组 默认 1
+ */
+pubfn.parseXlsxFile = async function(obj = {}) {
+	const {
+		file,
+		index = 0,
+		mode = 1
+	} = obj;
+
+	// #ifdef WEB
+	if (typeof ExcelJS !== "object") {
+		throw new Error("ExcelJS not installed");
+	}
+	const arrayBuffer = await new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = (e) => resolve(e.target.result);
+		reader.onerror = (e) => reject(e);
+		reader.readAsArrayBuffer(file);
+	});
+	const workbook = new ExcelJS.Workbook();
+	await workbook.xlsx.load(arrayBuffer);
+	const worksheet = workbook.worksheets[index];
+	if (!worksheet) {
+		throw new Error(`No worksheet found with index ${index}`);
+	}
+	const result = [];
+	let headers = [];
+	worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+		const rowData = [];
+		row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+			let value = cell.value;
+			if (value && typeof value === 'object' && value.text !== undefined && value.hyperlink !== undefined) {
+				value = value.hyperlink;
+			}
+			rowData.push(value);
+		});
+
+		if (mode === 1) {
+			// mode 1: 返回对象数组
+			if (rowNumber === 1) {
+				headers = rowData;
+			} else {
+				const rowObj = {};
+				rowData.forEach((value, index) => {
+					if (headers[index]) {
+						rowObj[headers[index]] = value;
+					}
+				});
+				result.push(rowObj);
+			}
+		} else if (mode === 2) {
+			// mode 2: 返回二维数组
+			result.push(rowData);
+		}
+	});
+	return result;
+	// #endif
+
+	// #ifndef WEB
+	throw new Error("Only WEB platform supports");
+	// #endif
+
 };
 
 // 前端专属结束 -----------------------------------------------------------
