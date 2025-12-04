@@ -1652,6 +1652,16 @@ pubfn.objectKeySort = function(obj) {
 	return newObject;
 };
 
+/**
+ * 转义正则文本，使 * 变成 \* 等
+ * @param {Object} obj 需要排序对象
+ * 代码示例
+ * text = vk.pubfn.escapeRegExp(text);
+ */
+pubfn.escapeRegExp = function(text) {
+	return text.replace(new RegExp('[.*+?^${}()|[\\]\\\\]', 'g'), '\\$&');
+};
+
 // 以下是前端专属API-----------------------------------------------------------
 
 /**

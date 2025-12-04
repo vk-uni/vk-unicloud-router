@@ -38,7 +38,7 @@ module.exports = {
 			originalParam.context.PLATFORM = "app-harmony";
 		}
 
-		// 获取抖音绑定的手机号
+		// 获取绑定的手机号
 		res = await vk.openapi.huawei.decrypt.getPhoneNumber({
 			...data,
 			context: originalParam.context

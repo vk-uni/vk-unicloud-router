@@ -427,11 +427,20 @@ export default {
 	loginByUniverify(obj = {}) {
 		addLoading(obj, "login");
 		if (typeof obj.needAlert === "undefined") obj.needAlert = true;
-		// #ifdef APP-PLUS
+		// #ifdef APP
 		return new Promise((resolve, reject) => {
-			uni.login({
-				provider: 'univerify',
+			const univerifyManager = uni.getUniverifyManager();
+			univerifyManager.login({
+				// #ifdef APP-HARMONY
+				univerifyStyle: {
+					fullScreen: obj.univerifyStyle.fullScreen,
+					logoPath: obj.univerifyStyle.icon && obj.univerifyStyle.icon.path,
+					loginBtnText : obj.univerifyStyle.authButton && obj.univerifyStyle.authButton.title,
+				},
+				// #endif
+				// #ifndef APP-HARMONY
 				univerifyStyle: obj.univerifyStyle,
+				// #endif
 				success: (res) => {
 					let dataJson = Object.assign(obj.data, res.authResult);
 					callFunction({
@@ -445,20 +454,24 @@ export default {
 						fail: (err) => {
 							if (typeof obj.fail === "function") obj.fail(err);
 							reject(err);
+						},
+						complete: (res) => {
+							uni.vk.hideLoading();
 						}
 					});
 				},
 				fail: (err) => {
+					console.log('err: ', err)
 					if (typeof obj.fail === "function") obj.fail(err);
 					reject(err);
 				},
 				complete: (res) => {
-					uni.vk.hideLoading();
+					univerifyManager.close();
 				}
 			});
 		});
 		// #endif
-		// #ifndef APP-PLUS
+		// #ifndef APP
 		uni.vk.toast("请在APP中使用本机号码一键登录", "none");
 		// #endif
 	},
@@ -601,14 +614,16 @@ export default {
 				resolve();
 				return;
 			}
-			// #ifdef MP-WEIXIN
+			// #ifdef MP-WEIXIN || APP-HARMONY
 			uni.login({
 				provider: 'weixin',
 				success(res) {
 					resolve(res.code)
 				},
 				fail(err) {
-					reject(new Error('微信登录失败'))
+					let msg = err.msg || err.errMsg || err.message;
+					uni.vk.alert(msg);
+					reject(err);
 				}
 			})
 			// #endif
@@ -888,7 +903,7 @@ export default {
 			});
 		}
 		// #endif
-		
+
 		// #ifdef APP-PLUS || MP-ALIPAY
 		return new Promise((resolve, reject) => {
 			uni.login({
@@ -897,7 +912,9 @@ export default {
 					resolve(res.code);
 				},
 				fail(err) {
-					reject(new Error('支付宝登录失败'));
+					let msg = err.msg || err.errMsg || err.message;
+					uni.vk.alert(msg);
+					reject(err);
 				}
 			});
 		});
@@ -1188,7 +1205,9 @@ export default {
 					// #endif
 				},
 				fail(err) {
-					reject(new Error('QQ登录失败'));
+					let msg = err.msg || err.errMsg || err.message;
+					uni.vk.alert(msg);
+					reject(err);
 				}
 			});
 		});
@@ -1364,7 +1383,9 @@ export default {
 					resolve(res.code)
 				},
 				fail(err) {
-					reject(new Error('抖音登录失败'))
+					let msg = err.msg || err.errMsg || err.message;
+					uni.vk.alert(msg);
+					reject(err);
 				}
 			})
 			// #endif
@@ -1524,8 +1545,9 @@ export default {
 					resolve(res.code)
 				},
 				fail(err) {
-					console.error('华为登录失败: ', err)
-					reject(new Error('华为登录失败'))
+					let msg = err.msg || err.errMsg || err.message;
+					uni.vk.alert(msg);
+					reject(err);
 				}
 			})
 			// #endif
@@ -1557,10 +1579,7 @@ export default {
 						...data
 					}
 				});
-			}).catch((err) => {
-				if (typeof obj.fail === "function") obj.fail(err);
-				if (typeof obj.complete === "function") obj.complete(err);
-			});
+			})
 		}, debounceTime, true, "login");
 	},
 	/**

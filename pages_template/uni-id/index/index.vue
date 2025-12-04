@@ -32,7 +32,7 @@
 		<button type="default" @click="pageTo('../closeAccount/closeAccount')">账号注销与恢复</button>
 		
 		<view style="margin-bottom: 20rpx;">插件版本1.8.7 新增 APP手机一键登录</view>
-		<button type="default" @click="pageTo('../univerify/univerify')">手机一键登录</button>
+		<button type="default" @click="pageTo('../univerify/univerify')">APP本机号码一键登录</button>
 		<view style="margin-bottom: 20rpx;">插件版本1.4.4 新增 Vuex状态管理</view>
 		<button type="default" @click="pageTo('../../vk-vuex/vk-vuex')">Vuex状态管理演示示例</button>
 		<button type="default" @click="pageTo('../login/index/index')">登录注册找回密码页面模板</button>

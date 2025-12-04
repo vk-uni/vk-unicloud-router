@@ -44,19 +44,16 @@ module.exports = {
 		}
 
 		// 获取一键登录配置
-		const univerifyConfig = vk.pubfn.getUniIdConfig(config, "service.univerify");
-
-		if (vk.pubfn.isNull(univerifyConfig)) {
-			return { code: -1, msg: "请在uni-id配置中配置一键登录相关参数，配置节点：service.univerify" };
-		}
+		const univerifyConfig = vk.pubfn.getUniIdConfig(config, "service.univerify") || {};
 
 		// 获取手机号
-		let getPhoneNumberRes = await uniCloud.getPhoneNumber({
+		let getPhoneNumberData = {
 			provider: 'univerify',
-			...univerifyConfig,
+			appid: univerifyConfig.appid || originalParam.context.APPID,
 			access_token,
 			openid
-		});
+		}
+		let getPhoneNumberRes = await uniCloud.getPhoneNumber(getPhoneNumberData);
 
 		let mobile = getPhoneNumberRes.phoneNumber;
 

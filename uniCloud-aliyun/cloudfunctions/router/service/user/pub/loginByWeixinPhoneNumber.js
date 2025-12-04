@@ -37,7 +37,7 @@ module.exports = {
 		const provider = "wx"; // 历史原因，这里用wx，而非weixin
 		const providerName = "微信";
 
-		// 获取微信绑定的手机号
+		// 获取绑定的手机号
 		res = await vk.openapi.weixin.decrypt.getPhoneNumber({
 			encryptedKey,
 			code,

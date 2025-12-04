@@ -86,9 +86,7 @@
 			"smsSecret": ""
 		},
 		"univerify": {
-			"appid": "",
-			"apiKey": "",
-			"apiSecret": ""
+			"appid": ""
 		}
 	}
 }

@@ -469,7 +469,9 @@ class CallFunctionUtil {
 									initConifg.spaceAppId = envItem.spaceAppId;
 									initConifg.accessKey = envItem.accessKey;
 									initConifg.secretKey = envItem.secretKey;
-								}
+								} else if (envItem.provider === "dcloud") {
+									initConifg.clientSecret = envItem.clientSecret;
+								} 
 								if (envItem.endpoint) initConifg.endpoint = envItem.endpoint;
 								uniCloudEnvs[envKey] = uniCloud.init(initConifg);
 							}

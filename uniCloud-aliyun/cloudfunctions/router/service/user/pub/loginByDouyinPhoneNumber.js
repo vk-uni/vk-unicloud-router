@@ -37,7 +37,7 @@ module.exports = {
 		const provider = "douyin";
 		const providerName = "抖音";
 
-		// 获取抖音绑定的手机号
+		// 获取绑定的手机号
 		res = await vk.openapi.douyin.decrypt.getPhoneNumber({
 			encryptedKey,
 			code,
