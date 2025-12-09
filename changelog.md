@@ -1,3 +1,9 @@
+## 2.20.3（2025-12-09）
+* 【新增】鸿蒙App端新增华为账号一键登录功能 [传送门](https://vkdoc.fsq.pub/client/vk.userCenter.html#loginbyhuaweiphonenumber)
+* 【优化】连表查询时，副表新增 localKeyIndex 属性，可实现副表按主表外键的索引顺序排序功能 [传送门](https://vkdoc.fsq.pub/client/uniCloud/db/selects.html#scene5)
+* 【修复】`vk.baseDao.getTableData` 模糊查询时，模糊查询无法查询 `* + ?` 等特殊符号的问题
+* 【修复】`vk.baseDao.getTableData` 模糊查询时，新增属性 `ignoreCase`，如设置为 true，可忽略大小写，默认为 true
+
 ## 2.20.2（2025-11-07）
 * 【修复】vk.pubfn.snake2camelJson、vk.pubfn.camel2snakeJson 函数不支持深层嵌套转换的问题
 * 【优化】绑定微信逻辑细节（需替换框架内置目录 `/router/service/user/util`）
