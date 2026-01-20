@@ -23,9 +23,17 @@ module.exports = {
 		}
 
 		const ws = vk.getWebSocketManage();
-		await ws.close({
-			cid
-		});
+		try {
+			await ws.close({
+				cid
+			});
+		} catch (err) {
+			// 关闭失败一般都是死链接，故直接删除数据库内保存的连接信息
+			await vk.baseDao.deleteById({
+				dbName: "vk-ws-connection",
+				id: cid
+			});
+		}
 
 		return res;
 	}
