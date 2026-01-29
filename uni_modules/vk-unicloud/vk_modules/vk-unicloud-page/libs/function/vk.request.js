@@ -300,7 +300,7 @@ function requestSuccess(obj = {}) {
 			}
 			reject(data);
 			return;
-		} else if (res.statusCode >= 400 || data.code) {
+		} else if (res.statusCode >= 400 || (data.code && data.code != 200)) {
 			requestFail({
 				res: data,
 				params,
@@ -376,6 +376,7 @@ function requestFail(obj = {}) {
 		if (needAlert && vk.pubfn.isNotNull(errMsg)) {
 			if (sysErr) {
 				vk.toast("网络开小差了！", "none");
+				console.error(errMsg);
 			} else {
 				vk.alert(errMsg);
 			}

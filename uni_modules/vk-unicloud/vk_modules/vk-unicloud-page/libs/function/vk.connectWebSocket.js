@@ -90,7 +90,7 @@ async function connectWebSocket(obj = {}) {
 	let wsUrl = url;
 	let webSocket;
 	if (title) vk.showLoading(title);
-	if (url.indexOf("wss://") === 0) {
+	if (url.indexOf("wss://") === 0 || url.indexOf("ws://") === 0) {
 		webSocket = uni.connectSocket({
 			url,
 			header: {

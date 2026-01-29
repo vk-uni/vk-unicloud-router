@@ -1020,6 +1020,7 @@ class CallFunctionUtil {
 				if (sysErr) {
 					let toastMsg = globalErrorCode["cloudfunction-system-error"] || "网络开小差了！";
 					vk.toast(toastMsg, "none");
+					console.error(errMsg);
 				} else {
 					vk.alert(errMsg);
 				}
