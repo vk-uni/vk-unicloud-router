@@ -17,8 +17,9 @@ const cloudObject = {
 	_before: async function() {
 		vk = uniCloud.vk; // 将vk定义为全局对象
 		const clientInfo = this.getClientInfo();
+		const cloudInfo = this.getCloudInfo();
 		// 如果不是定时触发也不是本地运行，则拦截
-		if (clientInfo.source !== "timing" && clientInfo.RUNTIME_ENV !== "local") {
+		if (clientInfo.source !== "timing" && cloudInfo.runtimeEnv !== "local") {
 			return { code: -1, msg: "不支持的运行方式" };
 		}
 	},
