@@ -55,7 +55,12 @@
 </script>
 
 <style lang="scss">
-	/*每个页面公共css */
+	/**
+	 * 每个页面公共css
+	 * 特别注意，如果启动时报scss相关的错误，请卸载你的scss插件，重新安装
+	 * Vue3安装地址：https://ext.dcloud.net.cn/plugin?id=5701
+	 * Vue2安装地址：https://ext.dcloud.net.cn/plugin?id=2046
+	 */
 	// @import "./uni_modules/vk-uview-ui/index.scss";
 	@import "./common/css/app.scss";
 </style>
