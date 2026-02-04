@@ -46,16 +46,17 @@ const vk = {
 	/**
 	 * 发起一个云函数请求
 	 */
-	callFunction:     callFunctionUtil.callFunction,
-	getToken:         callFunctionUtil.getToken,
-	saveToken:        callFunctionUtil.saveToken,
-	checkToken:       callFunctionUtil.checkToken,
-	deleteToken:      callFunctionUtil.deleteToken,
-	uploadFile:       callFunctionUtil.uploadFile,
-	getConfig:        callFunctionUtil.getConfig,
-	emitRefreshToken: callFunctionUtil.emitRefreshToken,
-	onRefreshToken:   callFunctionUtil.onRefreshToken,
-	offRefreshToken:  callFunctionUtil.offRefreshToken,
+	callFunction:         callFunctionUtil.callFunction,
+	getToken:             callFunctionUtil.getToken,
+	saveToken:            callFunctionUtil.saveToken,
+	checkToken:           callFunctionUtil.checkToken,
+	deleteToken:          callFunctionUtil.deleteToken,
+	uploadFile:           callFunctionUtil.uploadFile,
+	getConfig:            callFunctionUtil.getConfig,
+	emitRefreshToken:     callFunctionUtil.emitRefreshToken,
+	onRefreshToken:       callFunctionUtil.onRefreshToken,
+	offRefreshToken:      callFunctionUtil.offRefreshToken,
+	handleAutoLoginToken: callFunctionUtil.handleAutoLoginToken,
 	pubfn,
 
 	// #ifdef H5

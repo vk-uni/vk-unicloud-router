@@ -87,6 +87,18 @@ class CallFunctionUtil {
 			if (this.config.debug) console.log("--------【token已更新】--------");
 			return true;
 		}
+		/**
+		 * 接收页面token参数，用于实现自动登录
+		 * vk.handleAutoLoginToken();
+		 */
+		this.handleAutoLoginToken = (options) => {
+			if (options && options.query && options.query.token) {
+				this.saveToken({
+					token: options.query.token,
+					tokenExpired: options.query.tokenExpired || Date.now() + 100 * 365 * 24 * 60 * 60 * 1000
+				});
+			}
+		}
 		// 删除token，并删除userInfo缓存
 		this.deleteToken = () => {
 			let config = this.config;
@@ -471,7 +483,7 @@ class CallFunctionUtil {
 									initConifg.secretKey = envItem.secretKey;
 								} else if (envItem.provider === "dcloud") {
 									initConifg.clientSecret = envItem.clientSecret;
-								} 
+								}
 								if (envItem.endpoint) initConifg.endpoint = envItem.endpoint;
 								uniCloudEnvs[envKey] = uniCloud.init(initConifg);
 							}

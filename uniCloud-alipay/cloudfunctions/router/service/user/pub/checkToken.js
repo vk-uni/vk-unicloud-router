@@ -13,11 +13,12 @@ module.exports = {
 	 * @param {Array} permission 当前用户权限
 	 */
 	main: async (event) => {
-		let { util } = event;
+		let { data = {}, util } = event;
 		let { uniID } = util;
 		let res = {};
 		// 业务逻辑开始-----------------------------------------------------------
-		res = await uniID.checkToken(event.uniIdToken, {
+		const token = data.uniIdToken || event.uniIdToken;
+		res = await uniID.checkToken(token, {
 			needPermission: true,
 			needUserInfo: true
 		});

@@ -12,6 +12,8 @@
 			})
 		},
 		onLaunch: function(options) {
+			// 接收页面token参数，用于实现自动登录
+			uni.vk.handleAutoLoginToken(options);
 			// 注意：config.debug 在正式环境时，值为false，故此{}内的代码只有开发环境才会执行
 			if (config.debug) {
 				// #ifndef APP-PLUS
