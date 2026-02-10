@@ -3,5 +3,5 @@
 const vkCloud = require('vk-unicloud');                    // 引入 vk-unicloud
 const vk = vkCloud.createInstance(require('./config.js')); // 通过 vkCloud.createInstance 创建 vk 实例
 exports.main = async (event, context) => {
-	return await vk.router({ event, context, vk });
+  return await vk.router({ event, context, vk });
 };
