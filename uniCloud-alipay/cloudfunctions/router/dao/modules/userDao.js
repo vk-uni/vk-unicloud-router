@@ -30,13 +30,15 @@ class UserDao extends BaseDao {
 
   // 查询单条记录（完整版，支持事务）
   let userInfo = await vk.daoCenter.userDao.findById({
-  	db, // 指定db对象
-  	id: id,
-  	fieldJson: { name: 1, status: 1 }
+    db, // 指定db对象
+    id: id,
+    fieldJson: {}
   });
 
   // 根据条件查询单条记录
-  let userInfo = await vk.daoCenter.userDao.findByWhereJson({ status: 1 });
+  let userInfo = await vk.daoCenter.userDao.findByWhereJson({
+
+  });
 
   // 添加记录
   await vk.daoCenter.userDao.add(dataJson);
@@ -46,20 +48,20 @@ class UserDao extends BaseDao {
 
   // 根据ID修改
   await vk.daoCenter.userDao.updateById({
-  	id: id,
-  	dataJson: {
+    id: id,
+    dataJson: {
 
-  	}
+    }
   });
 
   // 批量修改
   await vk.daoCenter.userDao.update({
-  	whereJson: {
+    whereJson: {
 
-  	},
-  	dataJson: {
+    },
+    dataJson: {
 
-  	}
+    }
   });
 
   // 删除记录
@@ -82,51 +84,51 @@ class UserDao extends BaseDao {
 
   // select 查询列表（不支持联表查询，性能比selects高）
   res = await vk.daoCenter.userDao.select({
-  	pageIndex: 1,
-  	pageSize: 20,
-  	getCount: false,
-  	whereJson: {
+    pageIndex: 1,
+    pageSize: 20,
+    getCount: false,
+    whereJson: {
 
-  	},
-  	sortArr: [{ name: "_id", type: "desc" }]
+    },
+    sortArr: [{ name: "register_date", type: "desc" }]
   });
 
   // selects 查询列表（支持联表查询）
   res = await vk.daoCenter.userDao.selects({
-  	pageIndex: 1,
-  	pageSize: 20,
-  	getCount: false,
-  	whereJson: {
+    pageIndex: 1,
+    pageSize: 20,
+    getCount: false,
+    whereJson: {
 
-  	},
-  	fieldJson: {},
-  	sortArr: [{ name: "_id", type: "desc" }],
-  	// 副表列表
-  	foreignDB: [{
-  		dbName: "副表表名",
-  		localKey: "主表外键名",
-  		foreignKey: "副表外键名",
-  		as: "副表连表结果的别名",
-  		limit: 1,	// 当limit为1时，以对象形式返回
-  		// 副表查询条件
-  		whereJson: {},
-  		// 副表字段显示规则
-  		fieldJson: {}
-  	}]
+    },
+    fieldJson: {},
+    sortArr: [{ name: "register_date", type: "desc" }],
+    // 副表列表
+    foreignDB: [{
+      dbName: "副表表名",
+      localKey: "主表外键名",
+      foreignKey: "副表外键名",
+      as: "副表连表结果的别名",
+      limit: 1,	// 当limit为1时，以对象形式返回
+      // 副表查询条件
+      whereJson: {},
+      // 副表字段显示规则
+      fieldJson: {}
+    }]
   });
 
   // 获取表格数据（与selects参数一致，也支持连表，默认 getCount 为 true）
   res = await vk.daoCenter.userDao.getTableData({
-  	data
+    data
   });
 
   // 设置强制查询条件
   res = await vk.daoCenter.userDao.getTableData({
-  	data,
-  	// 强制where条件
-  	whereJson: {
+    data,
+    // 强制where条件
+    whereJson: {
 
-  	}
+    }
   });
 
    */
@@ -135,7 +137,6 @@ class UserDao extends BaseDao {
    * 获取用户信息（重写父类方法，增加默认字段过滤，此函数请勿删除）
    * 调用示例
    * await vk.daoCenter.userDao.findById(user_id);
-   * data 请求参数说明
    * @param {String|Object} condition - 用户ID或包含db、id、fieldJson的对象
    * @param {Object} [fieldJson] - 字段显示规则，默认不显示 token 和 password
    * @returns {Promise<Object>} 返回用户信息对象，默认不包含 token 和 password 字段
@@ -220,10 +221,10 @@ class UserDao extends BaseDao {
   或
    * 调用示例
   await vk.daoCenter.userDao.add({
-  	db: transaction,
-  	dataJson: {
+    db: transaction,
+    dataJson: {
 
-  	}
+    }
   });
    */
   async add(obj) {
@@ -285,9 +286,8 @@ class UserDao extends BaseDao {
    * my_invite_code
    * 调用示例
    await vk.daoCenter.userDao.findByUserInfo({
-  	mobile:mobile
+    mobile:mobile
    });
-   * data 请求参数说明
    * @param {Object} userInfo 用户信息
    * @returns {Promise<Object|undefined>} 返回用户信息对象，默认不包含 token 和 password 字段；如果未找到返回 undefined
    */
@@ -327,7 +327,6 @@ class UserDao extends BaseDao {
    * 根据ID数组获取用户列表
    * 调用示例
    * await vk.daoCenter.userDao.listByIds(userIdArr);
-   * data 请求参数说明
    * @param {Array} userIdArr 用户ID数组
    * @returns {Promise<Array>} 返回用户列表数组，默认不包含 token 和 password 字段
    */
@@ -346,6 +345,21 @@ class UserDao extends BaseDao {
   }
 
   /**
+   * 根据用户列表获取当前客户端应用匹配的用户
+   * 调用示例
+   * let currentAppUserList = vk.daoCenter.userDao.getCurrentAppUser(userList, dcloudAppid);
+   * @param {Array} userList 数据库内查询到的用户列表
+   * @param {String} dcloudAppid
+   * @returns {Object} 返回值，被筛选出的用户
+   */
+
+  getCurrentAppUser(userList, dcloudAppid) {
+    return userList.filter(item => {
+      return item.dcloud_appid === undefined || item.dcloud_appid === null || item.dcloud_appid.indexOf(dcloudAppid) > -1 || item.dcloud_appid.indexOf(null) > -1;
+    });
+  }
+
+  /**
    * 根据手机号直接注册账号并登录
    * 若手机号已存在,则直接登录
    * @param {Object} data 参数
@@ -357,7 +371,7 @@ class UserDao extends BaseDao {
    * @returns {Promise<Object>} 返回包含 uid、token、tokenExpired、userInfo 等字段的登录结果对象
    * 调用示例
    await vk.daoCenter.userDao.registerUserByMobile({
-  	 mobile,
+     mobile,
    });
    */
   async registerUserByMobile(data) {
@@ -404,8 +418,8 @@ class UserDao extends BaseDao {
    * @returns {Promise<Object>} 返回操作结果对象
    * 调用示例
   await vk.daoCenter.userDao.resetPwd({
-  	uid: uid,
-  	password: "123456"
+    uid: uid,
+    password: "123456"
   });
    */
   async resetPwd(data) {
@@ -462,9 +476,9 @@ class UserDao extends BaseDao {
    * @returns {Promise<Object>} 返回包含 code、msg、destroyed 等字段的操作结果对象
    * 调用示例
   await vk.daoCenter.userDao.closeAccount({
-  	uid: "用户id",
-  	delay: 0, // 延迟注销时间（单位为秒），0表示立即注销，若设置大于0，则需要在定时任务中再次执行注销账号，且不传delay参数
-  	reason: "", // 注销原因
+    uid: "用户id",
+    delay: 0, // 延迟注销时间（单位为秒），0表示立即注销，若设置大于0，则需要在定时任务中再次执行注销账号，且不传delay参数
+    reason: "", // 注销原因
   });
    */
   async closeAccount(data = {}) {
@@ -553,7 +567,7 @@ class UserDao extends BaseDao {
    * @returns {Promise<Object>} 返回包含 code 和 msg 字段的操作结果对象
    * 调用示例
   await vk.daoCenter.userDao.openAccount({
-  	uid: "用户id"
+    uid: "用户id"
   });
    */
   async openAccount(data = {}) {
