@@ -47,17 +47,14 @@ module.exports = {
       verifyCodeRes.msg = `新邮箱${verifyCodeRes.msg}`
       return verifyCodeRes;
     }
-    // 解绑前先判断下新邮箱能否被绑定
-    let userList = await vk.daoCenter.userDao.select({
-      getMain: true,
-      whereJson: {
-        email: email,
-        email_confirmed: 1
-      }
+    // 解绑前先判断下新邮箱是否已存在
+    let dcloud_appid = originalParam.context.appId;
+    let num = await vk.daoCenter.userDao.count({
+      email,
+      dcloud_appid: _.or(_.eq(dcloud_appid), _.exists(false))
     });
-    userList = vk.daoCenter.userDao.getCurrentAppUser(userList, originalParam.context.APPID);
-    if (userList && userList.length > 0) {
-      return { code: 60101, msg: `邮箱 ${email} 已存在，请更换其他邮箱绑定` }
+    if (num > 0) {
+      return { code: -1, msg: `邮箱 ${email} 已存在，请更换其他邮箱绑定` };
     }
     // 解绑邮箱
     let unbindEmailRes = await uniID.unbindEmail({

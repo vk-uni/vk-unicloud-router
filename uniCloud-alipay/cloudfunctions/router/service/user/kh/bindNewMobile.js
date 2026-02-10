@@ -46,17 +46,14 @@ module.exports = {
       verifyCodeRes.msg = `新手机${verifyCodeRes.msg}`
       return verifyCodeRes;
     }
-    // 解绑前先判断下新手机号能否被绑定
-    let userList = await vk.daoCenter.userDao.select({
-      getMain: true,
-      whereJson: {
-        mobile: mobile,
-        mobile_confirmed: 1
-      }
+    // 解绑前先判断下新手机号是否已存在
+    let dcloud_appid = originalParam.context.appId;
+    let num = await vk.daoCenter.userDao.count({
+      mobile,
+      dcloud_appid: _.or(_.eq(dcloud_appid), _.exists(false))
     });
-    userList = vk.daoCenter.userDao.getCurrentAppUser(userList, originalParam.context.APPID);
-    if (userList && userList.length > 0) {
-      return { code: 60101, msg: `手机号 ${mobile} 已存在，请更换其他手机号绑定` }
+    if (num > 0) {
+      return { code: -1, msg: `手机号 ${mobile} 已存在，请更换其他手机号绑定` };
     }
     // 解绑手机号
     let unbindMobileRes = await uniID.unbindMobile({

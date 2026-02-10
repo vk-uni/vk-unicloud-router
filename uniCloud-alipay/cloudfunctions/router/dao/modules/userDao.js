@@ -345,21 +345,6 @@ class UserDao extends BaseDao {
   }
 
   /**
-   * 根据用户列表获取当前客户端应用匹配的用户
-   * 调用示例
-   * let currentAppUserList = vk.daoCenter.userDao.getCurrentAppUser(userList, dcloudAppid);
-   * @param {Array} userList 数据库内查询到的用户列表
-   * @param {String} dcloudAppid
-   * @returns {Object} 返回值，被筛选出的用户
-   */
-
-  getCurrentAppUser(userList, dcloudAppid) {
-    return userList.filter(item => {
-      return item.dcloud_appid === undefined || item.dcloud_appid === null || item.dcloud_appid.indexOf(dcloudAppid) > -1 || item.dcloud_appid.indexOf(null) > -1;
-    });
-  }
-
-  /**
    * 根据手机号直接注册账号并登录
    * 若手机号已存在,则直接登录
    * @param {Object} data 参数
