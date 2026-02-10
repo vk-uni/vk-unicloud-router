@@ -32,17 +32,17 @@ app.$mount();
 import { createSSRApp } from 'vue'
 
 export function createApp() {
-  const app  = createSSRApp(App)
-  
+  const app = createSSRApp(App)
+
   // 引入vuex
   app.use(store)
-  
+
   // 引入 uView UI
   // app.use(uView)
-  
+
   // 引入 vk框架前端
   app.use(vk, config);
-  
+
   return { app }
 }
 // #endif
