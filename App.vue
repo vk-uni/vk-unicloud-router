@@ -16,7 +16,7 @@
       uni.vk.handleAutoLoginToken(options);
       // 注意：config.debug 在正式环境时，值为false，故此{}内的代码只有开发环境才会执行
       if (config.debug) {
-        // #ifndef APP-PLUS
+        // #ifndef APP
         console.log(
           `%c vk-client %c v${version} `,
           'background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff',
