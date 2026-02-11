@@ -1,3 +1,11 @@
+## 2.22.1（2026-02-11）
+* 【优化】router 内的定时任务支持设置并发执行数，参数名 concurrency [传送门](https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/timer.html)
+* 【优化】绑定新手机号和绑定新邮箱的业务逻辑
+
+**特别注意：本次更新需要替换框架内置文件**
+
+- 替换文件 `/router/service/user/kh/bindNewEmail.js`
+- 替换文件 `/router/service/user/kh/bindNewMobile.js`
 ## 2.22.0（2026-02-07）
 * 【重要】移除 `db_init.json` 单一文件，将其拆分为多文件结构并补全完整表结构，采用新版数据库初始化方案（通过右键 database 目录完成数据库初始化操作）
 * 【重要】Dao 文件升级为 Dao2.0 版本 [传送门](https://vkdoc.fsq.pub/client/uniCloud/db/dao.html)
