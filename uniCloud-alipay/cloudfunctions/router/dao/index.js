@@ -2,7 +2,9 @@
 const modulesPath = __dirname + "/modules";
 const fs = require('fs');
 const fileList = fs.readdirSync(modulesPath);
-const moduleObj = {};
+const moduleObj = {
+  toJSON: () => { return { modulesNames } }
+};
 const modulesNames = [];
 fileList.map((file, index) => {
   if (file.indexOf("Dao.js") > -1) {

@@ -18,7 +18,6 @@ class UserDao extends BaseDao {
   constructor(obj) {
     super(obj);
     this.tableName = Tables.user;
-    this.util = obj;
   }
 
   /**

@@ -9,12 +9,22 @@ class BaseDao {
 
   constructor(util) {
     const { vk, db } = util;
-    this.vk = vk;
     this.dao = vk.baseDao;
     this.db = db;
     this._ = db.command;
     this.$ = db.command.aggregate;
     this.tableName = ""; // 表名
+    this._getUtil = () => {
+      return util;
+    }
+  }
+
+  get util() {
+    return this._getUtil();
+  }
+
+  get vk() {
+    return this._getUtil().vk;
   }
 
   /**
@@ -302,14 +312,27 @@ class BaseDao {
    * let count = await this.count({ status: 1 });
    * // 支持事务
    * let count = await this.count(whereJson, db);
+   * // 先分组再count
+   * let count = await this.count({
+   *   whereJson: {},
+   *   groupJson: {}
+   * });
    */
-  async count(whereJson, db) {
+  async count(condition, db) {
     let res = {};
-    res = await this.dao.count({
-      db,
-      dbName: this.tableName,
-      whereJson
-    });
+    if (condition && condition.whereJson && (condition.groupJson || condition.db)) {
+      res = await this.dao.count({
+        db,
+        ...condition,
+        dbName: this.tableName,
+      });
+    } else {
+      res = await this.dao.count({
+        db,
+        dbName: this.tableName,
+        whereJson: condition
+      });
+    }
     return res;
   }
 
