@@ -1,3 +1,12 @@
+## 2.22.2（2026-03-03）
+* 【修复】dao2.0 版本会有循环依赖的问题
+* 【修复】hbx 4.87 版本导入插件会有两个uniCloud目录的问题
+
+**特别注意：本次更新需要替换框架内置文件**
+
+- 替换文件 `router/dao/base.js`
+
+* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.22.1（2026-02-11）
 * 【优化】router 内的定时任务支持设置并发执行数，参数名 concurrency [传送门](https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/timer.html)
 * 【优化】绑定新手机号和绑定新邮箱的业务逻辑
