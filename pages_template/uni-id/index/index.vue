@@ -30,7 +30,7 @@
 		<button type="default" @click="pageTo('../../db-test/db-test')">数据库API</button>
 		<button type="default" @click="pageTo('../util/util')">通用方法</button>
 		<button type="default" @click="pageTo('../closeAccount/closeAccount')">账号注销与恢复</button>
-		
+
 		<view style="margin-bottom: 20rpx;">插件版本1.8.7 新增 APP手机一键登录</view>
 		<button type="default" @click="pageTo('../univerify/univerify')">APP本机号码一键登录</button>
 		<view style="margin-bottom: 20rpx;">插件版本1.4.4 新增 Vuex状态管理</view>
@@ -38,71 +38,76 @@
 		<button type="default" @click="pageTo('../login/index/index')">登录注册找回密码页面模板</button>
 		<view style="margin-bottom: 20rpx;">三方工具对接</view>
 		<button type="default" @click="vk.navigateTo('../../plugs/lucky-draw/lucky-draw')">抽奖活动小助手（新）</button>
-		<view style="margin-bottom: 20rpx;">各大小程序API扩展</view>
-		<button type="default" @click="vk.navigateTo('../../openapi/weixin/weixin')">微信小程序API</button>
 		<!-- #ifdef H5 -->
 		<button type="default" @click="pageTo('../weixin/h5-weixin')">微信公众号API</button>
 		<!-- #endif -->
-		<button type="default" @click="vk.navigateTo('../../openapi/qq/qq')">QQ小程序API</button>
-		<button type="default" @click="vk.navigateTo('../../openapi/douyin/douyin')">抖音小程序API</button>
-		<button type="default" @click="vk.navigateTo('../../openapi/alipay/alipay')">支付宝小程序API</button>
 		<button type="default" @click="vk.navigateTo('../../openapi/baidu/baidu')">百度开放平台API</button>
-		
-
+    <view style="margin-bottom: 20rpx;">各大小程序API扩展文档</view>
+    <view style="font-size: 12px;text-decoration: underline;color: blue;" @click="openWeb('https://vkdoc.fsq.pub/client/uniCloud/plus/weixin.html')">https://vkdoc.fsq.pub/client/uniCloud/plus/weixin.html</view>
 	</view>
 </template>
 
 <script>
-	let vk = uni.vk;
-	export default {
-		data() {
-			return {
+  let vk = uni.vk;
+  export default {
+    data() {
+      return {
 
-			}
-		},
-		onLoad(options) {
-			vk = uni.vk;
-		},
-		methods: {
-			pageTo(url){
-				vk.navigateTo(url);
-			}
-		}
-	}
+      }
+    },
+    onLoad(options) {
+      vk = uni.vk;
+    },
+    methods: {
+      pageTo(url) {
+        vk.navigateTo(url);
+      },
+      openWeb(url) {
+        // #ifdef WEB
+        window.open(url);
+        // #endif
+      }
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
-	.content {
-		padding: 15px;
-	}
-	.content input {
-		height: 46px;
-		border: solid 1px #DDDDDD;
-		border-radius: 5px;
-		margin-bottom: 15px;
-		padding: 0px 15px;
-	}
-	.content button {
-		margin-bottom: 15px;
-	}
-	.content navigator {
-		display: inline-block;
-		color: #007AFF;
-		border-bottom: solid 1px #007AFF;
-		font-size: 16px;
-		line-height: 24px;
-		margin-bottom: 15px;
-	}
-	.tips {
-		text-align: center;
-		line-height: 20px;
-		font-size: 14px;
-		color: #999999;
-		margin-bottom: 20px;
-	}
-	.red-tips{
-		margin-bottom: 20rpx;
-		color: red;
-		font-size: 26rpx;
-	}
+  .content {
+    padding: 15px;
+  }
+
+  .content input {
+    height: 46px;
+    border: solid 1px #DDDDDD;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding: 0px 15px;
+  }
+
+  .content button {
+    margin-bottom: 15px;
+  }
+
+  .content navigator {
+    display: inline-block;
+    color: #007AFF;
+    border-bottom: solid 1px #007AFF;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 15px;
+  }
+
+  .tips {
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    color: #999999;
+    margin-bottom: 20px;
+  }
+
+  .red-tips {
+    margin-bottom: 20rpx;
+    color: red;
+    font-size: 26rpx;
+  }
 </style>

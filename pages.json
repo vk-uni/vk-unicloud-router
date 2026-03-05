@@ -117,67 +117,9 @@
         }
       },
       {
-        "path": "openapi/weixin/weixin",
-        "style": {
-          "navigationBarTitleText": "微信开放平台API"
-        }
-      },
-      {
-        "path": "openapi/weixin/msgSecCheck/msgSecCheck",
-        "style": {
-          "navigationBarTitleText": "文本安全检测"
-        }
-      },
-      {
-        "path": "openapi/weixin/imgSecCheck/imgSecCheck",
-        "style": {
-          "navigationBarTitleText": "图片安全检测"
-        }
-      },
-      {
-        "path": "openapi/weixin/sendMessage/sendMessage",
-        "style": {
-          "navigationBarTitleText": "发送订阅消息"
-        }
-      },
-      {
         "path": "openapi/baidu/baidu",
         "style": {
           "navigationBarTitleText": "百度开放平台API"
-        }
-      },
-      {
-        "path": "openapi/qq/qq",
-        "style": {
-          "navigationBarTitleText": "qq开放接口"
-        }
-      },
-      {
-        "path": "openapi/qq/msgSecCheck/msgSecCheck",
-        "style": {}
-      },
-      {
-        "path": "openapi/qq/imgSecCheck/imgSecCheck",
-        "style": {}
-      },
-      {
-        "path": "openapi/douyin/douyin",
-        "style": {
-          "navigationBarTitleText": "抖音开放接口"
-        }
-      },
-      {
-        "path": "openapi/douyin/msgSecCheck/msgSecCheck",
-        "style": {}
-      },
-      {
-        "path": "openapi/douyin/imgSecCheck/imgSecCheck",
-        "style": {}
-      },
-      {
-        "path": "openapi/alipay/alipay",
-        "style": {
-          "navigationBarTitleText": "支付宝开放接口"
         }
       },
       {
