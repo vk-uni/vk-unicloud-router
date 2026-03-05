@@ -115,10 +115,6 @@
     onReachBottom() {
       this.nextPage();
     },
-    // 监听 - 点击右上角转发时 https://uniapp.dcloud.io/api/plugins/share.html#onshareappmessage
-    onShareAppMessage(options) {
-
-    },
     // 函数
     methods: {
       // 页面数据初始化函数
