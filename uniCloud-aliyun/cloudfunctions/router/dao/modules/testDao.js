@@ -62,6 +62,11 @@ class TestDao extends BaseDao {
   // 删除记录
   await vk.daoCenter.testDao.deleteById(id);
 
+  // 批量删除
+  await vk.daoCenter.testDao.del({
+
+  });
+
   // 统计数量
   let count = await vk.daoCenter.testDao.count({
 

@@ -66,6 +66,11 @@ class UserDao extends BaseDao {
   // 删除记录
   await vk.daoCenter.userDao.deleteById(id);
 
+  // 批量删除
+  await vk.daoCenter.userDao.del({
+
+  });
+
   // 统计数量
   let count = await vk.daoCenter.userDao.count({
 
