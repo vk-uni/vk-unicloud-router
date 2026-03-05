@@ -29,7 +29,10 @@ const cloudObject = {
   _after: async function(options) {
     let { err, res } = options;
     if (err) {
-      return; // 如果方法抛出错误，直接return;不处理
+      if (err instanceof Error) {
+        return; // 如果是Error类型，直接return;不处理
+      }
+      return err;
     }
     return res;
   },
