@@ -85,7 +85,6 @@ export default {
      */
     mode: 1,
     list: [
-      "^template/test/pub/testEncryptRequest$", // 表示 template/test/pub/testEncryptRequest 云函数需要加密通信
       "^template/encrypt/(.*)", // 表示以 template/encrypt/ 开头的云函数或云对象需要加密通信
     ]
   },

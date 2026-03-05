@@ -1,6 +1,5 @@
-* 【修复】dao2.0 版本会有循环依赖的问题
-* 【修复】hbx 4.87 版本导入插件会有两个uniCloud目录的问题
+* 【调整】`router/service/plugs/baidu/` 调整为云对象方式实现
 
 **特别注意：本次更新需要替换框架内置文件**
 
-- 替换文件 `router/dao/base.js`
+- 替换目录 `router/service/plugs/baidu/`

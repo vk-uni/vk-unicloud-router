@@ -8,7 +8,6 @@ module.exports = [{
   id: "encryptFilter",
   // 正则匹配规则，满足以下规则的云函数会强制需要加密通信
   regExp: [
-    "^template/test/pub/testEncryptRequest$",
     "^template/encrypt/(.*)"
   ],
   description: "加密函数拦截器",
