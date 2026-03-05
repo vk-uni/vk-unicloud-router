@@ -9,13 +9,13 @@
   "subPackages": [{
     "root": "pages_template",
     "pages": [{
-        "path": "db-test/db-test",
+        "path": "db/db",
         "style": {
-          "navigationBarTitleText": "数据库API演示"
+          "navigationBarTitleText": "数据库"
         }
       },
       {
-        "path": "db-test/list/list",
+        "path": "db/list/list",
         "style": {
           "navigationBarTitleText": "列表加载演示"
         }

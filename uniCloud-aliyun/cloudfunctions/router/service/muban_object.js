@@ -1,9 +1,7 @@
 'use strict';
 let vk = uniCloud.vk; // 全局vk实例
 // 涉及的表名
-const dbName = {
-  //test: "vk-test", // 测试表
-};
+const dbName = require('../dao/config.js');
 
 const db = uniCloud.database(); // 全局数据库引用
 const _ = db.command; // 数据库操作符
@@ -19,7 +17,7 @@ const cloudObject = {
    * 文档地址：https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#before-预处理
    */
   _before: async function() {
-    vk = uniCloud.vk; // 将vk定义为全局对象
+    vk = this.vk; // 将vk定义为全局对象
     // let { customUtil, uniID, config, pubFun } = this.getUtil(); // 获取工具包
   },
   /**
