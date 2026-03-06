@@ -1928,7 +1928,7 @@ pubfn.getComponentsDynamicData = function(obj = {}) {
 		that,
 		keyName = "componentsDynamic",
 		title,
-		url = "plugs/components_dynamic/client/pub/getComponentsDynamicData",
+		url = "plugs/components-dynamic/client/pub.getList",
 		ids
 	} = obj;
 	let vk = uni.vk;
@@ -2483,9 +2483,9 @@ pubfn.getMiniProgramEnvVersion = function() {
 
 /**
  * 解析Excel文件数据（只支持xlsx格式）仅h5支持
-vk.pubfn.parseXlsxFile({ 
-	file, 
-	index, mode 
+vk.pubfn.parseXlsxFile({
+	file,
+	index, mode
 })
 .then((result) => {
 	console.log('result: ', result);
