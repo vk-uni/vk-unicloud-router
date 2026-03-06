@@ -11,16 +11,16 @@ let pubFun = {};
  * vk.myfn.test();
  */
 pubFun.test = function(path) {
-	// 可通过 uniCloud.vk 来获取vk实例
-	let vk = uniCloud.vk;
-	let timeStr = vk.pubfn.timeFormat(new Date(), "yyyy-MM-dd hh:mm:ss");
-	// 逻辑
-	// ...
-	// 逻辑	
-	return {
-		timeStr,
-		msg: "这是公共函数test的返回"
-	}
+  // 可通过 uniCloud.vk 来获取vk实例
+  let vk = uniCloud.vk;
+  let timeStr = vk.pubfn.timeFormat(new Date(), "yyyy-MM-dd hh:mm:ss");
+  // 逻辑
+  // ...
+  // 逻辑
+  return {
+    timeStr,
+    msg: "这是公共函数test的返回"
+  }
 }
 
 
