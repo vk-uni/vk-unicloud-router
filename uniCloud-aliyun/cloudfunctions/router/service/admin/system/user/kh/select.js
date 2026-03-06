@@ -1,7 +1,7 @@
 module.exports = {
   /**
    * 查询用户列表(用于后端用户选择器的搜索数据)
-   * @url admin/select/kh/user 前端调用的url参数地址
+   * @url admin/system/user/kh/select 前端调用的url参数地址
    * data 请求参数 说明
    * @param {String} searchvalue 搜索内容
    * res 返回参数说明
