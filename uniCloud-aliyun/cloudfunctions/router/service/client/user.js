@@ -35,7 +35,7 @@ const cloudObject = {
     return res;
   },
   /**
-   * 获取列表
+   * 获取我的信息
    * @url client/user.getMyInfo 前端调用的url参数地址
    */
   getMyInfo: async function(data) {
