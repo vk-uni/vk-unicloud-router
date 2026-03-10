@@ -5,9 +5,6 @@
 let pubFun = {};
 /**
  * 公共函数写法示例
- * 调用示例：
- * pubFun.test();
- * 或
  * vk.myfn.test();
  */
 pubFun.test = function(path) {
