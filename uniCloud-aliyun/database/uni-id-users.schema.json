@@ -23,10 +23,6 @@
       "bsonType": "password",
       "description": "密码，加密存储"
     },
-    "password_secret_version": {
-      "title": "passwordSecret",
-      "bsonType": "int"
-    },
     "nickname": {
       "title": "昵称",
       "bsonType": "string"
