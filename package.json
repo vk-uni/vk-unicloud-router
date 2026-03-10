@@ -9,7 +9,7 @@
     "vk云开发",
     "内置uni-id、数据库baseDao",
     "企业级云开发框架"
-],
+  ],
   "main": "main.js",
   "dependencies": {},
   "devDependencies": {},

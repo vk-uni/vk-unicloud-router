@@ -26,7 +26,7 @@ vk.openapi.baidu.open.ocr.business_license({
 		file: res.tempFiles[0]
 	},
 	success: (res) => {
-		that.data = res.data;
+		this.data = res.data;
 	},
 });
  */
@@ -57,7 +57,7 @@ vk.openapi.baidu.open.ocr.idcard({
 		id_card_side:"front", // front：身份证含照片的一面 back：身份证带国徽的一面
 	},
 	success: (res) => {
-		that.data = res.data;
+		this.data = res.data;
 	},
 });
  */
@@ -93,7 +93,7 @@ vk.openapi.baidu.request({
  		image:base64
  	},
  	success: (data) => {
- 		that.data = data;
+ 		this.data = data;
  	},
 });
  */

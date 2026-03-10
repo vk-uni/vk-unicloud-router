@@ -195,18 +195,18 @@ rules: {
 },
  */
 pubfn.validator = function(type) {
-	return function(rule, value, callback) {
-		let key = pubfn.test(value, type);
-		if (typeof callback === "function") {
-			if (key || !value) {
-				callback();
-			} else {
-				return callback(false);
-			}
-		} else {
-			return callback(false);
-		}
-	}
+  return function(rule, value, callback) {
+    let key = pubfn.test(value, type);
+    if (typeof callback === "function") {
+      if (key || !value) {
+        callback();
+      } else {
+        return callback(false);
+      }
+    } else {
+      return callback(false);
+    }
+  }
 };
 
 /**
@@ -249,81 +249,81 @@ pubfn.validator = function(type) {
  * vk.pubfn.test(str, type, allowEmpty);
  */
 pubfn.test = function(str, type = "", allowEmpty = false) {
-	type = type.toLowerCase();
-	let newStr;
-	if (allowEmpty && (str === "" || str === null || str === undefined)) {
-		return true;
-	}
-	switch (type) {
-		case 'mobile': //手机号码
-			return new RegExp(/^1[3|4|5|6|7|8|9][0-9]{9}$/).test(str);
-		case 'tel': //座机
-			return new RegExp(/^(0\d{2,3}-\d{7,8})(-\d{1,4})?$/).test(str);
-		case 'card': //身份证
-			return new RegExp(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/).test(str);
-		case 'mobilecode': //6位数字验证码
-			return new RegExp(/^[0-9]{6}$/).test(str);
-		case 'username': //账号以字母开头，长度在3~32之间，只能包含字母、数字和下划线
-			return new RegExp(/^[a-zA-Z]([-_a-zA-Z0-9]{2,31})$/).test(str)
-		case 'pwd': //密码长度在6~18之间，只能包含字母、数字和下划线和@
-			return new RegExp(/^([a-zA-Z0-9_@]){6,18}$/).test(str)
-		case 'password': //密码长度在6~18之间，只能包含字母、数字和下划线和@
-			return new RegExp(/^([a-zA-Z0-9_@]){6,18}$/).test(str)
-		case 'paypwd': //支付密码 6位纯数字
-			return new RegExp(/^[0-9]{6}$/).test(str)
-		case 'postal': //邮政编码
-			return new RegExp(/[1-9]\d{5}(?!\d)/).test(str);
-		case 'qq': //QQ号
-			return new RegExp(/^[1-9][0-9]{4,9}$/).test(str);
-		case 'email': //邮箱
-			return new RegExp(/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/).test(str);
-		case 'money': //金额(小数点2位)
-			return new RegExp(/^\d*(?:\.\d{0,2})?$/).test(str);
-		case 'url': //网址
-			return new RegExp(/^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/).test(str);
-		case 'domain': //域名
-			return new RegExp(/^(?!:\/\/)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/).test(str);
-		case 'ip': //IP
-			return new RegExp(/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/).test(
-				str);
-		case 'date': //日期 2014-01-01
-			return new RegExp(/^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/).test(str);
-		case 'time': //时间 12:00:00
-			return new RegExp(/^(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/).test(str);
-		case 'datetime': //日期+时间 2014-01-01 12:00:00
-			return new RegExp(/^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/).test(str);
-		case 'english+number': //英文+数字（空字符串算通过）
-			return new RegExp(/^[a-zA-Z0-9]+$/).test(str);
-		case 'english+number+_': //英文+数字+_（空字符串算通过）
-			return new RegExp(/^[a-zA-Z0-9_]+$/).test(str);
-		case 'english+number+_-': //英文+数字+_-（空字符串算通过）
-			return new RegExp(/^[a-zA-Z0-9_-]+$/).test(str);
-		case 'version': //版本号 xx.xx.xx（xx必须是数字）
-			return new RegExp(/^([1-9]\d|[1-9])(.([1-9]\d|\d)){2}$/).test(str);
-		case 'number': //数字（空字符串算通过）
-			return new RegExp(/^[0-9]+$/).test(str);
-		case 'english': //英文（空字符串算通过）
-			return new RegExp(/^[a-zA-Z]+$/).test(str);
-		case 'chinese': //中文（空字符串算通过）
-			return new RegExp(/^[\u4e00-\u9fa5]+$/gi).test(str);
-		case 'lower': //小写（空字符串算通过）
-			return new RegExp(/^[a-z]+$/).test(str);
-		case 'upper': //大写（空字符串算通过）
-			return new RegExp(/^[A-Z]+$/).test(str);
-		case 'html': //HTML标记
-			return new RegExp(/<("[^"]*"|'[^']*'|[^'">])*>/).test(str);
-		case 'image': //是否图片格式
-			newStr = str.split("?")[0].toLowerCase();
-			return new RegExp(/\.(jpeg|jpg|gif|png|svg|webp|jfif|bmp|dpg)$/).test(newStr);
-		case 'video': //是否视频格式
-			newStr = str.split("?")[0].toLowerCase();
-			return new RegExp(/\.(mp4|mpg|mpeg|dat|asf|avi|rm|rmvb|mov|wmv|flv|mkv|m3u8|3gp)$/).test(newStr);
-		case 'audio': //是否音频格式
-			newStr = str.split("?")[0].toLowerCase();
-			return new RegExp(/\.(mp3)$/).test(newStr);
-		default:
-			return true;
-	}
+  type = type.toLowerCase();
+  let newStr;
+  if (allowEmpty && (str === "" || str === null || str === undefined)) {
+    return true;
+  }
+  switch (type) {
+    case 'mobile': //手机号码
+      return new RegExp(/^1[3|4|5|6|7|8|9][0-9]{9}$/).test(str);
+    case 'tel': //座机
+      return new RegExp(/^(0\d{2,3}-\d{7,8})(-\d{1,4})?$/).test(str);
+    case 'card': //身份证
+      return new RegExp(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/).test(str);
+    case 'mobilecode': //6位数字验证码
+      return new RegExp(/^[0-9]{6}$/).test(str);
+    case 'username': //账号以字母开头，长度在3~32之间，只能包含字母、数字和下划线
+      return new RegExp(/^[a-zA-Z]([-_a-zA-Z0-9]{2,31})$/).test(str)
+    case 'pwd': //密码长度在6~18之间，只能包含字母、数字和下划线和@
+      return new RegExp(/^([a-zA-Z0-9_@]){6,18}$/).test(str)
+    case 'password': //密码长度在6~18之间，只能包含字母、数字和下划线和@
+      return new RegExp(/^([a-zA-Z0-9_@]){6,18}$/).test(str)
+    case 'paypwd': //支付密码 6位纯数字
+      return new RegExp(/^[0-9]{6}$/).test(str)
+    case 'postal': //邮政编码
+      return new RegExp(/[1-9]\d{5}(?!\d)/).test(str);
+    case 'qq': //QQ号
+      return new RegExp(/^[1-9][0-9]{4,9}$/).test(str);
+    case 'email': //邮箱
+      return new RegExp(/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/).test(str);
+    case 'money': //金额(小数点2位)
+      return new RegExp(/^\d*(?:\.\d{0,2})?$/).test(str);
+    case 'url': //网址
+      return new RegExp(/^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/).test(str);
+    case 'domain': //域名
+      return new RegExp(/^(?!:\/\/)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/).test(str);
+    case 'ip': //IP
+      return new RegExp(/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/).test(
+        str);
+    case 'date': //日期 2014-01-01
+      return new RegExp(/^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/).test(str);
+    case 'time': //时间 12:00:00
+      return new RegExp(/^(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/).test(str);
+    case 'datetime': //日期+时间 2014-01-01 12:00:00
+      return new RegExp(/^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/).test(str);
+    case 'english+number': //英文+数字（空字符串算通过）
+      return new RegExp(/^[a-zA-Z0-9]+$/).test(str);
+    case 'english+number+_': //英文+数字+_（空字符串算通过）
+      return new RegExp(/^[a-zA-Z0-9_]+$/).test(str);
+    case 'english+number+_-': //英文+数字+_-（空字符串算通过）
+      return new RegExp(/^[a-zA-Z0-9_-]+$/).test(str);
+    case 'version': //版本号 xx.xx.xx（xx必须是数字）
+      return new RegExp(/^([1-9]\d|[1-9])(.([1-9]\d|\d)){2}$/).test(str);
+    case 'number': //数字（空字符串算通过）
+      return new RegExp(/^[0-9]+$/).test(str);
+    case 'english': //英文（空字符串算通过）
+      return new RegExp(/^[a-zA-Z]+$/).test(str);
+    case 'chinese': //中文（空字符串算通过）
+      return new RegExp(/^[\u4e00-\u9fa5]+$/gi).test(str);
+    case 'lower': //小写（空字符串算通过）
+      return new RegExp(/^[a-z]+$/).test(str);
+    case 'upper': //大写（空字符串算通过）
+      return new RegExp(/^[A-Z]+$/).test(str);
+    case 'html': //HTML标记
+      return new RegExp(/<("[^"]*"|'[^']*'|[^'">])*>/).test(str);
+    case 'image': //是否图片格式
+      newStr = str.split("?")[0].toLowerCase();
+      return new RegExp(/\.(jpeg|jpg|gif|png|svg|webp|jfif|bmp|dpg)$/).test(newStr);
+    case 'video': //是否视频格式
+      newStr = str.split("?")[0].toLowerCase();
+      return new RegExp(/\.(mp4|mpg|mpeg|dat|asf|avi|rm|rmvb|mov|wmv|flv|mkv|m3u8|3gp)$/).test(newStr);
+    case 'audio': //是否音频格式
+      newStr = str.split("?")[0].toLowerCase();
+      return new RegExp(/\.(mp3)$/).test(newStr);
+    default:
+      return true;
+  }
 };
 // 保留之前的函数名
 pubfn.checkStr = pubfn.test;
@@ -333,12 +333,12 @@ pubfn.checkStr = pubfn.test;
  * vk.pubfn.objectDeleteInvalid(obj);
  */
 pubfn.objectDeleteInvalid = function(obj = {}) {
-	Object.keys(obj).forEach(item => {
-		if (obj[item] === undefined) {
-			delete obj[item];
-		}
-	});
-	return obj;
+  Object.keys(obj).forEach(item => {
+    if (obj[item] === undefined) {
+      delete obj[item];
+    }
+  });
+  return obj;
 };
 /**
  * 对象属性拷贝（浅拷贝）
@@ -350,8 +350,8 @@ pubfn.objectDeleteInvalid = function(obj = {}) {
  * vk.pubfn.objectAssign(obj1, obj2, false);
  */
 pubfn.objectAssign = function(obj1, obj2, deleteInvalid = true) {
-	if (deleteInvalid) pubfn.objectDeleteInvalid(obj2);
-	return Object.assign(obj1, obj2);
+  if (deleteInvalid) pubfn.objectDeleteInvalid(obj2);
+  return Object.assign(obj1, obj2);
 };
 /**
  * 复制一份对象-没有映射关系
@@ -360,11 +360,11 @@ pubfn.objectAssign = function(obj1, obj2, deleteInvalid = true) {
  * let newObj = vk.pubfn.copyObject(obj);
  */
 pubfn.copyObject = function(obj) {
-	if (typeof obj !== "undefined") {
-		return JSON.parse(JSON.stringify(obj));
-	} else {
-		return obj;
-	}
+  if (typeof obj !== "undefined") {
+    return JSON.parse(JSON.stringify(obj));
+  } else {
+    return obj;
+  }
 };
 /**
  * 深度克隆一个对象-没有映射关系
@@ -373,30 +373,30 @@ pubfn.copyObject = function(obj) {
  * let newObj = vk.pubfn.deepClone(obj);
  */
 pubfn.deepClone = function(obj) {
-	// 对常见的“非”值，直接返回原来值
-	if ([null, undefined, NaN, false].includes(obj)) return obj;
-	if (typeof obj !== "object" && typeof obj !== 'function') {
-		//原始类型直接返回
-		return obj;
-	}
-	let o = Object.prototype.toString.call(obj) === '[object Array]' ? [] : {};
-	for (let i in obj) {
-		if (obj.hasOwnProperty(i)) {
-			o[i] = typeof obj[i] === "object" ? pubfn.deepClone(obj[i]) : obj[i];
-		}
-	}
-	return o;
+  // 对常见的“非”值，直接返回原来值
+  if ([null, undefined, NaN, false].includes(obj)) return obj;
+  if (typeof obj !== "object" && typeof obj !== 'function') {
+    //原始类型直接返回
+    return obj;
+  }
+  let o = Object.prototype.toString.call(obj) === '[object Array]' ? [] : {};
+  for (let i in obj) {
+    if (obj.hasOwnProperty(i)) {
+      o[i] = typeof obj[i] === "object" ? pubfn.deepClone(obj[i]) : obj[i];
+    }
+  }
+  return o;
 };
 /**
  * 表单自动填充数据
  * @description 主要用于表单修改时,数据库没有默认字段会报错的问题
  * @param {Object} 	defaultData 默认数据
  * @param {Object} 	itemData		当前数据
- * that.form1 = vk.pubfn.formAssign(defaultData,itemData);
+ * this.form1 = vk.pubfn.formAssign(defaultData,itemData);
  */
 pubfn.formAssign = function(defaultData, itemData) {
-	let newDefaultData = pubfn.copyObject(defaultData);
-	return pubfn.objectAssign(newDefaultData, itemData);
+  let newDefaultData = pubfn.copyObject(defaultData);
+  return pubfn.objectAssign(newDefaultData, itemData);
 };
 
 
@@ -408,25 +408,25 @@ pubfn.formAssign = function(defaultData, itemData) {
  * let arr = vk.pubfn.arr_concat(arr1, arr2, "_id");
  */
 pubfn.arr_concat = function(arr1, arr2, flag) {
-	if (!flag) flag = "id"; // 默认用id来判断是否是同一个对象元素
-	if (!arr1) arr1 = [];
-	if (!arr2) arr2 = [];
-	let arr3 = arr1.concat(arr2); // 新旧数据合并
-	let arr = []; // 定义一个临时数组 存放对象
-	if (flag != -1) {
-		let arr_id = []; // 定义一个临时数组 存放id
-		for (let i in arr3) { // 循环遍历当前数组
-			// 判断当前数组下标为i的元素是否已经保存到临时数组
-			// 如果已保存，则跳过，否则将此元素保存到临时数组中
-			if (arr_id.indexOf(arr3[i][flag]) == -1) {
-				arr_id.push(arr3[i][flag]); // 添加id到数组
-				arr.push(arr3[i]); // 添加对象到数组
-			}
-		}
-	} else {
-		arr = arr3;
-	}
-	return arr;
+  if (!flag) flag = "id"; // 默认用id来判断是否是同一个对象元素
+  if (!arr1) arr1 = [];
+  if (!arr2) arr2 = [];
+  let arr3 = arr1.concat(arr2); // 新旧数据合并
+  let arr = []; // 定义一个临时数组 存放对象
+  if (flag != -1) {
+    let arr_id = []; // 定义一个临时数组 存放id
+    for (let i in arr3) { // 循环遍历当前数组
+      // 判断当前数组下标为i的元素是否已经保存到临时数组
+      // 如果已保存，则跳过，否则将此元素保存到临时数组中
+      if (arr_id.indexOf(arr3[i][flag]) == -1) {
+        arr_id.push(arr3[i][flag]); // 添加id到数组
+        arr.push(arr3[i]); // 添加对象到数组
+      }
+    }
+  } else {
+    arr = arr3;
+  }
+  return arr;
 };
 /**
  * 自动根据字符串路径获取对象中的值支持.和[] , 且任意一个值为undefined时,不会报错,会直接返回undefined
@@ -436,26 +436,26 @@ pubfn.arr_concat = function(arr1, arr2, flag) {
  * vk.pubfn.getData(dataObj, name);
  */
 pubfn.getData = function(dataObj, name, defaultValue) {
-	let newDataObj = dataObj;
-	if (pubfn.isNotNull(newDataObj) || typeof newDataObj === "object") {
-		let k = "",
-			d = ".",
-			l = "[",
-			r = "]";
-		name = name.replace(/\s+/g, k) + d;
-		let tstr = k;
-		for (let i = 0; i < name.length; i++) {
-			let theChar = name.charAt(i);
-			if (theChar != d && theChar != l && theChar != r) {
-				tstr += theChar;
-			} else if (newDataObj) {
-				if (tstr != k) newDataObj = newDataObj[tstr];
-				tstr = k;
-			}
-		}
-	}
-	if (typeof newDataObj === "undefined" && typeof defaultValue !== "undefined") newDataObj = defaultValue;
-	return newDataObj;
+  let newDataObj = dataObj;
+  if (pubfn.isNotNull(newDataObj) || typeof newDataObj === "object") {
+    let k = "",
+      d = ".",
+      l = "[",
+      r = "]";
+    name = name.replace(/\s+/g, k) + d;
+    let tstr = k;
+    for (let i = 0; i < name.length; i++) {
+      let theChar = name.charAt(i);
+      if (theChar != d && theChar != l && theChar != r) {
+        tstr += theChar;
+      } else if (newDataObj) {
+        if (tstr != k) newDataObj = newDataObj[tstr];
+        tstr = k;
+      }
+    }
+  }
+  if (typeof newDataObj === "undefined" && typeof defaultValue !== "undefined") newDataObj = defaultValue;
+  return newDataObj;
 };
 /**
  * 自动根据字符串路径设置对象中的值 支持.和[]
@@ -465,16 +465,16 @@ pubfn.getData = function(dataObj, name, defaultValue) {
  * vk.pubfn.setData(dataObj, name, value);
  */
 pubfn.setData = function(dataObj, name, value) {
-	let regExp = new RegExp("([\\w$-]+)|\\[(:\\d)\\]", "g");
-	const patten = name.match(regExp);
-	// 遍历路径  逐级查找  最后一级用于直接赋值
-	for (let i = 0; i < patten.length - 1; i++) {
-		let keyName = patten[i];
-		if (typeof dataObj[keyName] !== "object") dataObj[keyName] = {};
-		dataObj = dataObj[keyName];
-	}
-	// 最后一级
-	dataObj[patten[patten.length - 1]] = value;
+  let regExp = new RegExp("([\\w$-]+)|\\[(:\\d)\\]", "g");
+  const patten = name.match(regExp);
+  // 遍历路径  逐级查找  最后一级用于直接赋值
+  for (let i = 0; i < patten.length - 1; i++) {
+    let keyName = patten[i];
+    if (typeof dataObj[keyName] !== "object") dataObj[keyName] = {};
+    dataObj = dataObj[keyName];
+  }
+  // 最后一级
+  dataObj[patten[patten.length - 1]] = value;
 };
 
 /**
@@ -482,14 +482,14 @@ pubfn.setData = function(dataObj, name, value) {
  * vk.pubfn.isNull(value);
  */
 pubfn.isNull = function(value) {
-	let key = false;
-	if (typeof value == "undefined" || value === null || value === "" ||
-		(Object.prototype.toString.call(value) === "[object Object]" && Object.keys(value).length === 0) ||
-		(Object.prototype.toString.call(value) === "[object Array]" && value.length === 0)
-	) {
-		key = true;
-	}
-	return key;
+  let key = false;
+  if (typeof value == "undefined" || value === null || value === "" ||
+    (Object.prototype.toString.call(value) === "[object Object]" && Object.keys(value).length === 0) ||
+    (Object.prototype.toString.call(value) === "[object Array]" && value.length === 0)
+  ) {
+    key = true;
+  }
+  return key;
 };
 
 /**
@@ -497,23 +497,23 @@ pubfn.isNull = function(value) {
  * vk.pubfn.isNotNull(value);
  */
 pubfn.isNotNull = function(value) {
-	return !pubfn.isNull(value);
+  return !pubfn.isNull(value);
 };
 /**
  * 检测所有参数 - 是否至少有一个为空
  * vk.pubfn.isNullOne(value1,value2,value3);
  */
 pubfn.isNullOne = function(...strS) {
-	let key = false;
-	for (let i = 0; i < strS.length; i++) {
-		let str = strS[i];
-		if (pubfn.isNull(str)) {
-			key = true;
-			break;
-		}
-	}
+  let key = false;
+  for (let i = 0; i < strS.length; i++) {
+    let str = strS[i];
+    if (pubfn.isNull(str)) {
+      key = true;
+      break;
+    }
+  }
 
-	return key;
+  return key;
 };
 /**
  * 检测整个对象是否没有一个属性是空值,如果有空值,则返回首个是空值的属性名
@@ -521,30 +521,30 @@ pubfn.isNullOne = function(...strS) {
  if(nullKey) return { code : -1, msg : `${nullKey}不能为空` };
  */
 pubfn.isNullOneByObject = function(obj) {
-	let key;
-	for (let name in obj) {
-		let val = obj[name];
-		if (pubfn.isNull(val)) {
-			key = name;
-			break;
-		}
-	}
-	return key;
+  let key;
+  for (let name in obj) {
+    let val = obj[name];
+    if (pubfn.isNull(val)) {
+      key = name;
+      break;
+    }
+  }
+  return key;
 };
 /**
  * 检测所有参数 - 是否全部为空
  * vk.pubfn.isNullAll(value1,value2,value3);
  */
 pubfn.isNullAll = function(...strS) {
-	let key = true;
-	for (let i = 0; i < strS.length; i++) {
-		let str = strS[i];
-		if (pubfn.isNotNull(str)) {
-			key = false;
-			break;
-		}
-	}
-	return key;
+  let key = true;
+  for (let i = 0; i < strS.length; i++) {
+    let str = strS[i];
+    if (pubfn.isNotNull(str)) {
+      key = false;
+      break;
+    }
+  }
+  return key;
 };
 
 /**
@@ -552,7 +552,7 @@ pubfn.isNullAll = function(...strS) {
  * vk.pubfn.isNotNullAll(value1,value2,value3);
  */
 pubfn.isNotNullAll = function(...strS) {
-	return !pubfn.isNullOne(...strS);
+  return !pubfn.isNullOne(...strS);
 };
 /**
  * 获取对象数组中的某一个item,根据指定的键名和键值
@@ -563,14 +563,14 @@ pubfn.isNotNullAll = function(...strS) {
  * vk.pubfn.getListItem(list, key, value);
  */
 pubfn.getListItem = function(list, key, value) {
-	let item;
-	for (let i = 0; i < list.length; i++) {
-		if (list[i][key] === value) {
-			item = list[i];
-			break;
-		}
-	}
-	return item;
+  let item;
+  for (let i = 0; i < list.length; i++) {
+    if (list[i][key] === value) {
+      item = list[i];
+      break;
+    }
+  }
+  return item;
 };
 /**
  * 获取对象数组中某个元素的index,根据指定的键名和键值
@@ -581,14 +581,14 @@ pubfn.getListItem = function(list, key, value) {
  * vk.pubfn.getListIndex(list, key, value);
  */
 pubfn.getListIndex = function(list, key, value) {
-	let index = -1;
-	for (let i = 0; i < list.length; i++) {
-		if (list[i][key] === value) {
-			index = i;
-			break;
-		}
-	}
-	return index;
+  let index = -1;
+  for (let i = 0; i < list.length; i++) {
+    if (list[i][key] === value) {
+      index = i;
+      break;
+    }
+  }
+  return index;
 };
 /**
  * 获取对象数组中某个元素的index,根据指定的键名和键值
@@ -599,21 +599,21 @@ pubfn.getListIndex = function(list, key, value) {
  * vk.pubfn.getListItemIndex(list, key, value);
  */
 pubfn.getListItemIndex = function(list, key, value) {
-	let obj = {};
-	let item;
-	let index = -1;
-	for (let i = 0; i < list.length; i++) {
-		if (list[i][key] === value) {
-			index = i;
-			item = list[i];
-			break;
-		}
-	}
-	obj = {
-		item,
-		index
-	}
-	return obj;
+  let obj = {};
+  let item;
+  let index = -1;
+  for (let i = 0; i < list.length; i++) {
+    if (list[i][key] === value) {
+      index = i;
+      item = list[i];
+      break;
+    }
+  }
+  obj = {
+    item,
+    index
+  }
+  return obj;
 };
 /**
  * 数组转对象 - 将对象数组转成json
@@ -623,12 +623,12 @@ pubfn.getListItemIndex = function(list, key, value) {
  * vk.pubfn.arrayToJson(list, "_id");
  */
 pubfn.arrayToJson = function(list, key) {
-	let json = {};
-	for (let i in list) {
-		let item = list[i];
-		json[item[key]] = item;
-	}
-	return json;
+  let json = {};
+  for (let i in list) {
+    let item = list[i];
+    json[item[key]] = item;
+  }
+  return json;
 };
 pubfn.listToJson = pubfn.arrayToJson;
 
@@ -640,7 +640,7 @@ pubfn.listToJson = pubfn.arrayToJson;
  * let idArr = vk.pubfn.arrayObjectGetArray(list, "_id");
  */
 pubfn.arrayObjectGetArray = function(list, key) {
-	return list.map(obj => { return obj[key] });
+  return list.map(obj => { return obj[key] });
 };
 
 /**
@@ -653,21 +653,21 @@ pubfn.arrayObjectGetArray = function(list, key) {
  * vk.pubfn.random(1,"12",["1","2"]);
  */
 pubfn.random = function(length, range, arr) {
-	let s;
-	if (pubfn.isNull(arr)) {
-		s = pubfn.randomFn(length, range);
-	} else {
-		let i = 0;
-		let maxForCount = 100000;
-		do {
-			i++;
-			s = pubfn.randomFn(length, range);
-		} while (arr.indexOf(s) > -1 && i < maxForCount);
-		if (i === maxForCount) {
-			s = undefined;
-		}
-	}
-	return s;
+  let s;
+  if (pubfn.isNull(arr)) {
+    s = pubfn.randomFn(length, range);
+  } else {
+    let i = 0;
+    let maxForCount = 100000;
+    do {
+      i++;
+      s = pubfn.randomFn(length, range);
+    } while (arr.indexOf(s) > -1 && i < maxForCount);
+    if (i === maxForCount) {
+      s = undefined;
+    }
+  }
+  return s;
 };
 /**
  * 产生指定位数的随机数(支持任意字符,默认纯数字)
@@ -677,24 +677,24 @@ pubfn.random = function(length, range, arr) {
  * vk.pubfn.random(6, "abcdefghijklmnopqrstuvwxyz0123456789");
  */
 pubfn.randomFn = function(length, range) {
-	let s = "";
-	let list = "123456789";
-	//0123456789QWERTYUIPASDFGHJKLZXCVBNM
-	if (pubfn.isNotNull(range)) {
-		if (range == "a-z,0-9") {
-			range = "abcdefghijklmnopqrstuvwxyz0123456789";
-		} else if (range == "A-Z,0-9") {
-			range = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		} else if (range == "a-z,A-Z,0-9" || range == "A-Z,a-z,0-9") {
-			range = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		}
-		list = range;
-	}
-	for (let i = 0; i < length; i++) {
-		let code = list[Math.floor(Math.random() * list.length)];
-		s += code;
-	}
-	return s;
+  let s = "";
+  let list = "123456789";
+  //0123456789QWERTYUIPASDFGHJKLZXCVBNM
+  if (pubfn.isNotNull(range)) {
+    if (range == "a-z,0-9") {
+      range = "abcdefghijklmnopqrstuvwxyz0123456789";
+    } else if (range == "A-Z,0-9") {
+      range = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    } else if (range == "a-z,A-Z,0-9" || range == "A-Z,a-z,0-9") {
+      range = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    }
+    list = range;
+  }
+  for (let i = 0; i < length; i++) {
+    let code = list[Math.floor(Math.random() * list.length)];
+    s += code;
+  }
+  return s;
 };
 
 /**
@@ -702,17 +702,17 @@ pubfn.randomFn = function(length, range) {
  * vk.pubfn.stringIdToNumberId(uid,8);
  */
 pubfn.stringIdToNumberId = function(str, length) {
-	let s = "";
-	let list = "0123456789";
-	for (let i = 0; i < length; i++) {
-		if (str.length > i) {
-			let index = str[i].charCodeAt() % 10;
-			s += list[index];
-		} else {
-			s = "0" + s;
-		}
-	}
-	return s;
+  let s = "";
+  let list = "0123456789";
+  for (let i = 0; i < length; i++) {
+    if (str.length > i) {
+      let index = str[i].charCodeAt() % 10;
+      s += list[index];
+    } else {
+      s = "0" + s;
+    }
+  }
+  return s;
 };
 
 /**
@@ -723,12 +723,12 @@ pubfn.stringIdToNumberId = function(str, length) {
  * vk.pubfn.hidden(str, first, last);
  */
 pubfn.hidden = function(str = "", first = 0, last = 0) {
-	let len = str.length - first - last;
-	let xing = '';
-	for (let i = 0; i < len; i++) {
-		xing += '*';
-	}
-	return str.substring(0, first) + xing + str.substring(str.length - last);
+  let len = str.length - first - last;
+  let xing = '';
+  for (let i = 0; i < len; i++) {
+    xing += '*';
+  }
+  return str.substring(0, first) + xing + str.substring(str.length - last);
 };
 /**
  * 判断常量数组A是否至少有一个元素在常量数组B中存在(两数组有交集)
@@ -737,13 +737,13 @@ pubfn.hidden = function(str = "", first = 0, last = 0) {
  * vk.pubfn.checkArrayIntersection(arr1, arr2);
  */
 pubfn.checkArrayIntersection = function(arr1 = [], arr2 = []) {
-	let checkKey = false;
-	for (let i = 0; i < arr2.length; i++) {
-		if (arr1.indexOf(arr2[i]) > -1) {
-			checkKey = true;
-		}
-	}
-	return checkKey;
+  let checkKey = false;
+  for (let i = 0; i < arr2.length; i++) {
+    if (arr1.indexOf(arr2[i]) > -1) {
+      checkKey = true;
+    }
+  }
+  return checkKey;
 };
 /**
  * 检测数据源是否满足表达式规则
@@ -752,130 +752,130 @@ pubfn.checkArrayIntersection = function(arr1 = [], arr2 = []) {
  * vk.pubfn.checkDataExpText(data, expText);
  */
 pubfn.checkDataExpText = function(data = {}, expText) {
-	expText = expText.replace(new RegExp("\\s", "g"), "");
-	//console.log("expText:",expText);
-	let orArr = expText.split("||");
-	//console.log("orArr",orArr);
-	let checkKey = false;
-	for (let index1 = 0; index1 < orArr.length; index1++) {
-		let orItem = orArr[index1];
-		let andArr = orItem.split("&&");
-		//console.log("andArr",andArr);
-		let itemKey = true;
-		for (let index2 = 0; index2 < andArr.length; index2++) {
-			let andItem = andArr[index2];
-			//console.log("andItem",andItem);
-			if (andItem.indexOf("!=") > -1) {
-				let andItemArr = andItem.split("!=");
-				let key = andItemArr[0];
-				let value = andItemArr[1];
-				let formValue = pubfn.getData(data, key);
+  expText = expText.replace(new RegExp("\\s", "g"), "");
+  //console.log("expText:",expText);
+  let orArr = expText.split("||");
+  //console.log("orArr",orArr);
+  let checkKey = false;
+  for (let index1 = 0; index1 < orArr.length; index1++) {
+    let orItem = orArr[index1];
+    let andArr = orItem.split("&&");
+    //console.log("andArr",andArr);
+    let itemKey = true;
+    for (let index2 = 0; index2 < andArr.length; index2++) {
+      let andItem = andArr[index2];
+      //console.log("andItem",andItem);
+      if (andItem.indexOf("!=") > -1) {
+        let andItemArr = andItem.split("!=");
+        let key = andItemArr[0];
+        let value = andItemArr[1];
+        let formValue = pubfn.getData(data, key);
 
-				itemKey = String(formValue) !== value ? true : false;
+        itemKey = String(formValue) !== value ? true : false;
 
-			} else if (andItem.indexOf("==") > -1) {
-				let andItemArr = andItem.split("==");
-				let key = andItemArr[0];
-				let value = andItemArr[1];
-				let formValue = pubfn.getData(data, key);
+      } else if (andItem.indexOf("==") > -1) {
+        let andItemArr = andItem.split("==");
+        let key = andItemArr[0];
+        let value = andItemArr[1];
+        let formValue = pubfn.getData(data, key);
 
-				itemKey = String(formValue) == value ? true : false;
+        itemKey = String(formValue) == value ? true : false;
 
-			} else if (andItem.indexOf(">=") > -1) {
-				let andItemArr = andItem.split(">=");
-				let key = andItemArr[0];
-				let value = andItemArr[1];
-				let formValue = pubfn.getData(data, key);
-				if (isNaN(value)) {
-					if (typeof formValue !== "undefined") itemKey = String(formValue) >= value ? true : false;
-					if (typeof formValue === "undefined" || formValue === null) itemKey = false;
-				} else {
-					if (typeof formValue !== "undefined") itemKey = formValue >= Number(value) ? true : false;
-					if (typeof formValue === "undefined" || formValue === null) itemKey = false;
-				}
-			} else if (andItem.indexOf(">") > -1) {
-				let andItemArr = andItem.split(">");
-				let key = andItemArr[0];
-				let value = andItemArr[1];
-				let formValue = pubfn.getData(data, key);
-				if (isNaN(value)) {
-					if (typeof formValue !== "undefined") itemKey = String(formValue) > value ? true : false;
-					if (typeof formValue === "undefined" || formValue === null) itemKey = false;
-				} else {
-					if (typeof formValue !== "undefined") itemKey = formValue > Number(value) ? true : false;
-					if (typeof formValue === "undefined" || formValue === null) itemKey = false;
-				}
-			} else if (andItem.indexOf("<=") > -1) {
-				let andItemArr = andItem.split("<=");
-				let key = andItemArr[0];
-				let value = andItemArr[1];
-				if (isNaN(value)) {
-					if (typeof data[key] !== "undefined") itemKey = String(data[key]) <= value ? true : false;
-					if (typeof data[key] === "undefined" || data[key] === null) itemKey = false;
-				} else {
-					if (typeof data[key] !== "undefined") itemKey = data[key] <= Number(value) ? true : false;
-					if (typeof data[key] === "undefined" || data[key] === null) itemKey = false;
-				}
-			} else if (andItem.indexOf("<") > -1) {
-				let andItemArr = andItem.split("<");
-				let key = andItemArr[0];
-				let value = andItemArr[1];
-				let formValue = pubfn.getData(data, key);
-				if (isNaN(value)) {
-					if (typeof formValue !== "undefined") itemKey = String(formValue) < value ? true : false;
-					if (typeof formValue === "undefined" || formValue === null) itemKey = false;
-				} else {
-					if (typeof formValue !== "undefined") itemKey = formValue < Number(value) ? true : false;
-					if (typeof formValue === "undefined" || formValue === null) itemKey = false;
-				}
-			} else if (andItem.indexOf("{in}") > -1) {
-				let andItemArr = andItem.split("{in}");
-				let key = andItemArr[0];
-				let value = andItemArr[1];
-				let formValue = pubfn.getData(data, key);
-				if (Array.isArray(formValue)) {
-					let index = formValue.findIndex(item => {
-						return item.toString() === value.toString();
-					});
-					itemKey = index > -1 ? true : false;
-				} else {
-					itemKey = false;
-				}
-				//itemKey = (Array.isArray(formValue) && formValue.indexOf(value) > -1 ) ? true : false;
-			} else if (andItem.indexOf("{nin}") > -1) {
-				let andItemArr = andItem.split("{nin}");
-				let key = andItemArr[0];
-				let value = andItemArr[1];
-				let formValue = pubfn.getData(data, key);
-				if (Array.isArray(formValue)) {
-					let index = formValue.findIndex(item => {
-						return item.toString() === value.toString();
-					});
-					itemKey = index < 0 ? true : false;
-				} else {
-					itemKey = false;
-				}
-				//itemKey = (Array.isArray(formValue) && formValue.indexOf(value) < 0 ) ? true : false;
-			} else {
-				let andItemArr = andItem.split("=");
-				let key = andItemArr[0];
-				let value = andItemArr[1];
-				let formValue = pubfn.getData(data, key);
+      } else if (andItem.indexOf(">=") > -1) {
+        let andItemArr = andItem.split(">=");
+        let key = andItemArr[0];
+        let value = andItemArr[1];
+        let formValue = pubfn.getData(data, key);
+        if (isNaN(value)) {
+          if (typeof formValue !== "undefined") itemKey = String(formValue) >= value ? true : false;
+          if (typeof formValue === "undefined" || formValue === null) itemKey = false;
+        } else {
+          if (typeof formValue !== "undefined") itemKey = formValue >= Number(value) ? true : false;
+          if (typeof formValue === "undefined" || formValue === null) itemKey = false;
+        }
+      } else if (andItem.indexOf(">") > -1) {
+        let andItemArr = andItem.split(">");
+        let key = andItemArr[0];
+        let value = andItemArr[1];
+        let formValue = pubfn.getData(data, key);
+        if (isNaN(value)) {
+          if (typeof formValue !== "undefined") itemKey = String(formValue) > value ? true : false;
+          if (typeof formValue === "undefined" || formValue === null) itemKey = false;
+        } else {
+          if (typeof formValue !== "undefined") itemKey = formValue > Number(value) ? true : false;
+          if (typeof formValue === "undefined" || formValue === null) itemKey = false;
+        }
+      } else if (andItem.indexOf("<=") > -1) {
+        let andItemArr = andItem.split("<=");
+        let key = andItemArr[0];
+        let value = andItemArr[1];
+        if (isNaN(value)) {
+          if (typeof data[key] !== "undefined") itemKey = String(data[key]) <= value ? true : false;
+          if (typeof data[key] === "undefined" || data[key] === null) itemKey = false;
+        } else {
+          if (typeof data[key] !== "undefined") itemKey = data[key] <= Number(value) ? true : false;
+          if (typeof data[key] === "undefined" || data[key] === null) itemKey = false;
+        }
+      } else if (andItem.indexOf("<") > -1) {
+        let andItemArr = andItem.split("<");
+        let key = andItemArr[0];
+        let value = andItemArr[1];
+        let formValue = pubfn.getData(data, key);
+        if (isNaN(value)) {
+          if (typeof formValue !== "undefined") itemKey = String(formValue) < value ? true : false;
+          if (typeof formValue === "undefined" || formValue === null) itemKey = false;
+        } else {
+          if (typeof formValue !== "undefined") itemKey = formValue < Number(value) ? true : false;
+          if (typeof formValue === "undefined" || formValue === null) itemKey = false;
+        }
+      } else if (andItem.indexOf("{in}") > -1) {
+        let andItemArr = andItem.split("{in}");
+        let key = andItemArr[0];
+        let value = andItemArr[1];
+        let formValue = pubfn.getData(data, key);
+        if (Array.isArray(formValue)) {
+          let index = formValue.findIndex(item => {
+            return item.toString() === value.toString();
+          });
+          itemKey = index > -1 ? true : false;
+        } else {
+          itemKey = false;
+        }
+        //itemKey = (Array.isArray(formValue) && formValue.indexOf(value) > -1 ) ? true : false;
+      } else if (andItem.indexOf("{nin}") > -1) {
+        let andItemArr = andItem.split("{nin}");
+        let key = andItemArr[0];
+        let value = andItemArr[1];
+        let formValue = pubfn.getData(data, key);
+        if (Array.isArray(formValue)) {
+          let index = formValue.findIndex(item => {
+            return item.toString() === value.toString();
+          });
+          itemKey = index < 0 ? true : false;
+        } else {
+          itemKey = false;
+        }
+        //itemKey = (Array.isArray(formValue) && formValue.indexOf(value) < 0 ) ? true : false;
+      } else {
+        let andItemArr = andItem.split("=");
+        let key = andItemArr[0];
+        let value = andItemArr[1];
+        let formValue = pubfn.getData(data, key);
 
-				itemKey = String(formValue) == value ? true : false;
+        itemKey = String(formValue) == value ? true : false;
 
-				//console.log("key:",key,"value:",value,"formValue",formValue.toString(),"itemKey:",itemKey);
-			}
-			if (!itemKey) {
-				break;
-			}
-		}
-		if (itemKey) {
-			checkKey = true;
-			break;
-		}
-	}
-	return checkKey;
+        //console.log("key:",key,"value:",value,"formValue",formValue.toString(),"itemKey:",itemKey);
+      }
+      if (!itemKey) {
+        break;
+      }
+    }
+    if (itemKey) {
+      checkKey = true;
+      break;
+    }
+  }
+  return checkKey;
 };
 
 /**
@@ -883,14 +883,14 @@ pubfn.checkDataExpText = function(data = {}, expText) {
  * vk.pubfn.isArray(value);
  */
 pubfn.isArray = function(value) {
-	return Object.prototype.toString.call(value) === "[object Array]" ? true : false;
+  return Object.prototype.toString.call(value) === "[object Array]" ? true : false;
 };
 /**
  * 判断变量是否是对象
  * vk.pubfn.isObject(value);
  */
 pubfn.isObject = function(value) {
-	return Object.prototype.toString.call(value) === "[object Object]" ? true : false;
+  return Object.prototype.toString.call(value) === "[object Object]" ? true : false;
 };
 
 
@@ -911,8 +911,8 @@ pubfn.isObject = function(value) {
  * vk.pubfn.calcFreights(freightItem, weight);
  */
 pubfn.calcFreights = function(freightItem, weight) {
-	let freightRes = vk.pubfn.calcFreightDetail(freightItem, weight);
-	return freightRes.total_amount;
+  let freightRes = vk.pubfn.calcFreightDetail(freightItem, weight);
+  return freightRes.total_amount;
 };
 
 /**
@@ -935,64 +935,64 @@ pubfn.calcFreights = function(freightItem, weight) {
  * let freightRes = vk.pubfn.calcFreightDetail(freightItem, weight);
  */
 pubfn.calcFreightDetail = function(freightItem, weight) {
-	let {
-		first_weight, // 首重（KG）
-		first_weight_price, // 首重价格（元）
-		continuous_weight, // 续重（KG）
-		continuous_weight_price, // 续重价格（元）
-		max_weight, // 拆包裹，每个包裹最大重量（KG）
-	} = freightItem;
-	if (!max_weight) max_weight = 1000000000;
-	let originalWeight = weight;
-	let money = 0; // 运费
-	let first_weight_count = 0; // 包裹数量
-	let packagesSurplusWeight = max_weight; // 包裹剩余重量
-	let first_weight_key = false; // 是否已减过首重
-	let continuous_weight_count = 0; // 续重次数
-	let logArr = [];
-	let logRun = false;
-	while (weight > 0) {
-		if (!first_weight_key) {
-			// 首重
-			first_weight_key = true;
-			first_weight_count++;
-			packagesSurplusWeight = max_weight; // 还原包裹剩余重量
-			weight -= first_weight;
-			packagesSurplusWeight -= first_weight;
-		} else {
-			// 续重
-			continuous_weight_count++;
-			weight -= continuous_weight;
-			packagesSurplusWeight -= continuous_weight;
-		}
-		if (logRun) logArr.push({
-			"总重量剩余": weight,
-			"当前包裹重量剩余": packagesSurplusWeight,
-			"当前第几个包裹": first_weight_count,
-			"续重计算次数": continuous_weight_count
-		});
+  let {
+    first_weight, // 首重（KG）
+    first_weight_price, // 首重价格（元）
+    continuous_weight, // 续重（KG）
+    continuous_weight_price, // 续重价格（元）
+    max_weight, // 拆包裹，每个包裹最大重量（KG）
+  } = freightItem;
+  if (!max_weight) max_weight = 1000000000;
+  let originalWeight = weight;
+  let money = 0; // 运费
+  let first_weight_count = 0; // 包裹数量
+  let packagesSurplusWeight = max_weight; // 包裹剩余重量
+  let first_weight_key = false; // 是否已减过首重
+  let continuous_weight_count = 0; // 续重次数
+  let logArr = [];
+  let logRun = false;
+  while (weight > 0) {
+    if (!first_weight_key) {
+      // 首重
+      first_weight_key = true;
+      first_weight_count++;
+      packagesSurplusWeight = max_weight; // 还原包裹剩余重量
+      weight -= first_weight;
+      packagesSurplusWeight -= first_weight;
+    } else {
+      // 续重
+      continuous_weight_count++;
+      weight -= continuous_weight;
+      packagesSurplusWeight -= continuous_weight;
+    }
+    if (logRun) logArr.push({
+      "总重量剩余": weight,
+      "当前包裹重量剩余": packagesSurplusWeight,
+      "当前第几个包裹": first_weight_count,
+      "续重计算次数": continuous_weight_count
+    });
 
-		if (packagesSurplusWeight <= 0) {
-			// 需要增加一个新的包裹
-			first_weight_key = false; // 新包裹设置没有减过首重
-		}
-	}
-	if (logRun) console.log(JSON.stringify(logArr));
-	let total_amount = first_weight_price * first_weight_count + continuous_weight_price * continuous_weight_count;
-	let res = {
-		weight: originalWeight, // 商品重量（KG）
-		first_weight, // 首重步长
-		first_weight_price, // 首重单价
-		first_weight_count, // 首重计算次数
-		continuous_weight, // 续重步长
-		continuous_weight_price, // 续重单价
-		continuous_weight_count, // 续重计算次数
-		first_weight_amount: first_weight_count * first_weight_price, // 首重总金额
-		continuous_weight_amount: continuous_weight_price * continuous_weight_count, // 续重总金额
-		total_amount, // 最终运费金额
-		formula: `${first_weight_price} * ${first_weight_count} + ${continuous_weight_price} * ${continuous_weight_count} = ${total_amount}`, // 运费计算公式
-	};
-	return res;
+    if (packagesSurplusWeight <= 0) {
+      // 需要增加一个新的包裹
+      first_weight_key = false; // 新包裹设置没有减过首重
+    }
+  }
+  if (logRun) console.log(JSON.stringify(logArr));
+  let total_amount = first_weight_price * first_weight_count + continuous_weight_price * continuous_weight_count;
+  let res = {
+    weight: originalWeight, // 商品重量（KG）
+    first_weight, // 首重步长
+    first_weight_price, // 首重单价
+    first_weight_count, // 首重计算次数
+    continuous_weight, // 续重步长
+    continuous_weight_price, // 续重单价
+    continuous_weight_count, // 续重计算次数
+    first_weight_amount: first_weight_count * first_weight_price, // 首重总金额
+    continuous_weight_amount: continuous_weight_price * continuous_weight_count, // 续重总金额
+    total_amount, // 最终运费金额
+    formula: `${first_weight_price} * ${first_weight_count} + ${continuous_weight_price} * ${continuous_weight_count} = ${total_amount}`, // 运费计算公式
+  };
+  return res;
 };
 
 
@@ -1003,19 +1003,19 @@ pubfn.calcFreightDetail = function(freightItem, weight) {
  * vk.pubfn.getNewObject(obj, keys);
  */
 pubfn.getNewObject = function(obj, keys) {
-	let selectedObj = obj;
-	let newObject = {};
-	if (keys && keys.length > 0) {
-		for (let i in keys) {
-			let key = keys[i];
-			if (pubfn.isNotNull(selectedObj[key])) {
-				newObject[key] = selectedObj[key];
-			}
-		}
-	} else {
-		newObject = selectedObj;
-	}
-	return newObject;
+  let selectedObj = obj;
+  let newObject = {};
+  if (keys && keys.length > 0) {
+    for (let i in keys) {
+      let key = keys[i];
+      if (pubfn.isNotNull(selectedObj[key])) {
+        newObject[key] = selectedObj[key];
+      }
+    }
+  } else {
+    newObject = selectedObj;
+  }
+  return newObject;
 };
 
 /**
@@ -1025,15 +1025,15 @@ pubfn.getNewObject = function(obj, keys) {
  * vk.pubfn.deleteObjectKeys(data, deleteKeys);
  */
 pubfn.deleteObjectKeys = function(data, deleteKeys = []) {
-	let newData = {};
-	if (data) {
-		for (let key in data) {
-			if (deleteKeys.indexOf(key) == -1) {
-				newData[key] = data[key];
-			}
-		}
-	}
-	return newData;
+  let newData = {};
+  if (data) {
+    for (let key in data) {
+      if (deleteKeys.indexOf(key) == -1) {
+        newData[key] = data[key];
+      }
+    }
+  }
+  return newData;
 }
 
 /**
@@ -1060,12 +1060,12 @@ pubfn.treeToArray = pubfn.treeUtil.treeToArray;
  * vk.pubfn.wildcardTestOne(text, expText);
  */
 pubfn.wildcardTestOne = function(text, expText) {
-	if (!expText) return false;
-	let regExpText = expText.replace(new RegExp("\\*"), "(.*)");
-	let startText = expText.indexOf("*") !== 0 ? "^" : "";
-	let endText = expText[expText.length - 1] !== "*" ? "$" : "";
-	let regExp = new RegExp(startText + regExpText + endText);
-	return regExp.test(text);
+  if (!expText) return false;
+  let regExpText = expText.replace(new RegExp("\\*"), "(.*)");
+  let startText = expText.indexOf("*") !== 0 ? "^" : "";
+  let endText = expText[expText.length - 1] !== "*" ? "$" : "";
+  let regExp = new RegExp(startText + regExpText + endText);
+  return regExp.test(text);
 };
 /**
  * 通配符匹配 expText支持数组
@@ -1074,23 +1074,23 @@ pubfn.wildcardTestOne = function(text, expText) {
  * vk.pubfn.wildcardTest(text, expText);
  */
 pubfn.wildcardTest = function(text, expText) {
-	let matchNum = 0; // 被匹配的次数
-	let regExp1 = new RegExp("\\*");
-	if (typeof expText === "string") {
-		// 字符串
-		if (pubfn.wildcardTestOne(text, expText)) {
-			matchNum++;
-		}
-	} else if (typeof expText === "object") {
-		// 数组
-		for (let i = 0; i < expText.length; i++) {
-			let expTextItem = expText[i];
-			if (pubfn.wildcardTestOne(text, expTextItem)) {
-				matchNum++;
-			}
-		}
-	}
-	return matchNum;
+  let matchNum = 0; // 被匹配的次数
+  let regExp1 = new RegExp("\\*");
+  if (typeof expText === "string") {
+    // 字符串
+    if (pubfn.wildcardTestOne(text, expText)) {
+      matchNum++;
+    }
+  } else if (typeof expText === "object") {
+    // 数组
+    for (let i = 0; i < expText.length; i++) {
+      let expTextItem = expText[i];
+      if (pubfn.wildcardTestOne(text, expTextItem)) {
+        matchNum++;
+      }
+    }
+  }
+  return matchNum;
 }
 
 /**
@@ -1100,9 +1100,9 @@ pubfn.wildcardTest = function(text, expText) {
  * vk.pubfn.regExpTestOne(text, expText);
  */
 pubfn.regExpTestOne = function(text, expText) {
-	if (!expText) return false;
-	let regExp = new RegExp(expText);
-	return regExp.test(text);
+  if (!expText) return false;
+  let regExp = new RegExp(expText);
+  return regExp.test(text);
 };
 
 /**
@@ -1112,22 +1112,22 @@ pubfn.regExpTestOne = function(text, expText) {
  * vk.pubfn.regExpTest(text, regExp);
  */
 pubfn.regExpTest = function(text, expText) {
-	let matchNum = 0; // 被匹配的次数
-	if (typeof expText === "string") {
-		// 字符串
-		if (pubfn.regExpTestOne(text, expText)) {
-			matchNum++;
-		}
-	} else if (typeof expText === "object") {
-		// 数组
-		for (let i = 0; i < expText.length; i++) {
-			let expTextItem = expText[i];
-			if (pubfn.regExpTestOne(text, expTextItem)) {
-				matchNum++;
-			}
-		}
-	}
-	return matchNum;
+  let matchNum = 0; // 被匹配的次数
+  if (typeof expText === "string") {
+    // 字符串
+    if (pubfn.regExpTestOne(text, expText)) {
+      matchNum++;
+    }
+  } else if (typeof expText === "object") {
+    // 数组
+    for (let i = 0; i < expText.length; i++) {
+      let expTextItem = expText[i];
+      if (pubfn.regExpTestOne(text, expTextItem)) {
+        matchNum++;
+      }
+    }
+  }
+  return matchNum;
 }
 
 /**
@@ -1137,57 +1137,57 @@ pubfn.regExpTest = function(text, expText) {
  * vk.pubfn.createOrderNo();
  */
 pubfn.createOrderNo = function(prefix = "", num = 25) {
-	// 获取当前时间字符串格式如20200803093000123
-	let fullTime = vk.pubfn.timeFormat(new Date(), "yyyyMMddhhmmss");
-	fullTime = fullTime.substring(2);
-	let randomNum = num - (prefix + fullTime).length;
-	return prefix + fullTime + pubfn.random(randomNum);
+  // 获取当前时间字符串格式如20200803093000123
+  let fullTime = vk.pubfn.timeFormat(new Date(), "yyyyMMddhhmmss");
+  fullTime = fullTime.substring(2);
+  let randomNum = num - (prefix + fullTime).length;
+  return prefix + fullTime + pubfn.random(randomNum);
 };
 
 
 function parseObjectKeys(obj, type) {
-	// 处理 null 和非对象类型
-	if (obj === null || typeof obj !== 'object') {
-		return obj;
-	}
+  // 处理 null 和非对象类型
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
 
-	if (Array.isArray(obj)) {
-		return obj.map(item => parseObjectKeys(item, type));
-	}
+  if (Array.isArray(obj)) {
+    return obj.map(item => parseObjectKeys(item, type));
+  }
 
-	let parser;
-	let parserReg;
+  let parser;
+  let parserReg;
 
-	switch (type) {
-		case 'snake2camel':
-			parser = pubfn.snake2camel;
-			parserReg = new RegExp('_(\\w)');
-			break;
-		case 'camel2snake':
-			parser = pubfn.camel2snake;
-			parserReg = new RegExp('[A-Z]');
-			break;
-		default:
-			return obj;
-	}
+  switch (type) {
+    case 'snake2camel':
+      parser = pubfn.snake2camel;
+      parserReg = new RegExp('_(\\w)');
+      break;
+    case 'camel2snake':
+      parser = pubfn.camel2snake;
+      parserReg = new RegExp('[A-Z]');
+      break;
+    default:
+      return obj;
+  }
 
-	const result = {};
+  const result = {};
 
-	for (const key in obj) {
-		if (Object.prototype.hasOwnProperty.call(obj, key)) {
-			const newKey = parserReg.test(key) ? parser(key) : key;
-			const value = obj[key];
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const newKey = parserReg.test(key) ? parser(key) : key;
+      const value = obj[key];
 
-			// 递归处理对象和数组
-			if (value !== null && typeof value === 'object') {
-				result[newKey] = parseObjectKeys(value, type);
-			} else {
-				result[newKey] = value;
-			}
-		}
-	}
+      // 递归处理对象和数组
+      if (value !== null && typeof value === 'object') {
+        result[newKey] = parseObjectKeys(value, type);
+      } else {
+        result[newKey] = value;
+      }
+    }
+  }
 
-	return result;
+  return result;
 }
 
 /**
@@ -1196,7 +1196,7 @@ function parseObjectKeys(obj, type) {
  * vk.pubfn.snake2camel(value);
  */
 pubfn.snake2camel = function(value) {
-	return value.replace(new RegExp('_(\\w)', 'g'), (_, c) => (c ? c.toUpperCase() : ''))
+  return value.replace(new RegExp('_(\\w)', 'g'), (_, c) => (c ? c.toUpperCase() : ''))
 }
 /**
  * 字符串 - 驼峰转蛇形
@@ -1204,7 +1204,7 @@ pubfn.snake2camel = function(value) {
  * vk.pubfn.camel2snake(value);
  */
 pubfn.camel2snake = function(value) {
-	return value.replace(new RegExp('[A-Z]', 'g'), str => '_' + str.toLowerCase())
+  return value.replace(new RegExp('[A-Z]', 'g'), str => '_' + str.toLowerCase())
 }
 
 /**
@@ -1213,7 +1213,7 @@ pubfn.camel2snake = function(value) {
  * vk.pubfn.snake2camelJson(obj);
  */
 pubfn.snake2camelJson = function(obj) {
-	return parseObjectKeys(obj, 'snake2camel');
+  return parseObjectKeys(obj, 'snake2camel');
 };
 /**
  * 对象内的属性名 - 驼峰转蛇形
@@ -1221,7 +1221,7 @@ pubfn.snake2camelJson = function(obj) {
  * vk.pubfn.camel2snakeJson(obj);
  */
 pubfn.camel2snakeJson = function(obj) {
-	return parseObjectKeys(obj, 'camel2snake');
+  return parseObjectKeys(obj, 'camel2snake');
 };
 
 /**
@@ -1236,44 +1236,44 @@ pubfn.camel2snakeJson = function(obj) {
  * vk.pubfn.string2Number(obj, option);
  */
 pubfn.string2Number = function(obj, option = {}) {
-	const type = Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
-	switch (type) {
-		case 'string':
-			if (obj && !isNaN(obj)) {
-				let {
-					mobile = true,
-						idCard = true,
-						startFrom0 = true,
-						maxLength = 14,
-				} = option;
-				if (obj.length > maxLength) {
-					return obj;
-				} else if (mobile && pubfn.test(obj, "mobile")) {
-					return obj;
-				} else if (idCard && pubfn.test(obj, "card")) {
-					return obj;
-				} else if (startFrom0 && obj.length > 1 && obj.indexOf("0") === 0 && obj.indexOf(".") !== 1) {
-					return obj;
-				}
-				return Number(obj);
-			} else {
-				return obj;
-			}
-		case 'object':
-			const keys = Object.keys(obj);
-			for (let i = 0; i < keys.length; i++) {
-				const key = keys[i];
-				obj[key] = pubfn.string2Number(obj[key]);
-			}
-			return obj;
-		case 'array':
-			for (let i = 0; i < obj.length; i++) {
-				obj[i] = pubfn.string2Number(obj[i]);
-			}
-			return obj;
-		default:
-			return obj;
-	}
+  const type = Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+  switch (type) {
+    case 'string':
+      if (obj && !isNaN(obj)) {
+        let {
+          mobile = true,
+            idCard = true,
+            startFrom0 = true,
+            maxLength = 14,
+        } = option;
+        if (obj.length > maxLength) {
+          return obj;
+        } else if (mobile && pubfn.test(obj, "mobile")) {
+          return obj;
+        } else if (idCard && pubfn.test(obj, "card")) {
+          return obj;
+        } else if (startFrom0 && obj.length > 1 && obj.indexOf("0") === 0 && obj.indexOf(".") !== 1) {
+          return obj;
+        }
+        return Number(obj);
+      } else {
+        return obj;
+      }
+    case 'object':
+      const keys = Object.keys(obj);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        obj[key] = pubfn.string2Number(obj[key]);
+      }
+      return obj;
+    case 'array':
+      for (let i = 0; i < obj.length; i++) {
+        obj[i] = pubfn.string2Number(obj[i]);
+      }
+      return obj;
+    default:
+      return obj;
+  }
 };
 
 /**
@@ -1283,13 +1283,13 @@ pubfn.string2Number = function(obj, option = {}) {
  * vk.pubfn.toDecimal(val, 2);
  */
 pubfn.toDecimal = function(val, precision = 0) {
-	if (typeof val === "string") val = Number(val);
-	if (precision <= 6 && val < 100000000) {
-		let multiplier = Math.pow(10, precision);
-		return Math.round(val * multiplier) / multiplier;
-	} else {
-		return parseFloat(val.toFixed(precision));
-	}
+  if (typeof val === "string") val = Number(val);
+  if (precision <= 6 && val < 100000000) {
+    let multiplier = Math.pow(10, precision);
+    return Math.round(val * multiplier) / multiplier;
+  } else {
+    return parseFloat(val.toFixed(precision));
+  }
 };
 
 /**
@@ -1303,17 +1303,17 @@ pubfn.toDecimal = function(val, precision = 0) {
  * other 其他
  */
 pubfn.getFileType = function(url) {
-	let fileType;
-	if (pubfn.checkFileSuffix(url, ["png", "jpg", "jpeg", "gif", "bmp", "svg"])) {
-		fileType = "image";
-	} else if (pubfn.checkFileSuffix(url, ["avi", "mp4", "3gp", "mov", "rmvb", "rm", "flv", "mkv"])) {
-		fileType = "video";
-	} else if (pubfn.checkFileSuffix(url, ["mp3"])) {
-		fileType = "audio";
-	} else {
-		fileType = "other";
-	}
-	return fileType;
+  let fileType;
+  if (pubfn.checkFileSuffix(url, ["png", "jpg", "jpeg", "gif", "bmp", "svg"])) {
+    fileType = "image";
+  } else if (pubfn.checkFileSuffix(url, ["avi", "mp4", "3gp", "mov", "rmvb", "rm", "flv", "mkv"])) {
+    fileType = "video";
+  } else if (pubfn.checkFileSuffix(url, ["mp3"])) {
+    fileType = "audio";
+  } else {
+    fileType = "other";
+  }
+  return fileType;
 };
 /**
  * 获取文件url的后缀名
@@ -1321,12 +1321,12 @@ pubfn.getFileType = function(url) {
  * vk.pubfn.getFileSuffix(url);
  */
 pubfn.getFileSuffix = function(url) {
-	let suffix = "";
-	let index = url.lastIndexOf(".");
-	if (index > -1) {
-		suffix = url.substring(index + 1);
-	}
-	return suffix.toLowerCase();
+  let suffix = "";
+  let index = url.lastIndexOf(".");
+  if (index > -1) {
+    suffix = url.substring(index + 1);
+  }
+  return suffix.toLowerCase();
 };
 
 /**
@@ -1336,15 +1336,15 @@ pubfn.getFileSuffix = function(url) {
  * vk.pubfn.checkFileSuffix(url,["png", "jpg", "jpeg", "gif", "bmp", "svg"]);
  */
 pubfn.checkFileSuffix = function(url, list) {
-	let key = false;
-	let suffix = pubfn.getFileSuffix(url);
-	for (let i = 0; i < list.length; i++) {
-		if (list.indexOf(suffix) > -1) {
-			key = true;
-			break;
-		}
-	}
-	return key;
+  let key = false;
+  let suffix = pubfn.getFileSuffix(url);
+  for (let i = 0; i < list.length; i++) {
+    if (list.indexOf(suffix) > -1) {
+      key = true;
+      break;
+    }
+  }
+  return key;
 };
 // 前端专属开始 -----------------------------------------------------------
 /**
@@ -1354,42 +1354,42 @@ pubfn.checkFileSuffix = function(url, list) {
  * vk.pubfn.dateDiff(startTime);
  */
 pubfn.dateDiff = function(startTime, suffix = "前") {
-	if (!startTime) {
-		return "";
-	}
-	if (typeof startTime === "string" && !isNaN(startTime)) startTime = Number(startTime);
-	if (typeof startTime == "number") {
-		if (startTime.toString().length == 10) startTime *= 1000;
-		startTime = new Date(startTime);
-		startTime = pubfn.timeFormat(startTime);
-	}
-	if (typeof startTime == "string") {
-		startTime = startTime.replace("T", " ");
-		startTime = startTime;
-		startTime = new Date(startTime.replace(/-/g, "/")); //将-转化为/，使用new Date
-	}
-	let endTime = new Date(); //获取当前时间
-	let nd = 1000 * 24 * 60 * 60; //一天的毫秒数
-	let nh = 1000 * 60 * 60; //一小时的毫秒数
-	let nm = 1000 * 60; //一分钟的毫秒数
-	let ns = 1000; //一秒钟的毫秒数long diff;try {
-	let diff = endTime.getTime() - startTime.getTime();
-	let day = Math.floor(diff / nd); //计算差多少天
-	let hour = Math.floor(diff % nd / nh); //计算差多少小时
-	let min = Math.floor(diff % nd % nh / nm); //计算差多少分钟
-	let sec = Math.round(diff % nd % nh % nm / ns); //计算差多少秒//输出结果
-	let showStr = "1 秒";
-	if (day > 0) {
-		showStr = day + "天";
-	} else if (hour > 0) {
-		showStr = hour + "小时";
-	} else if (min > 0) {
-		showStr = min + "分钟";
-	} else if (sec > 0) {
-		showStr = sec + "秒";
-	}
-	showStr += suffix;
-	return showStr;
+  if (!startTime) {
+    return "";
+  }
+  if (typeof startTime === "string" && !isNaN(startTime)) startTime = Number(startTime);
+  if (typeof startTime == "number") {
+    if (startTime.toString().length == 10) startTime *= 1000;
+    startTime = new Date(startTime);
+    startTime = pubfn.timeFormat(startTime);
+  }
+  if (typeof startTime == "string") {
+    startTime = startTime.replace("T", " ");
+    startTime = startTime;
+    startTime = new Date(startTime.replace(/-/g, "/")); //将-转化为/，使用new Date
+  }
+  let endTime = new Date(); //获取当前时间
+  let nd = 1000 * 24 * 60 * 60; //一天的毫秒数
+  let nh = 1000 * 60 * 60; //一小时的毫秒数
+  let nm = 1000 * 60; //一分钟的毫秒数
+  let ns = 1000; //一秒钟的毫秒数long diff;try {
+  let diff = endTime.getTime() - startTime.getTime();
+  let day = Math.floor(diff / nd); //计算差多少天
+  let hour = Math.floor(diff % nd / nh); //计算差多少小时
+  let min = Math.floor(diff % nd % nh / nm); //计算差多少分钟
+  let sec = Math.round(diff % nd % nh % nm / ns); //计算差多少秒//输出结果
+  let showStr = "1 秒";
+  if (day > 0) {
+    showStr = day + "天";
+  } else if (hour > 0) {
+    showStr = hour + "小时";
+  } else if (min > 0) {
+    showStr = min + "分钟";
+  } else if (sec > 0) {
+    showStr = sec + "秒";
+  }
+  showStr += suffix;
+  return showStr;
 }
 /**
  * 将时间显示成1秒、1天
@@ -1398,41 +1398,41 @@ pubfn.dateDiff = function(startTime, suffix = "前") {
  * vk.pubfn.dateDiff2(endTime);
  */
 pubfn.dateDiff2 = function(startTime, str = "1秒") {
-	if (!startTime) {
-		return "";
-	}
-	if (typeof startTime === "string" && !isNaN(startTime)) startTime = Number(startTime);
-	if (typeof startTime == "number") {
-		if (startTime.toString().length == 10) startTime *= 1000;
-		startTime = new Date(startTime);
-		startTime = pubfn.timeFormat(startTime);
-	}
-	if (typeof startTime == "string") {
-		startTime = startTime.replace("T", " ");
-		startTime = startTime;
-		startTime = new Date(startTime.replace(/-/g, "/")); //将-转化为/，使用new Date
-	}
-	let endTime = new Date(); //获取当前时间
-	let nd = 1000 * 24 * 60 * 60; //一天的毫秒数
-	let nh = 1000 * 60 * 60; //一小时的毫秒数
-	let nm = 1000 * 60; //一分钟的毫秒数
-	let ns = 1000; //一秒钟的毫秒数long diff;try {
-	let diff = startTime.getTime() - endTime.getTime();
-	let day = Math.floor(diff / nd);
-	let hour = Math.floor(diff % nd / nh);
-	let min = Math.floor(diff % nd % nh / nm);
-	let sec = Math.round(diff % nd % nh % nm / ns);
-	let showStr = str;
-	if (day > 0) {
-		showStr = day + "天";
-	} else if (hour > 0) {
-		showStr = hour + "小时";
-	} else if (min > 0) {
-		showStr = min + "分钟";
-	} else if (sec > 0) {
-		showStr = sec + "秒";
-	}
-	return showStr;
+  if (!startTime) {
+    return "";
+  }
+  if (typeof startTime === "string" && !isNaN(startTime)) startTime = Number(startTime);
+  if (typeof startTime == "number") {
+    if (startTime.toString().length == 10) startTime *= 1000;
+    startTime = new Date(startTime);
+    startTime = pubfn.timeFormat(startTime);
+  }
+  if (typeof startTime == "string") {
+    startTime = startTime.replace("T", " ");
+    startTime = startTime;
+    startTime = new Date(startTime.replace(/-/g, "/")); //将-转化为/，使用new Date
+  }
+  let endTime = new Date(); //获取当前时间
+  let nd = 1000 * 24 * 60 * 60; //一天的毫秒数
+  let nh = 1000 * 60 * 60; //一小时的毫秒数
+  let nm = 1000 * 60; //一分钟的毫秒数
+  let ns = 1000; //一秒钟的毫秒数long diff;try {
+  let diff = startTime.getTime() - endTime.getTime();
+  let day = Math.floor(diff / nd);
+  let hour = Math.floor(diff % nd / nh);
+  let min = Math.floor(diff % nd % nh / nm);
+  let sec = Math.round(diff % nd % nh % nm / ns);
+  let showStr = str;
+  if (day > 0) {
+    showStr = day + "天";
+  } else if (hour > 0) {
+    showStr = hour + "小时";
+  } else if (min > 0) {
+    showStr = min + "分钟";
+  } else if (sec > 0) {
+    showStr = sec + "秒";
+  }
+  return showStr;
 };
 /**
  * 将大数字转中文
@@ -1446,32 +1446,32 @@ pubfn.dateDiff2 = function(startTime, str = "1秒") {
  * vk.pubfn.numStr(n);
  */
 pubfn.numStr = function(n, needSymbol = false) {
-	if (typeof n == "string") {
-		n = parseFloat(n);
-	}
-	let str = n;
-	if (n < 1000) {
-		str = n;
-	} else if (n < 10000) {
-		let n1 = Math.floor(n / 100);
-		str = n1 / 10 + "千"
-	} else if (n < 1000000) {
-		let n1 = Math.floor(n / 1000);
-		str = n1 / 10 + "万"
-	} else if (n < 10000000) {
-		let n1 = Math.floor(n / 1000000);
-		str = n1 + "百万"
-	} else if (n < 100000000) {
-		let n1 = Math.floor(n / 10000000);
-		str = n1 + "千万"
-	} else if (n >= 100000000) {
-		let n1 = Math.floor(n / 10000000);
-		str = n1 / 10 + "亿"
-	}
-	if (needSymbol && n >= 1000 && n % 10 > 0) {
-		str += "+";
-	}
-	return str;
+  if (typeof n == "string") {
+    n = parseFloat(n);
+  }
+  let str = n;
+  if (n < 1000) {
+    str = n;
+  } else if (n < 10000) {
+    let n1 = Math.floor(n / 100);
+    str = n1 / 10 + "千"
+  } else if (n < 1000000) {
+    let n1 = Math.floor(n / 1000);
+    str = n1 / 10 + "万"
+  } else if (n < 10000000) {
+    let n1 = Math.floor(n / 1000000);
+    str = n1 + "百万"
+  } else if (n < 100000000) {
+    let n1 = Math.floor(n / 10000000);
+    str = n1 + "千万"
+  } else if (n >= 100000000) {
+    let n1 = Math.floor(n / 10000000);
+    str = n1 / 10 + "亿"
+  }
+  if (needSymbol && n >= 1000 && n % 10 > 0) {
+    str += "+";
+  }
+  return str;
 };
 /**
  * 金额显示过滤器（已分为单位，将100 转成 1）
@@ -1479,32 +1479,32 @@ pubfn.numStr = function(n, needSymbol = false) {
  * vk.pubfn.priceFilter(money);
  */
 pubfn.priceFilter = function(money, defaultValue = "") {
-	if (pubfn.isNull(money)) {
-		return defaultValue;
-	}
-	if (isNaN(money)) {
-		return money;
-	}
-	if (typeof money == "string") {
-		money = parseFloat(money);
-	}
-	return (money / 100).toFixed(2);
+  if (pubfn.isNull(money)) {
+    return defaultValue;
+  }
+  if (isNaN(money)) {
+    return money;
+  }
+  if (typeof money == "string") {
+    money = parseFloat(money);
+  }
+  return (money / 100).toFixed(2);
 };
 // 金额过滤器 - 只显示小数点左边
 pubfn.priceLeftFilter = function(n) {
-	let s = "";
-	if (n) {
-		s = pubfn.priceFilter(n).split(".")[0];
-	}
-	return s;
+  let s = "";
+  if (n) {
+    s = pubfn.priceFilter(n).split(".")[0];
+  }
+  return s;
 };
 // 金额过滤器 - 只显示小数点右边
 pubfn.priceRightFilter = function(n) {
-	let s = "";
-	if (n) {
-		s = pubfn.priceFilter(n).split(".")[1];
-	}
-	return s;
+  let s = "";
+  if (n) {
+    s = pubfn.priceFilter(n).split(".")[1];
+  }
+  return s;
 };
 /**
  * 百分比过滤器 将 0.01 显示成 1%  1 显示成 100%
@@ -1514,20 +1514,20 @@ pubfn.priceRightFilter = function(n) {
  * vk.pubfn.percentageFilter(money);
  */
 pubfn.percentageFilter = function(value, needShowSymbol = true, defaultValue = "") {
-	if (pubfn.isNull(value)) {
-		return defaultValue;
-	}
-	if (isNaN(value)) {
-		return value;
-	}
-	if (typeof value == "string") {
-		value = parseFloat(value);
-	}
-	value = parseFloat((value * 100).toFixed(2));
-	if (needShowSymbol) {
-		value += "%";
-	}
-	return value;
+  if (pubfn.isNull(value)) {
+    return defaultValue;
+  }
+  if (isNaN(value)) {
+    return value;
+  }
+  if (typeof value == "string") {
+    value = parseFloat(value);
+  }
+  value = parseFloat((value * 100).toFixed(2));
+  if (needShowSymbol) {
+    value += "%";
+  }
+  return value;
 };
 /**
  * 折扣过滤器 将 0.1 显示成 1折 1 显示成 原价 0 显示成免费
@@ -1537,48 +1537,48 @@ pubfn.percentageFilter = function(value, needShowSymbol = true, defaultValue = "
  * vk.pubfn.discountFilter(value);
  */
 pubfn.discountFilter = function(value, needShowSymbol = true, defaultValue = "") {
-	if (pubfn.isNull(value)) {
-		return defaultValue;
-	}
-	if (isNaN(value)) {
-		return value;
-	}
-	if (typeof value == "string") {
-		value = parseFloat(value);
-	}
-	value = parseFloat((value * 10).toFixed(2));
-	if (value > 10) {
-		return "折扣不可以大于原价";
-	}
-	if (value == 10) {
-		return "原价";
-	}
-	if (value == 0) {
-		return "免费";
-	}
-	if (value < 0) {
-		return "折扣不可以小于0";
-	}
-	if (needShowSymbol) {
-		value += " 折";
-	}
-	return value;
+  if (pubfn.isNull(value)) {
+    return defaultValue;
+  }
+  if (isNaN(value)) {
+    return value;
+  }
+  if (typeof value == "string") {
+    value = parseFloat(value);
+  }
+  value = parseFloat((value * 10).toFixed(2));
+  if (value > 10) {
+    return "折扣不可以大于原价";
+  }
+  if (value == 10) {
+    return "原价";
+  }
+  if (value == 0) {
+    return "免费";
+  }
+  if (value < 0) {
+    return "折扣不可以小于0";
+  }
+  if (needShowSymbol) {
+    value += " 折";
+  }
+  return value;
 };
 /**
  * 将字符串格式的时间转为时间戳
  * @param {String} 	dateString		格式为:2020-08-08 12:12:12
  */
 pubfn.toTimeLong = function(dateString) {
-	if (!dateString) {
-		return "";
-	}
-	dateString = dateString.substring(0, 19);
-	dateString = dateString.replace(new RegExp(/-/, "g"), '/');
-	let time = new Date(dateString).getTime();
-	if (isNaN(time)) {
-		time = "";
-	}
-	return time;
+  if (!dateString) {
+    return "";
+  }
+  dateString = dateString.substring(0, 19);
+  dateString = dateString.replace(new RegExp(/-/, "g"), '/');
+  let time = new Date(dateString).getTime();
+  if (isNaN(time)) {
+    time = "";
+  }
+  return time;
 };
 
 /**
@@ -1590,36 +1590,36 @@ pubfn.toTimeLong = function(dateString) {
  * vk.pubfn.calcSize(length,["B","KB","MB","GB"],1024,3);
  */
 pubfn.calcSize = function(length = 0, arr, ary, precision = 2, showType = "auto") {
-	length = parseFloat(length);
-	let size = 0;
-	let type = "";
-	if (length < ary || arr.length <= 1) {
-		type = arr[0];
-		size = parseFloat(length.toFixed(precision));
-	} else {
-		for (let i = 1; i < arr.length; i++) {
-			let currentType = arr[i];
-			length = length / ary;
-			if (showType === "auto") {
-				if (length < ary) {
-					type = currentType;
-					size = parseFloat(length.toFixed(precision));
-					break;
-				}
-			} else {
-				if (showType === currentType) {
-					type = currentType;
-					size = parseFloat(length.toFixed(precision));
-					break;
-				}
-			}
-		}
-	}
-	return {
-		size: size,
-		type: type,
-		title: size + " " + type
-	}
+  length = parseFloat(length);
+  let size = 0;
+  let type = "";
+  if (length < ary || arr.length <= 1) {
+    type = arr[0];
+    size = parseFloat(length.toFixed(precision));
+  } else {
+    for (let i = 1; i < arr.length; i++) {
+      let currentType = arr[i];
+      length = length / ary;
+      if (showType === "auto") {
+        if (length < ary) {
+          type = currentType;
+          size = parseFloat(length.toFixed(precision));
+          break;
+        }
+      } else {
+        if (showType === currentType) {
+          type = currentType;
+          size = parseFloat(length.toFixed(precision));
+          break;
+        }
+      }
+    }
+  }
+  return {
+    size: size,
+    type: type,
+    title: size + " " + type
+  }
 };
 
 /**
@@ -1630,11 +1630,11 @@ pubfn.calcSize = function(length = 0, arr, ary, precision = 2, showType = "auto"
  * let newArray = vk.pubfn.splitArray(array, 2);
  */
 pubfn.splitArray = function(array, size) {
-	let data = [];
-	for (let i = 0; i < array.length; i += size) {
-		data.push(array.slice(i, i + size))
-	}
-	return data
+  let data = [];
+  for (let i = 0; i < array.length; i += size) {
+    data.push(array.slice(i, i + size))
+  }
+  return data
 };
 
 /**
@@ -1644,12 +1644,12 @@ pubfn.splitArray = function(array, size) {
  * let newObj = vk.pubfn.objectKeySort(obj);
  */
 pubfn.objectKeySort = function(obj) {
-	let keys = Object.keys(obj).sort();
-	let newObject = {};
-	for (let i in keys) {
-		newObject[keys[i]] = (obj[keys[i]]);
-	}
-	return newObject;
+  let keys = Object.keys(obj).sort();
+  let newObject = {};
+  for (let i in keys) {
+    newObject[keys[i]] = (obj[keys[i]]);
+  }
+  return newObject;
 };
 
 /**
@@ -1659,7 +1659,7 @@ pubfn.objectKeySort = function(obj) {
  * text = vk.pubfn.escapeRegExp(text);
  */
 pubfn.escapeRegExp = function(text) {
-	return text.replace(new RegExp('[.*+?^${}()|[\\]\\\\]', 'g'), '\\$&');
+  return text.replace(new RegExp('[.*+?^${}()|[\\]\\\\]', 'g'), '\\$&');
 };
 
 // 以下是前端专属API-----------------------------------------------------------
@@ -1676,110 +1676,110 @@ pubfn.escapeRegExp = function(text) {
  *
  * 代码示例
 	vk.pubfn.getListData2({
-		that : this,
-		url : "template/db_api/pub/select",
-		data : {
-			a : 1
+		that: this,
+		url: "template/db_api/pub/select",
+		data: {
+			a: 1
 		},
-		dataPreprocess : function(list){
+		dataPreprocess: (list) => {
 			return list;
 		}
 	});
  */
 pubfn.getListData2 = function(obj = {}) {
-	let vk = uni.vk;
-	let {
-		that,
-		listName,
-		listKey = "rows",
-		formKey = "queryForm1",
-		url,
-		dataPreprocess,
-		idKeyName = "_id"
-	} = obj;
-	if (listName) listKey = listName;
-	/**
-	 * 2.0与1.0的区别
-	 * 2.0使用的queryForm1作为查询,而1.0是form1
-	 * 2.0云函数端是getTableData,而1.0是selects
-	 */
-	let queryForm1 = that[formKey] || that.queryForm1 || that.queryForm;
-	// 标记为请求中
-	that.loading = true;
-	let hasMore = true;
-	if (queryForm1.pagination.pageIndex === 1) {
-		that.firstLoading = true;
-	}
-	vk.callFunction({
-		url: url,
-		data: queryForm1,
-		success: function(data) {
-			let list = data[listKey] || [];
-			// 数据预处理
-			if (typeof dataPreprocess == "function") {
-				list = dataPreprocess(list);
-			}
-			if (queryForm1.pagination.pageIndex > 1) {
-				// 翻页
-				if (list.length == 0) {
-					// 无数据时
-					hasMore = false;
-					queryForm1.pagination.pageIndex--;
-					list = that.data.list;
-				} else {
-					// 有数据时
-					if (list.length < queryForm1.pagination.pageSize) {
-						hasMore = false;
-					}
-					// 数据合并
-					list = vk.pubfn.arr_concat(that.data.list, list, idKeyName);
-				}
-			} else if (queryForm1.pagination.pageIndex == 1) {
-				// 第一页
-				if (list.length < queryForm1.pagination.pageSize) {
-					hasMore = false;
-				}
-				if (list.length == 0) {
-					that.state.isEmpty = true;
-				} else {
-					that.state.isEmpty = false;
-				}
-			}
-			// 如果后端返回了hasMore,则使用后端的hasMore值
-			if (typeof data.hasMore !== "undefined") {
-				hasMore = data.hasMore;
-			}
-			data = {
-				...data,
-				total: data.total,
-				list: list,
-				hasMore: hasMore,
-				pageIndex: data.pageIndex,
-				pageSize: data.pageSize
-			};
-			that.data = vk.pubfn.objectAssign(that.data, data); // 更新数据
-			that.state.loadmore = hasMore ? "loadmore" : "nomore"; // 更新状态
-			if (typeof obj.success == "function") obj.success(data);
-		},
-		fail: function(err) {
-			that.state.loadmore = "loadmore";
-			if (queryForm1.pagination.pageIndex > 1) {
-				queryForm1.pagination.pageIndex--;
-			}
-			if (typeof obj.fail == "function") {
-				obj.fail(data);
-			} else if (err && err.msg) {
-				vk.toast(err.msg, "none");
-			}
-		},
-		complete: function(res) {
-			that.loading = false;
-			if (queryForm1.pagination.pageIndex === 1) {
-				that.state.firstLoading = false;
-			}
-			if (typeof obj.complete == "function") obj.complete(res);
-		}
-	});
+  let vk = uni.vk;
+  let {
+    that,
+    listName,
+    listKey = "rows",
+    formKey = "queryForm1",
+    url,
+    dataPreprocess,
+    idKeyName = "_id"
+  } = obj;
+  if (listName) listKey = listName;
+  /**
+   * 2.0与1.0的区别
+   * 2.0使用的queryForm1作为查询,而1.0是form1
+   * 2.0云函数端是getTableData,而1.0是selects
+   */
+  let queryForm1 = that[formKey] || that.queryForm1 || that.queryForm;
+  // 标记为请求中
+  that.loading = true;
+  let hasMore = true;
+  if (queryForm1.pagination.pageIndex === 1) {
+    that.firstLoading = true;
+  }
+  vk.callFunction({
+    url: url,
+    data: queryForm1,
+    success: function(data) {
+      let list = data[listKey] || [];
+      // 数据预处理
+      if (typeof dataPreprocess == "function") {
+        list = dataPreprocess(list);
+      }
+      if (queryForm1.pagination.pageIndex > 1) {
+        // 翻页
+        if (list.length == 0) {
+          // 无数据时
+          hasMore = false;
+          queryForm1.pagination.pageIndex--;
+          list = that.data.list;
+        } else {
+          // 有数据时
+          if (list.length < queryForm1.pagination.pageSize) {
+            hasMore = false;
+          }
+          // 数据合并
+          list = vk.pubfn.arr_concat(that.data.list, list, idKeyName);
+        }
+      } else if (queryForm1.pagination.pageIndex == 1) {
+        // 第一页
+        if (list.length < queryForm1.pagination.pageSize) {
+          hasMore = false;
+        }
+        if (list.length == 0) {
+          that.state.isEmpty = true;
+        } else {
+          that.state.isEmpty = false;
+        }
+      }
+      // 如果后端返回了hasMore,则使用后端的hasMore值
+      if (typeof data.hasMore !== "undefined") {
+        hasMore = data.hasMore;
+      }
+      data = {
+        ...data,
+        total: data.total,
+        list: list,
+        hasMore: hasMore,
+        pageIndex: data.pageIndex,
+        pageSize: data.pageSize
+      };
+      that.data = vk.pubfn.objectAssign(that.data, data); // 更新数据
+      that.state.loadmore = hasMore ? "loadmore" : "nomore"; // 更新状态
+      if (typeof obj.success == "function") obj.success(data);
+    },
+    fail: (err) => {
+      that.state.loadmore = "loadmore";
+      if (queryForm1.pagination.pageIndex > 1) {
+        queryForm1.pagination.pageIndex--;
+      }
+      if (typeof obj.fail == "function") {
+        obj.fail(data);
+      } else if (err && err.msg) {
+        vk.toast(err.msg, "none");
+      }
+    },
+    complete: (res) => {
+      that.loading = false;
+      if (queryForm1.pagination.pageIndex === 1) {
+        that.state.firstLoading = false;
+      }
+      if (typeof obj.complete == "function") obj.complete(res);
+    }
+  });
 };
 
 /**
@@ -1807,94 +1807,94 @@ pubfn.getListData2 = function(obj = {}) {
 	});
  */
 pubfn.getListData = function(obj = {}) {
-	let {
-		that,
-		listName,
-		listKey = "rows",
-		formKey = "form1",
-		url,
-		dataPreprocess,
-		loading
-	} = obj;
-	let vk = uni.vk;
-	if (listName) listKey = listName;
-	let { data = {} } = that;
-	let form1 = that[formKey] || {};
-	let { pageKey = true } = data;
-	if (!form1.pageIndex) form1.pageIndex = 1;
-	if (!form1.pageSize) form1.pageSize = 20;
-	let addTime = form1.addTime;
-	let endTime = form1.endTime;
-	if (endTime) endTime += " 23:59:59";
-	if (!pageKey && form1.pageIndex > 1) {
-		form1.pageIndex--;
-		return false;
-	}
+  let {
+    that,
+    listName,
+    listKey = "rows",
+    formKey = "form1",
+    url,
+    dataPreprocess,
+    loading
+  } = obj;
+  let vk = uni.vk;
+  if (listName) listKey = listName;
+  let { data = {} } = that;
+  let form1 = that[formKey] || {};
+  let { pageKey = true } = data;
+  if (!form1.pageIndex) form1.pageIndex = 1;
+  if (!form1.pageSize) form1.pageSize = 20;
+  let addTime = form1.addTime;
+  let endTime = form1.endTime;
+  if (endTime) endTime += " 23:59:59";
+  if (!pageKey && form1.pageIndex > 1) {
+    form1.pageIndex--;
+    return false;
+  }
 
-	if (addTime) form1.addTimeLong = pubfn.toTimeLong(addTime);
-	if (endTime) form1.endTimeLong = pubfn.toTimeLong(endTime);
-	if (pubfn.isNotNull(obj.data)) {
-		pubfn.objectAssign(form1, obj.data);
-	}
-	let title = obj.title;
-	if (typeof obj.title == "undefined" && !loading) {
-		title = form1.pageIndex == 1 ? "请求中..." : "";
-	}
-	vk.callFunction({
-		url: url,
-		data: form1,
-		title: title,
-		loading: loading,
-		success: function(data) {
-			let list = data[listKey] || [];
-			// 数据预处理
-			if (typeof dataPreprocess == "function") {
-				list = dataPreprocess(list);
-			}
-			if (form1.pageIndex > 1) {
-				// 翻页
-				if (list.length == 0) {
-					// 无数据时
-					pageKey = false;
-					form1.pageIndex--;
-					list = that.data.list;
-				} else {
-					// 有数据时
-					if (list.length < form1.pageSize) {
-						pageKey = false;
-					}
-					let oldList = that.data.list;
-					// 数据合并
-					list = pubfn.arr_concat(oldList, list, "_id");
-				}
-			} else if (form1.pageIndex == 1) {
-				if (list.length < form1.pageSize) {
-					pageKey = false;
-				}
-			}
-			//console.log(pageKey,list.length,form1.pageSize);
-			data = {
-				...data,
-				total: data.total,
-				list: list,
-				pageKey: pageKey,
-				loadmore: pageKey ? "loadmore" : "nomore" // 更新状态
-			};
-			that.data = pubfn.objectAssign(that.data, data); // 更新数据
-			if (typeof obj.success == "function") obj.success(data);
-		},
-		fail: function(err) {
-			if (form1.pageIndex > 1) { form1.pageIndex--; }
-			if (typeof obj.fail == "function") {
-				obj.fail(data);
-			} else if (err && err.msg) {
-				vk.toast(err.msg, "none");
-			}
-		},
-		complete: function(res) {
-			if (typeof obj.complete == "function") obj.complete(res);
-		},
-	});
+  if (addTime) form1.addTimeLong = pubfn.toTimeLong(addTime);
+  if (endTime) form1.endTimeLong = pubfn.toTimeLong(endTime);
+  if (pubfn.isNotNull(obj.data)) {
+    pubfn.objectAssign(form1, obj.data);
+  }
+  let title = obj.title;
+  if (typeof obj.title == "undefined" && !loading) {
+    title = form1.pageIndex == 1 ? "请求中..." : "";
+  }
+  vk.callFunction({
+    url: url,
+    data: form1,
+    title: title,
+    loading: loading,
+    success: (data) => {
+      let list = data[listKey] || [];
+      // 数据预处理
+      if (typeof dataPreprocess == "function") {
+        list = dataPreprocess(list);
+      }
+      if (form1.pageIndex > 1) {
+        // 翻页
+        if (list.length == 0) {
+          // 无数据时
+          pageKey = false;
+          form1.pageIndex--;
+          list = that.data.list;
+        } else {
+          // 有数据时
+          if (list.length < form1.pageSize) {
+            pageKey = false;
+          }
+          let oldList = that.data.list;
+          // 数据合并
+          list = pubfn.arr_concat(oldList, list, "_id");
+        }
+      } else if (form1.pageIndex == 1) {
+        if (list.length < form1.pageSize) {
+          pageKey = false;
+        }
+      }
+      //console.log(pageKey,list.length,form1.pageSize);
+      data = {
+        ...data,
+        total: data.total,
+        list: list,
+        pageKey: pageKey,
+        loadmore: pageKey ? "loadmore" : "nomore" // 更新状态
+      };
+      that.data = pubfn.objectAssign(that.data, data); // 更新数据
+      if (typeof obj.success == "function") obj.success(data);
+    },
+    fail: (err) => {
+      if (form1.pageIndex > 1) { form1.pageIndex--; }
+      if (typeof obj.fail == "function") {
+        obj.fail(data);
+      } else if (err && err.msg) {
+        vk.toast(err.msg, "none");
+      }
+    },
+    complete: (res) => {
+      if (typeof obj.complete == "function") obj.complete(res);
+    },
+  });
 };
 
 /**
@@ -1924,51 +1924,51 @@ pubfn.getListData = function(obj = {}) {
   });
  */
 pubfn.getComponentsDynamicData = function(obj = {}) {
-	let {
-		that,
-		keyName = "componentsDynamic",
-		title,
-		url = "plugs/components-dynamic/client/pub.getList",
-		ids
-	} = obj;
-	let vk = uni.vk;
-	let form1 = {
-		ids: ids
-	};
-	if (pubfn.isNotNull(obj.data)) {
-		pubfn.objectAssign(form1, obj.data);
-	}
-	// 读取缓存开始-----------------------------------------------------------
-	let cacheKey = "pub-componentsDynamic";
-	let cacheData = uni.getStorageSync(cacheKey) || {};
-	let cacheDataKey = JSON.stringify(ids);
-	if (cacheData[cacheDataKey]) {
-		// 渲染本地数据
-		that[keyName] = cacheData[cacheDataKey];
-	}
-	// 读取缓存结束-----------------------------------------------------------
-	vk.callFunction({
-		url: url,
-		data: form1,
-		title: title,
-		success: function(data) {
-			if (JSON.stringify(cacheData[cacheDataKey]) !== JSON.stringify(data.componentsDynamic)) {
-				// 渲染服务器数据
-				that[keyName] = data.componentsDynamic;
-				// 同时将组件数据进行缓存
-				cacheData[cacheDataKey] = data.componentsDynamic;
-				uni.setStorageSync(cacheKey, cacheData);
-			}
-			if (typeof obj.success == "function") obj.success(data);
-		},
-		fail: function(err) {
-			console.error(err);
-			if (typeof obj.fail == "function") obj.fail(data);
-		},
-		complete: function() {
-			if (typeof obj.complete == "function") obj.complete(data);
-		},
-	});
+  let {
+    that,
+    keyName = "componentsDynamic",
+    title,
+    url = "plugs/components-dynamic/client/pub.getList",
+    ids
+  } = obj;
+  let vk = uni.vk;
+  let form1 = {
+    ids: ids
+  };
+  if (pubfn.isNotNull(obj.data)) {
+    pubfn.objectAssign(form1, obj.data);
+  }
+  // 读取缓存开始-----------------------------------------------------------
+  let cacheKey = "pub-componentsDynamic";
+  let cacheData = uni.getStorageSync(cacheKey) || {};
+  let cacheDataKey = JSON.stringify(ids);
+  if (cacheData[cacheDataKey]) {
+    // 渲染本地数据
+    that[keyName] = cacheData[cacheDataKey];
+  }
+  // 读取缓存结束-----------------------------------------------------------
+  vk.callFunction({
+    url: url,
+    data: form1,
+    title: title,
+    success: function(data) {
+      if (JSON.stringify(cacheData[cacheDataKey]) !== JSON.stringify(data.componentsDynamic)) {
+        // 渲染服务器数据
+        that[keyName] = data.componentsDynamic;
+        // 同时将组件数据进行缓存
+        cacheData[cacheDataKey] = data.componentsDynamic;
+        uni.setStorageSync(cacheKey, cacheData);
+      }
+      if (typeof obj.success == "function") obj.success(data);
+    },
+    fail: function(err) {
+      console.error(err);
+      if (typeof obj.fail == "function") obj.fail(data);
+    },
+    complete: function() {
+      if (typeof obj.complete == "function") obj.complete(data);
+    },
+  });
 };
 
 /**
@@ -1977,76 +1977,76 @@ pubfn.getComponentsDynamicData = function(obj = {}) {
  * vk.pubfn.getPageFullPath(url);
  */
 pubfn.getPageFullPath = function(url) {
-	let fullPath = url;
-	if (fullPath.indexOf("/") !== 0) {
-		if (fullPath.indexOf("./") === 0) {
-			//fullPath = "." + fullPath;
-			fullPath = fullPath.substring(2);
-		}
-		let urlSplit = fullPath.split("../");
-		// 向上目录级数,0:根目录 1:向上1级
-		let level = urlSplit.length;
-		// 尾部路径
-		let urlEnd = urlSplit[level - 1];
-		// 获取当前页面的页面全路径
-		let pages = getCurrentPages();
-		let currentPage = pages[pages.length - 1];
-		let currentPagePath = currentPage.route;
-		// 分割成目录,最后一段是页面名称
-		let urlArr = currentPagePath.split("/");
-		let urlSplicing = "";
-		// 开始拼接
-		for (let i = 0; i < urlArr.length - level; i++) {
-			urlSplicing += urlArr[i] + "/";
-		}
-		// 完整页面路径
-		fullPath = urlSplicing + urlEnd;
-		if (fullPath.indexOf("/") != 0) {
-			fullPath = "/" + fullPath;
-		}
-	}
-	return fullPath;
+  let fullPath = url;
+  if (fullPath.indexOf("/") !== 0) {
+    if (fullPath.indexOf("./") === 0) {
+      //fullPath = "." + fullPath;
+      fullPath = fullPath.substring(2);
+    }
+    let urlSplit = fullPath.split("../");
+    // 向上目录级数,0:根目录 1:向上1级
+    let level = urlSplit.length;
+    // 尾部路径
+    let urlEnd = urlSplit[level - 1];
+    // 获取当前页面的页面全路径
+    let pages = getCurrentPages();
+    let currentPage = pages[pages.length - 1];
+    let currentPagePath = currentPage.route;
+    // 分割成目录,最后一段是页面名称
+    let urlArr = currentPagePath.split("/");
+    let urlSplicing = "";
+    // 开始拼接
+    for (let i = 0; i < urlArr.length - level; i++) {
+      urlSplicing += urlArr[i] + "/";
+    }
+    // 完整页面路径
+    fullPath = urlSplicing + urlEnd;
+    if (fullPath.indexOf("/") != 0) {
+      fullPath = "/" + fullPath;
+    }
+  }
+  return fullPath;
 };
 /**
  * 获取平台信息
  * let platform = vk.pubfn.getPlatform();
  */
 pubfn.getPlatform = function() {
-	let platform;
-	// #ifdef APP-PLUS || APP-NVUE || APP-PLUS-NVUE
-	platform = "app-plus";
-	// #endif
-	// #ifdef H5
-	platform = "h5";
-	// #endif
-	// #ifdef MP-WEIXIN
-	platform = "mp-weixin";
-	// #endif
-	// #ifdef MP-ALIPAY
-	platform = "mp-alipay";
-	// #endif
-	// #ifdef MP-BAIDU
-	platform = "mp-baidu";
-	// #endif
-	// #ifdef MP-TOUTIAO
-	platform = "mp-toutiao";
-	// #endif
-	// #ifdef MP-QQ
-	platform = "mp-qq";
-	// #endif
-	// #ifdef MP-360
-	platform = "mp-360";
-	// #endif
-	// #ifdef MP-KUAISHOU
-	platform = "mp-toutiao";
-	// #endif
-	// #ifdef MP-HARMONY
-	platform = "mp-harmony";
-	// #endif
-	// #ifdef APP-HARMONY
-	platform = "app-harmony";
-	// #endif
-	return platform;
+  let platform;
+  // #ifdef APP-PLUS || APP-NVUE || APP-PLUS-NVUE
+  platform = "app-plus";
+  // #endif
+  // #ifdef H5
+  platform = "h5";
+  // #endif
+  // #ifdef MP-WEIXIN
+  platform = "mp-weixin";
+  // #endif
+  // #ifdef MP-ALIPAY
+  platform = "mp-alipay";
+  // #endif
+  // #ifdef MP-BAIDU
+  platform = "mp-baidu";
+  // #endif
+  // #ifdef MP-TOUTIAO
+  platform = "mp-toutiao";
+  // #endif
+  // #ifdef MP-QQ
+  platform = "mp-qq";
+  // #endif
+  // #ifdef MP-360
+  platform = "mp-360";
+  // #endif
+  // #ifdef MP-KUAISHOU
+  platform = "mp-toutiao";
+  // #endif
+  // #ifdef MP-HARMONY
+  platform = "mp-harmony";
+  // #endif
+  // #ifdef APP-HARMONY
+  platform = "app-harmony";
+  // #endif
+  return platform;
 };
 /**
  * 获取当前页面实例
@@ -2059,40 +2059,40 @@ pubfn.getPlatform = function() {
  * vk.pubfn.getCurrentPage();
  */
 pubfn.getCurrentPage = function() {
-	let res = {};
-	let pages = getCurrentPages();
-	let page = pages[pages.length - 1];
-	if (page.route.indexOf("/") == 0) page.route = page.route.substring(1);
-	let pagePath = `/${page.route}`;
-	let fullPath = `/${page.route}`;
-	let options = page.options;
-	if (page.$page) {
-		if (typeof page.$page.fullPath !== "undefined") {
-			fullPath = page.$page.fullPath;
-		} else if (typeof options === "object") {
-			let optionsStr = pubfn.queryParams(options);
-			fullPath = pagePath + optionsStr;
-		}
-	}
-	res.fullPath = fullPath;
-	res.pagePath = pagePath;
-	res.options = options;
-	res.route = page.route;
-	res.$vm = page.$vm;
-	return res;
+  let res = {};
+  let pages = getCurrentPages();
+  let page = pages[pages.length - 1];
+  if (page.route.indexOf("/") == 0) page.route = page.route.substring(1);
+  let pagePath = `/${page.route}`;
+  let fullPath = `/${page.route}`;
+  let options = page.options;
+  if (page.$page) {
+    if (typeof page.$page.fullPath !== "undefined") {
+      fullPath = page.$page.fullPath;
+    } else if (typeof options === "object") {
+      let optionsStr = pubfn.queryParams(options);
+      fullPath = pagePath + optionsStr;
+    }
+  }
+  res.fullPath = fullPath;
+  res.pagePath = pagePath;
+  res.options = options;
+  res.route = page.route;
+  res.$vm = page.$vm;
+  return res;
 };
 /**
  * 获取当前页面路由
  * vk.pubfn.getCurrentPageRoute();
  */
 pubfn.getCurrentPageRoute = function(removeSlash) {
-	let pages = getCurrentPages();
-	let page = pages[pages.length - 1];
-	if (removeSlash) {
-		return page.route;
-	} else {
-		return "/" + page.route;
-	}
+  let pages = getCurrentPages();
+  let page = pages[pages.length - 1];
+  if (removeSlash) {
+    return page.route;
+  } else {
+    return "/" + page.route;
+  }
 };
 /**
  * 文件转base64
@@ -2113,75 +2113,75 @@ vk.pubfn.fileToBase64({ file }).then(base64 => {
 });
  */
 pubfn.fileToBase64 = function(obj = {}) {
-	let { file } = obj;
-	let filePath = typeof file === "object" ? file.path : file;
-	return new Promise(function(resolve, reject) {
-		// #ifdef H5
-		let reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = function(res) {
-			let base64 = this.result;
-			if (base64.indexOf(";base64,") == -1) {
-				base64 = "data:image/jpeg;base64," + base64;
-			}
-			if (obj.success) obj.success(base64);
-			if (obj.complete) obj.complete(base64);
-			resolve(base64);
-		};
-		reader.onerror = function(err) {
-			if (obj.fail) obj.fail(err);
-			if (obj.complete) obj.complete(err);
-			reject(err);
-		};
-		// #endif
-		// #ifdef MP
-		uni.getFileSystemManager().readFile({
-			filePath: filePath,
-			encoding: "base64",
-			success: function(res) {
-				let base64 = res.data;
-				if (base64.indexOf(";base64,") == -1) {
-					base64 = "data:image/jpeg;base64," + base64;
-				}
-				if (obj.success) obj.success(base64);
-				if (obj.complete) obj.complete(base64);
-				resolve(base64);
-			},
-			fail: function(err) {
-				if (obj.fail) obj.fail(err);
-				reject(err);
-			},
-			complete: obj.complete
-		});
-		// let base64 = uni.getFileSystemManager().readFileSync(file.path, 'base64');
-		// if(obj.success) obj.success(base64);
-		// if(obj.complete) obj.complete(base64);
-		// resolve(base64);
-		// #endif
-		// #ifdef APP-PLUS
-		plus.io.resolveLocalFileSystemURL(pubfn.getLocalFilePath(filePath), function(entry) {
-			entry.file(function(file) {
-				let fileReader = new plus.io.FileReader();
-				fileReader.onload = function(data) {
-					if (obj.success) obj.success(data.target.result);
-					if (obj.complete) obj.complete(data.target.result);
-					resolve(data.target.result);
-				}
-				fileReader.onerror = function(err) {
-					if (obj.fail) obj.fail(err);
-					reject(err);
-				}
-				fileReader.readAsDataURL(file)
-			}, function(err) {
-				if (obj.fail) obj.fail(err);
-				reject(err);
-			})
-		}, function(err) {
-			if (obj.fail) obj.fail(err);
-			reject(err);
-		})
-		// #endif
-	});
+  let { file } = obj;
+  let filePath = typeof file === "object" ? file.path : file;
+  return new Promise(function(resolve, reject) {
+    // #ifdef H5
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(res) {
+      let base64 = this.result;
+      if (base64.indexOf(";base64,") == -1) {
+        base64 = "data:image/jpeg;base64," + base64;
+      }
+      if (obj.success) obj.success(base64);
+      if (obj.complete) obj.complete(base64);
+      resolve(base64);
+    };
+    reader.onerror = function(err) {
+      if (obj.fail) obj.fail(err);
+      if (obj.complete) obj.complete(err);
+      reject(err);
+    };
+    // #endif
+    // #ifdef MP
+    uni.getFileSystemManager().readFile({
+      filePath: filePath,
+      encoding: "base64",
+      success: function(res) {
+        let base64 = res.data;
+        if (base64.indexOf(";base64,") == -1) {
+          base64 = "data:image/jpeg;base64," + base64;
+        }
+        if (obj.success) obj.success(base64);
+        if (obj.complete) obj.complete(base64);
+        resolve(base64);
+      },
+      fail: function(err) {
+        if (obj.fail) obj.fail(err);
+        reject(err);
+      },
+      complete: obj.complete
+    });
+    // let base64 = uni.getFileSystemManager().readFileSync(file.path, 'base64');
+    // if(obj.success) obj.success(base64);
+    // if(obj.complete) obj.complete(base64);
+    // resolve(base64);
+    // #endif
+    // #ifdef APP-PLUS
+    plus.io.resolveLocalFileSystemURL(pubfn.getLocalFilePath(filePath), function(entry) {
+      entry.file(function(file) {
+        let fileReader = new plus.io.FileReader();
+        fileReader.onload = function(data) {
+          if (obj.success) obj.success(data.target.result);
+          if (obj.complete) obj.complete(data.target.result);
+          resolve(data.target.result);
+        }
+        fileReader.onerror = function(err) {
+          if (obj.fail) obj.fail(err);
+          reject(err);
+        }
+        fileReader.readAsDataURL(file)
+      }, function(err) {
+        if (obj.fail) obj.fail(err);
+        reject(err);
+      })
+    }, function(err) {
+      if (obj.fail) obj.fail(err);
+      reject(err);
+    })
+    // #endif
+  });
 };
 
 /**
@@ -2202,111 +2202,111 @@ vk.pubfn.base64ToFile({ base64 }).then(file => {
 });
  */
 pubfn.base64ToFile = function(obj = {}) {
-	let {
-		base64 = "",
-			filePath
-	} = obj;
-	let extName = base64.split(',')[0].match(/data\:\S+\/(\S+);/);
-	if (extName) {
-		extName = extName[1];
-	} else {
-		reject(new Error('base64 error'));
-	}
-	if (!filePath) {
-		filePath = pubfn.random(32, "abcdefghijklmnopqrstuvwxyz0123456789") + '.' + extName;
-	}
-	let index = base64.indexOf("base64,");
-	let base64Data = base64;
-	if (index > -1) {
-		base64Data = base64.substring(base64.indexOf("base64,") + 7);
-	}
-	let savePath;
-	return new Promise(function(resolve, reject) {
-		// #ifdef MP
-		savePath = wx.env.USER_DATA_PATH + '/' + filePath;
-		let fs = uni.getFileSystemManager();
-		fs.writeFile({
-			filePath: savePath,
-			data: base64Data,
-			encoding: "base64",
-			success: function(res) {
-				let file = {
-					path: savePath,
-					lastModifiedDate: new Date(),
-					name: filePath
-				};
-				if (obj.success) obj.success(file);
-				resolve(file);
-			},
-			fail: function(res) {
-				if (obj.fail) obj.fail(res);
-				reject(res);
-			},
-			complete: obj.complete
-		});
-		// #endif
-		// #ifdef H5
-		savePath = filePath;
-		let blob = pubfn.base64toBlob(base64);
-		let file = pubfn.blobToFile(blob, savePath);
-		if (obj.success) obj.success(file);
-		if (obj.complete) obj.complete(file);
-		resolve(file);
-		// #endif
-		// #ifdef APP-PLUS
-		let fileName = filePath;
-		let basePath = '_user_resources';
-		let dirPath = 'vk_temp';
-		savePath = basePath + '/' + dirPath + '/' + fileName;
-		let bitmap = new plus.nativeObj.Bitmap(fileName);
-		bitmap.loadBase64Data(base64, function() {
-			bitmap.save(savePath, {}, function() {
-				bitmap.clear();
-				let file = {
-					path: savePath,
-					lastModifiedDate: new Date(),
-					name: filePath
-				};
-				if (obj.success) obj.success(file);
-				if (obj.complete) obj.complete(file);
-				resolve(file);
-			}, function(error) {
-				bitmap.clear();
-				if (obj.fail) obj.fail(error);
-				reject(error);
-			})
-		}, function(error) {
-			bitmap.clear();
-			if (obj.fail) obj.fail(error);
-			reject(error);
-		})
-		// #endif
-	});
+  let {
+    base64 = "",
+      filePath
+  } = obj;
+  let extName = base64.split(',')[0].match(/data\:\S+\/(\S+);/);
+  if (extName) {
+    extName = extName[1];
+  } else {
+    reject(new Error('base64 error'));
+  }
+  if (!filePath) {
+    filePath = pubfn.random(32, "abcdefghijklmnopqrstuvwxyz0123456789") + '.' + extName;
+  }
+  let index = base64.indexOf("base64,");
+  let base64Data = base64;
+  if (index > -1) {
+    base64Data = base64.substring(base64.indexOf("base64,") + 7);
+  }
+  let savePath;
+  return new Promise(function(resolve, reject) {
+    // #ifdef MP
+    savePath = wx.env.USER_DATA_PATH + '/' + filePath;
+    let fs = uni.getFileSystemManager();
+    fs.writeFile({
+      filePath: savePath,
+      data: base64Data,
+      encoding: "base64",
+      success: function(res) {
+        let file = {
+          path: savePath,
+          lastModifiedDate: new Date(),
+          name: filePath
+        };
+        if (obj.success) obj.success(file);
+        resolve(file);
+      },
+      fail: function(res) {
+        if (obj.fail) obj.fail(res);
+        reject(res);
+      },
+      complete: obj.complete
+    });
+    // #endif
+    // #ifdef H5
+    savePath = filePath;
+    let blob = pubfn.base64toBlob(base64);
+    let file = pubfn.blobToFile(blob, savePath);
+    if (obj.success) obj.success(file);
+    if (obj.complete) obj.complete(file);
+    resolve(file);
+    // #endif
+    // #ifdef APP-PLUS
+    let fileName = filePath;
+    let basePath = '_user_resources';
+    let dirPath = 'vk_temp';
+    savePath = basePath + '/' + dirPath + '/' + fileName;
+    let bitmap = new plus.nativeObj.Bitmap(fileName);
+    bitmap.loadBase64Data(base64, function() {
+      bitmap.save(savePath, {}, function() {
+        bitmap.clear();
+        let file = {
+          path: savePath,
+          lastModifiedDate: new Date(),
+          name: filePath
+        };
+        if (obj.success) obj.success(file);
+        if (obj.complete) obj.complete(file);
+        resolve(file);
+      }, function(error) {
+        bitmap.clear();
+        if (obj.fail) obj.fail(error);
+        reject(error);
+      })
+    }, function(error) {
+      bitmap.clear();
+      if (obj.fail) obj.fail(error);
+      reject(error);
+    })
+    // #endif
+  });
 };
 /**
  * 将base64转换为blob （H5独有）
  vk.pubfn.base64toBlob(base64);
  */
 pubfn.base64toBlob = function(base64) {
-	let arr = base64.split(',');
-	let mime = arr[0].match(/:(.*?);/)[1];
-	let bstr = atob(arr[1]);
-	let n = bstr.length;
-	let u8arr = new Uint8Array(n);
-	while (n--) {
-		u8arr[n] = bstr.charCodeAt(n);
-	}
-	return new Blob([u8arr], { type: mime });
+  let arr = base64.split(',');
+  let mime = arr[0].match(/:(.*?);/)[1];
+  let bstr = atob(arr[1]);
+  let n = bstr.length;
+  let u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
 };
 /**
  * //将blob转换为file
  vk.pubfn.blobToFile(base64);
  */
 pubfn.blobToFile = function(blob, fileName) {
-	blob.lastModifiedDate = new Date();
-	blob.name = fileName;
-	blob.path = URL.createObjectURL(blob);
-	return blob;
+  blob.lastModifiedDate = new Date();
+  blob.name = fileName;
+  blob.path = URL.createObjectURL(blob);
+  return blob;
 };
 
 /**
@@ -2316,11 +2316,11 @@ pubfn.blobToFile = function(blob, fileName) {
  });
  */
 pubfn.requestSubscribeMessage = function(obj) {
-	// #ifdef MP-WEIXIN || MP-HARMONY
-	if (obj && obj.tmplIds && obj.tmplIds.length > 0) {
-		return uni.requestSubscribeMessage(obj);
-	}
-	// #endif
+  // #ifdef MP-WEIXIN || MP-HARMONY
+  if (obj && obj.tmplIds && obj.tmplIds.length > 0) {
+    return uni.requestSubscribeMessage(obj);
+  }
+  // #endif
 };
 
 /**
@@ -2328,79 +2328,79 @@ pubfn.requestSubscribeMessage = function(obj) {
  * vk.pubfn.checkLogin();
  */
 pubfn.checkLogin = function(obj = {}) {
-	let vk = uni.vk;
-	let loginUrl = vk.getConfig("login.url");
-	try {
-		let url;
-		try {
-			url = obj.url || vk.pubfn.getCurrentPageRoute();
-		} catch (err) {
-			url = vk.getConfig("index.url") || "/pages/index/index";
-		}
-		vk.navigate.checkNeedLogin({
-			url: url,
-			success: function(res) {
-				if (res.needLogin) {
-					// 记录下原本要跳转的页面
-					url = vk.pubfn.getPageFullPath(obj.fullPath || url);
-					vk.navigate.setOriginalPage({ url });
-					if (obj.isOnLaunch) vk.navigate.isOnLaunchToLogin = true; // 标记为首次启动的页面需要登录
-					uni.reLaunch({
-						url: loginUrl,
-						success: () => {
-							// #ifdef MP-WEIXIN
-							setTimeout(() => {
-								uni.hideHomeButton();
-							}, 400);
-							// #endif
-						}
-					});
-				} else {
-					// #ifdef H5
-					// 解决微信公众号登录无法跳回原页面的问题
-					if (!obj.options || !obj.options.code || !obj.options.state) {
-						vk.navigate.setOriginalPage(null);
-					}
-					// #endif
-					// #ifndef H5
-					vk.navigate.setOriginalPage(null);
-					// #endif
-				}
-			}
-		});
-	} catch (err) {
-		console.error("catch", err);
-		uni.reLaunch({
-			url: loginUrl
-		});
-		// #ifdef MP-WEIXIN
-		uni.hideHomeButton();
-		// #endif
-	}
+  let vk = uni.vk;
+  let loginUrl = vk.getConfig("login.url");
+  try {
+    let url;
+    try {
+      url = obj.url || vk.pubfn.getCurrentPageRoute();
+    } catch (err) {
+      url = vk.getConfig("index.url") || "/pages/index/index";
+    }
+    vk.navigate.checkNeedLogin({
+      url: url,
+      success: function(res) {
+        if (res.needLogin) {
+          // 记录下原本要跳转的页面
+          url = vk.pubfn.getPageFullPath(obj.fullPath || url);
+          vk.navigate.setOriginalPage({ url });
+          if (obj.isOnLaunch) vk.navigate.isOnLaunchToLogin = true; // 标记为首次启动的页面需要登录
+          uni.reLaunch({
+            url: loginUrl,
+            success: () => {
+              // #ifdef MP-WEIXIN
+              setTimeout(() => {
+                uni.hideHomeButton();
+              }, 400);
+              // #endif
+            }
+          });
+        } else {
+          // #ifdef H5
+          // 解决微信公众号登录无法跳回原页面的问题
+          if (!obj.options || !obj.options.code || !obj.options.state) {
+            vk.navigate.setOriginalPage(null);
+          }
+          // #endif
+          // #ifndef H5
+          vk.navigate.setOriginalPage(null);
+          // #endif
+        }
+      }
+    });
+  } catch (err) {
+    console.error("catch", err);
+    uni.reLaunch({
+      url: loginUrl
+    });
+    // #ifdef MP-WEIXIN
+    uni.hideHomeButton();
+    // #endif
+  }
 };
 /**
  * 获取文件本地路径
  * @param {Object} path
  */
 pubfn.getLocalFilePath = function(path) {
-	if (path.indexOf('_www') === 0 || path.indexOf('_doc') === 0 || path.indexOf('_documents') === 0 || path.indexOf('_downloads') === 0) {
-		return path
-	}
-	if (path.indexOf('file://') === 0) {
-		return path
-	}
-	if (path.indexOf('/storage/emulated/0/') === 0) {
-		return path
-	}
-	if (path.indexOf('/') === 0 && typeof plus !== "undefined") {
-		let localFilePath = plus.io.convertAbsoluteFileSystem(path)
-		if (localFilePath !== path) {
-			return localFilePath
-		} else {
-			path = path.substr(1)
-		}
-	}
-	return '_www/' + path
+  if (path.indexOf('_www') === 0 || path.indexOf('_doc') === 0 || path.indexOf('_documents') === 0 || path.indexOf('_downloads') === 0) {
+    return path
+  }
+  if (path.indexOf('file://') === 0) {
+    return path
+  }
+  if (path.indexOf('/storage/emulated/0/') === 0) {
+    return path
+  }
+  if (path.indexOf('/') === 0 && typeof plus !== "undefined") {
+    let localFilePath = plus.io.convertAbsoluteFileSystem(path)
+    if (localFilePath !== path) {
+      return localFilePath
+    } else {
+      path = path.substr(1)
+    }
+  }
+  return '_www/' + path
 };
 
 /**
@@ -2408,48 +2408,48 @@ pubfn.getLocalFilePath = function(path) {
  * let localeList = vk.pubfn.getLocaleList();
  */
 pubfn.getLocaleList = function() {
-	let localeList = [
-		{ value: "zh-Hans", label: "简体中文" },
-		{ value: "zh-Hant", label: "繁體中文" },
-		{ value: "en", label: "English" }
-	];
-	return localeList;
+  let localeList = [
+    { value: "zh-Hans", label: "简体中文" },
+    { value: "zh-Hant", label: "繁體中文" },
+    { value: "en", label: "English" }
+  ];
+  return localeList;
 };
 /**
  * 获取当前应用语言
  * let locale = vk.pubfn.getLocale();
  */
 pubfn.getLocale = function() {
-	let localeValue;
-	if (typeof uni.getLocale === "function") {
-		localeValue = uni.getLocale();
-	} else {
-		localeValue = "zh-Hans"; // 默认中文简体
-	}
-	let localeObj = {
-		"zh_CN": "zh-Hans", // 中国大陆（简体）
-		"zh_HK": "zh-Hant", // 香港（繁体）
-		"zh_MO": "zh-Hant", // 澳门（繁体）
-		"zh_SG": "zh-Hans", // 新加坡（简体）
-		"zh_TW": "zh-Hant", // 台湾（繁体）
-	};
-	if (localeObj[localeValue]) localeValue = localeObj[localeValue];
-	return localeValue;
+  let localeValue;
+  if (typeof uni.getLocale === "function") {
+    localeValue = uni.getLocale();
+  } else {
+    localeValue = "zh-Hans"; // 默认中文简体
+  }
+  let localeObj = {
+    "zh_CN": "zh-Hans", // 中国大陆（简体）
+    "zh_HK": "zh-Hant", // 香港（繁体）
+    "zh_MO": "zh-Hant", // 澳门（繁体）
+    "zh_SG": "zh-Hans", // 新加坡（简体）
+    "zh_TW": "zh-Hant", // 台湾（繁体）
+  };
+  if (localeObj[localeValue]) localeValue = localeObj[localeValue];
+  return localeValue;
 };
 /**
  * 获取当前应用语言
  * let localeObj = vk.pubfn.getLocaleObject();
  */
 pubfn.getLocaleObject = function() {
-	let value = pubfn.getLocale();
-	let list = pubfn.getLocaleList();
-	return pubfn.getListItem(list, "value", value);
+  let value = pubfn.getLocale();
+  let list = pubfn.getLocaleList();
+  return pubfn.getListItem(list, "value", value);
 };
 /**
  * 设置当前应用语言
  */
 pubfn.setLocale = function(...e) {
-	return uni.setLocale(...e);
+  return uni.setLocale(...e);
 };
 
 /**
@@ -2457,14 +2457,14 @@ pubfn.setLocale = function(...e) {
  * @description 将 obj2 的属性赋值给 obj1 (如果obj1中有对应的属性,则会被obj2的属性值覆盖)
  * @param {Object} 	obj1
  * @param {Object} 	obj2
- * @param {Object} 	that 页面实例
- * vk.pubfn.objectAssignForVue(obj1, obj2, that);
+ * @param {Object} 	this 页面实例
+ * vk.pubfn.objectAssignForVue(obj1, obj2, this);
  */
 pubfn.objectAssignForVue = function(obj1, obj2, that) {
-	pubfn.objectDeleteInvalid(obj2);
-	for (let key in obj2) {
-		that.$set(obj1, key, obj2[key]);
-	}
+  pubfn.objectDeleteInvalid(obj2);
+  for (let key in obj2) {
+    that.$set(obj1, key, obj2[key]);
+  }
 };
 
 /**
@@ -2472,13 +2472,13 @@ pubfn.objectAssignForVue = function(obj1, obj2, that) {
  * let envVersion = vk.pubfn.getMiniProgramEnvVersion();
  */
 pubfn.getMiniProgramEnvVersion = function() {
-	// #ifdef MP
-	try {
-		const info = uni.getAccountInfoSync();
-		return info.miniProgram.envVersion;
-	} catch (err) {}
-	// #endif
-	return process.env.NODE_ENV !== 'production' ? 'develop' : 'release';
+  // #ifdef MP
+  try {
+    const info = uni.getAccountInfoSync();
+    return info.miniProgram.envVersion;
+  } catch (err) {}
+  // #endif
+  return process.env.NODE_ENV !== 'production' ? 'develop' : 'release';
 };
 
 /**
@@ -2498,64 +2498,64 @@ vk.pubfn.parseXlsxFile({
  * @param {Number} mode - 返回格式：1-返回对象数组，2-返回二维数组 默认 1
  */
 pubfn.parseXlsxFile = async function(obj = {}) {
-	const {
-		file,
-		index = 0,
-		mode = 1
-	} = obj;
+  const {
+    file,
+    index = 0,
+    mode = 1
+  } = obj;
 
-	// #ifdef WEB
-	if (typeof ExcelJS !== "object") {
-		throw new Error("ExcelJS not installed");
-	}
-	const arrayBuffer = await new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.onload = (e) => resolve(e.target.result);
-		reader.onerror = (e) => reject(e);
-		reader.readAsArrayBuffer(file);
-	});
-	const workbook = new ExcelJS.Workbook();
-	await workbook.xlsx.load(arrayBuffer);
-	const worksheet = workbook.worksheets[index];
-	if (!worksheet) {
-		throw new Error(`No worksheet found with index ${index}`);
-	}
-	const result = [];
-	let headers = [];
-	worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-		const rowData = [];
-		row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
-			let value = cell.value;
-			if (value && typeof value === 'object' && value.text !== undefined && value.hyperlink !== undefined) {
-				value = value.hyperlink;
-			}
-			rowData.push(value);
-		});
+  // #ifdef WEB
+  if (typeof ExcelJS !== "object") {
+    throw new Error("ExcelJS not installed");
+  }
+  const arrayBuffer = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = (e) => reject(e);
+    reader.readAsArrayBuffer(file);
+  });
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(arrayBuffer);
+  const worksheet = workbook.worksheets[index];
+  if (!worksheet) {
+    throw new Error(`No worksheet found with index ${index}`);
+  }
+  const result = [];
+  let headers = [];
+  worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+    const rowData = [];
+    row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+      let value = cell.value;
+      if (value && typeof value === 'object' && value.text !== undefined && value.hyperlink !== undefined) {
+        value = value.hyperlink;
+      }
+      rowData.push(value);
+    });
 
-		if (mode === 1) {
-			// mode 1: 返回对象数组
-			if (rowNumber === 1) {
-				headers = rowData;
-			} else {
-				const rowObj = {};
-				rowData.forEach((value, index) => {
-					if (headers[index]) {
-						rowObj[headers[index]] = value;
-					}
-				});
-				result.push(rowObj);
-			}
-		} else if (mode === 2) {
-			// mode 2: 返回二维数组
-			result.push(rowData);
-		}
-	});
-	return result;
-	// #endif
+    if (mode === 1) {
+      // mode 1: 返回对象数组
+      if (rowNumber === 1) {
+        headers = rowData;
+      } else {
+        const rowObj = {};
+        rowData.forEach((value, index) => {
+          if (headers[index]) {
+            rowObj[headers[index]] = value;
+          }
+        });
+        result.push(rowObj);
+      }
+    } else if (mode === 2) {
+      // mode 2: 返回二维数组
+      result.push(rowData);
+    }
+  });
+  return result;
+  // #endif
 
-	// #ifndef WEB
-	throw new Error("Only WEB platform supports");
-	// #endif
+  // #ifndef WEB
+  throw new Error("Only WEB platform supports");
+  // #endif
 
 };
 
