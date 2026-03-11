@@ -88,13 +88,12 @@
 }
 
 .login-btn .btn.circle {
-  border-radius: 100rpx
+  border-radius: 100rpx;
 }
 
 .login-btn .btn.hover {
   opacity: 0.7;
 }
-
 
 /* 底部 */
 .footer {

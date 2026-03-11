@@ -11,17 +11,7 @@ module.exports = {
     let res = { code: 0, msg: '' };
     // 业务逻辑开始-----------------------------------------------------------
 
-    let {
-      clientInfo,
-      type,
-      provider,
-      appid,
-      openid,
-      unionid,
-      customData,
-      extraRes,
-      addLog
-    } = data;
+    let { clientInfo, type, provider, appid, openid, unionid, customData, extraRes, addLog } = data;
 
     // 参数非空检测
     let nullKey = vk.pubfn.isNullOneByObject({ clientInfo, provider, openid });
@@ -35,18 +25,21 @@ module.exports = {
     let platform = vk.pubfn.getPlatformForUniId(clientInfo);
 
     // 查找用户是否存在
-    let userInfo = await getUser({
-      clientInfo,
-      provider,
-      unionid,
-      openid
-    }, util);
+    let userInfo = await getUser(
+      {
+        clientInfo,
+        provider,
+        unionid,
+        openid,
+      },
+      util
+    );
 
     // 定义openid和unionid存在userInfo的哪个字段中
     let fieldInfo = {
       [`${provider}_openid`]: {
-        [platform]: openid
-      }
+        [platform]: openid,
+      },
     };
     if (appid) {
       fieldInfo[`${provider}_openid`][`${platform}_${appid}`] = openid;
@@ -76,13 +69,16 @@ module.exports = {
 
     if (addLog) {
       // 添加登录日志
-      const loginLog = vk.require("service/user/util/loginLog");
-      await loginLog.add({
-        type: "login",
-        login_type: provider,
-        user_id: res.uid,
-        context: clientInfo
-      }, util);
+      const loginLog = vk.require('service/user/util/loginLog');
+      await loginLog.add(
+        {
+          type: 'login',
+          login_type: provider,
+          user_id: res.uid,
+          context: clientInfo,
+        },
+        util
+      );
     }
 
     // 业务逻辑结束-----------------------------------------------------------
@@ -97,18 +93,7 @@ module.exports = {
     let res = { code: 0, msg: '' };
     // 业务逻辑开始-----------------------------------------------------------
 
-    let {
-      clientInfo,
-      userInfo,
-      provider,
-      providerName = "",
-      appid,
-      openid,
-      unionid,
-      extraRes,
-      customData,
-      encryptedKey,
-    } = data;
+    let { clientInfo, userInfo, provider, providerName = '', appid, openid, unionid, extraRes, customData, encryptedKey } = data;
 
     if (!openid && encryptedKey) {
       // 解密获得openid和unionid
@@ -137,12 +122,15 @@ module.exports = {
       }
     }
     // 查找用户是否存在
-    let currentAppUser = await getUser({
-      clientInfo,
-      provider,
-      unionid,
-      openid
-    }, util);
+    let currentAppUser = await getUser(
+      {
+        clientInfo,
+        provider,
+        unionid,
+        openid,
+      },
+      util
+    );
 
     if (currentAppUser) {
       return { code: 1, msg: `当前${providerName}号已绑定其他账号，请先解绑` };
@@ -151,8 +139,8 @@ module.exports = {
     // 需要修改的字段信息
     let updateDataJson = {
       [`${provider}_openid`]: {
-        [platform]: openid
-      }
+        [platform]: openid,
+      },
     };
     if (appid) {
       updateDataJson[`${provider}_openid`][`${platform}_${appid}`] = openid;
@@ -161,16 +149,16 @@ module.exports = {
       updateDataJson[`${provider}_unionid`] = unionid;
     }
 
-    if (typeof customData === "object") {
+    if (typeof customData === 'object') {
       updateDataJson = Object.assign(updateDataJson, customData);
     }
 
     let num = await vk.daoCenter.userDao.updateById({
       id: userInfo._id,
-      dataJson: updateDataJson
+      dataJson: updateDataJson,
     });
 
-    res.msg = num > 0 ? "绑定成功" : "绑定失败";
+    res.msg = num > 0 ? '绑定成功' : '绑定失败';
 
     Object.assign(res, extraRes);
 
@@ -212,7 +200,7 @@ module.exports = {
     if (!appid || Object.keys(userInfo[`${provider}_openid`]).length <= 2) {
       fieldInfo = {
         [`${provider}_openid`]: _.remove(),
-        [`${provider}_unionid`]: _.remove()
+        [`${provider}_unionid`]: _.remove(),
       };
     } else {
       // 找到对应appid的key
@@ -220,63 +208,58 @@ module.exports = {
         return item.indexOf(appid) > -1;
       });
       fieldInfo = {
-        [`${provider}_openid.${key}`]: _.remove()
+        [`${provider}_openid.${key}`]: _.remove(),
       };
     }
 
     let num = await vk.daoCenter.userDao.updateById({
       id: userInfo._id,
-      dataJson: fieldInfo
+      dataJson: fieldInfo,
     });
 
-    res.msg = num > 0 ? "解绑成功" : "解绑失败";
+    res.msg = num > 0 ? '解绑成功' : '解绑失败';
 
     // 业务逻辑结束-----------------------------------------------------------
     return res;
-  }
-}
+  },
+};
 
 async function getUser(obj = {}, util) {
   let { vk, _ } = util;
-  let {
-    clientInfo,
-    provider,
-    unionid,
-    openid
-  } = obj;
+  let { clientInfo, provider, unionid, openid } = obj;
   let platform = vk.pubfn.getPlatformForUniId(clientInfo);
   let orArr = [];
   if (unionid) {
     orArr.push({
-      [`${provider}_unionid`]: unionid
+      [`${provider}_unionid`]: unionid,
     });
   }
   if (openid) {
     orArr.push({
-      [`${provider}_openid.${platform}`]: openid
+      [`${provider}_openid.${platform}`]: openid,
     });
   }
-  let userInfo = await getCurrentAppUser({
-    whereJson: _.or(orArr),
-    clientInfo
-  }, util);
+  let userInfo = await getCurrentAppUser(
+    {
+      whereJson: _.or(orArr),
+      clientInfo,
+    },
+    util
+  );
   return userInfo;
 }
 
 async function getCurrentAppUser(obj = {}, util) {
   let { vk } = util;
-  let {
-    whereJson,
-    clientInfo
-  } = obj;
+  let { whereJson, clientInfo } = obj;
   let userList = await vk.daoCenter.userDao.select({
     pageIndex: 1,
     pageSize: 1000,
     getMain: true,
-    whereJson
+    whereJson,
   });
   const dcloudAppid = clientInfo.APPID || clientInfo.appId;
-  userList = userList.filter(item => {
+  userList = userList.filter((item) => {
     return item.dcloud_appid === undefined || item.dcloud_appid === null || item.dcloud_appid.indexOf(dcloudAppid) > -1 || item.dcloud_appid.indexOf(null) > -1;
   });
   return userList && userList[0];

@@ -5,7 +5,7 @@
 const h5 = {};
 
 // 引入 微信公众号 js_sdk 包
-import wx from './weixin-js-sdk'
+import wx from './weixin-js-sdk';
 h5.wx = wx;
 h5.wxReady = false;
 
@@ -16,7 +16,7 @@ if (env === "h5-weixin") {
 
 }
  */
-h5.getEnv = function() {
+h5.getEnv = function () {
   const ua = window.navigator.userAgent.toLowerCase();
   const isWeixin = /micromessenger/i.test(ua);
   const isAlipay = /alipay/i.test(ua);
@@ -24,24 +24,24 @@ h5.getEnv = function() {
   const isMiniProgram = /miniprogram/i.test(ua);
   if (isWeixin) {
     if (isMiniProgram) {
-      return "mp-weixin";
+      return 'mp-weixin';
     } else {
-      return "h5-weixin";
+      return 'h5-weixin';
     }
   } else if (isAlipay) {
     if (isMiniProgram) {
-      return "mp-alipay";
+      return 'mp-alipay';
     } else {
-      return "h5-alipay";
+      return 'h5-alipay';
     }
   } else if (isQQ) {
     if (isMiniProgram) {
-      return "mp-qq";
+      return 'mp-qq';
     } else {
-      return "h5-qq";
+      return 'h5-qq';
     }
   }
-  return "h5";
+  return 'h5';
 };
 
 /**
@@ -51,7 +51,7 @@ if (env.isPCWeixin) {
 
 }
  */
-h5.getEnvInfo = function() {
+h5.getEnvInfo = function () {
   const ua = window.navigator.userAgent.toLowerCase();
   const isMiniProgram = /miniprogram|microapp|swan/i.test(ua);
   // 微信
@@ -123,7 +123,7 @@ h5.getEnvInfo = function() {
  * let getRootPath = vk.h5.getRootPath();
  * let getRootPath = vk.h5.getRootPath({ projectName:true });
  */
-h5.getRootPath = function(obj = {}) {
+h5.getRootPath = function (obj = {}) {
   let { projectName = false } = obj;
   let url = new URL(window.location.href);
   return projectName ? url.origin + url.pathname.substring(0, url.pathname.substr(1).indexOf('/') + 1) : url.origin;
@@ -143,7 +143,7 @@ vk.h5.init({
 	signature: "", // 必填，签名
 })
  */
-h5.init = function(obj = {}) {
+h5.init = function (obj = {}) {
   const vk = uni.vk;
   let {
     debug, // 开启调试模式,调用的所有api的返回值会在客户端alert出来
@@ -156,64 +156,69 @@ h5.init = function(obj = {}) {
   if (!jsApiList) {
     // 具体接口参数用法请访问 https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html 查看文档
     jsApiList = [
-      "updateAppMessageShareData", // 自定义“分享给朋友”及“分享到QQ”按钮的分享内容
-      "updateTimelineShareData", // 自定义“分享到朋友圈”及“分享到QQ空间”按钮的分享内容
+      'updateAppMessageShareData', // 自定义“分享给朋友”及“分享到QQ”按钮的分享内容
+      'updateTimelineShareData', // 自定义“分享到朋友圈”及“分享到QQ空间”按钮的分享内容
       //"onMenuShareAppMessage", // 微信已废弃此接口
       //"onMenuShareTimeline",// 微信已废弃此接口
-      "onMenuShareWeibo", // 分享到腾讯微博
-      "onMenuShareQZone", // 分享到QQ空间
-      "startRecord", // 开始录音接口
-      "stopRecord", // 停止录音接口
-      "onVoiceRecordEnd", // 监听录音自动停止接口
-      "playVoice", // 播放语音接口
-      "pauseVoice", // 暂停播放接口
-      "stopVoice", // 停止播放接口
-      "onVoicePlayEnd", // 监听语音播放完毕接口
-      "uploadVoice", // 上传语音接口
-      "downloadVoice", // 下载语音接口
-      "chooseImage", // 拍照或从手机相册中选图接口
-      "previewImage", // 预览图片接口
-      "uploadImage", // 上传图片接口
-      "downloadImage", // 下载图片接口
-      "translateVoice", // 识别音频并返回识别结果接口
-      "getNetworkType", // 获取网络状态接口
-      "openLocation", // 使用微信内置地图查看位置接口
-      "getLocation", // 获取地理位置接口
-      "startSearchBeacons", // 开启查找周边ibeacon设备接口
-      "stopSearchBeacons", // 关闭查找周边ibeacon设备接口
-      "onSearchBeacons", // 监听周边ibeacon设备接口
-      "hideOptionMenu", // 效果和hideAllNonBaseMenuItem一致
-      "showOptionMenu", // 效果和showAllNonBaseMenuItem一致
-      "hideMenuItems", // 批量隐藏功能按钮接口
-      "showMenuItems", // 批量显示功能按钮接口
-      "hideAllNonBaseMenuItem", // 隐藏所有非基础按钮接口（可以用来一键隐藏分享按钮）
-      "showAllNonBaseMenuItem", // 显示所有功能按钮接口（可以用来一键显示分享按钮）
-      "closeWindow", // 关闭当前网页窗口接口
-      "scanQRCode", // 调起微信扫一扫接口
-      "openProductSpecificView", // 跳转微信商品页接口
-      "addCard", // 批量添加卡券接口
-      "chooseCard", // 拉取适用卡券列表并获取用户选择信息
-      "openCard", // 查看微信卡包中的卡券接口
-      "chooseWXPay", // 发起微信支付
-      "requestMerchantTransfer", // 商家转账 - 用户确认收款
+      'onMenuShareWeibo', // 分享到腾讯微博
+      'onMenuShareQZone', // 分享到QQ空间
+      'startRecord', // 开始录音接口
+      'stopRecord', // 停止录音接口
+      'onVoiceRecordEnd', // 监听录音自动停止接口
+      'playVoice', // 播放语音接口
+      'pauseVoice', // 暂停播放接口
+      'stopVoice', // 停止播放接口
+      'onVoicePlayEnd', // 监听语音播放完毕接口
+      'uploadVoice', // 上传语音接口
+      'downloadVoice', // 下载语音接口
+      'chooseImage', // 拍照或从手机相册中选图接口
+      'previewImage', // 预览图片接口
+      'uploadImage', // 上传图片接口
+      'downloadImage', // 下载图片接口
+      'translateVoice', // 识别音频并返回识别结果接口
+      'getNetworkType', // 获取网络状态接口
+      'openLocation', // 使用微信内置地图查看位置接口
+      'getLocation', // 获取地理位置接口
+      'startSearchBeacons', // 开启查找周边ibeacon设备接口
+      'stopSearchBeacons', // 关闭查找周边ibeacon设备接口
+      'onSearchBeacons', // 监听周边ibeacon设备接口
+      'hideOptionMenu', // 效果和hideAllNonBaseMenuItem一致
+      'showOptionMenu', // 效果和showAllNonBaseMenuItem一致
+      'hideMenuItems', // 批量隐藏功能按钮接口
+      'showMenuItems', // 批量显示功能按钮接口
+      'hideAllNonBaseMenuItem', // 隐藏所有非基础按钮接口（可以用来一键隐藏分享按钮）
+      'showAllNonBaseMenuItem', // 显示所有功能按钮接口（可以用来一键显示分享按钮）
+      'closeWindow', // 关闭当前网页窗口接口
+      'scanQRCode', // 调起微信扫一扫接口
+      'openProductSpecificView', // 跳转微信商品页接口
+      'addCard', // 批量添加卡券接口
+      'chooseCard', // 拉取适用卡券列表并获取用户选择信息
+      'openCard', // 查看微信卡包中的卡券接口
+      'chooseWXPay', // 发起微信支付
+      'requestMerchantTransfer', // 商家转账 - 用户确认收款
     ];
   }
   const env = vk.h5.getEnv();
-  if (env === "h5-weixin") {
+  if (env === 'h5-weixin') {
     const setConfig = (config = {}) => {
-      wx.config(Object.assign({
-        debug,
-        appId,
-        timestamp,
-        nonceStr,
-        signature,
-        jsApiList
-      }, config));
+      wx.config(
+        Object.assign(
+          {
+            debug,
+            appId,
+            timestamp,
+            nonceStr,
+            signature,
+            jsApiList,
+          },
+          config
+        )
+      );
       vk.h5.wxReady = true;
       wx.error((err) => {
         console.error(err);
       });
-    }
+    };
     if (appId) {
       setConfig();
     } else {
@@ -221,9 +226,9 @@ h5.init = function(obj = {}) {
         success: (data) => {
           setConfig({
             ...data.config,
-            debug
+            debug,
           });
-        }
+        },
       });
     }
   }
@@ -235,13 +240,13 @@ h5.init = function(obj = {}) {
  * 微信公众号同时设置分享好友和朋友圈（仅设置分享信息，最终分享依然要点右上角三个点）
 let wx = vk.h5.getWeiXinJsApi();
  */
-h5.getWeiXinJsApi = function() {
+h5.getWeiXinJsApi = function () {
   const proxyObj = {};
   const newObj = new Proxy(proxyObj, {
-    get: function(target, key, receiver) {
-      return async function(options) {
+    get: function (target, key, receiver) {
+      return async function (options) {
         const env = vk.h5.getEnv();
-        if (env === "h5-weixin") {
+        if (env === 'h5-weixin') {
           wx.ready(() => {
             wx[key](options);
             // wx.checkJsApi({
@@ -258,12 +263,11 @@ h5.getWeiXinJsApi = function() {
             // });
           });
         }
-      }
-    }
+      };
+    },
   });
   return newObj;
 };
-
 
 /**
  * 语法糖，微信公众号同时设置分享好友和朋友圈（仅设置分享信息，最终分享依然要点右上角三个点）
@@ -274,9 +278,9 @@ vk.h5.updateShareData({
 	imgUrl: "图片链接地址"
 });
  */
-h5.updateShareData = function(obj = {}) {
+h5.updateShareData = function (obj = {}) {
   const env = vk.h5.getEnv();
-  if (env === "h5-weixin") {
+  if (env === 'h5-weixin') {
     const wx = vk.h5.getWeiXinJsApi();
     // 分享到朋友圈和分享到QQ空间
     wx.updateAppMessageShareData(obj);

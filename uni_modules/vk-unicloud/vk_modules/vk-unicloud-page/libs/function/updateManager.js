@@ -3,7 +3,7 @@ let updateManager = {};
  * 本API返回全局唯一的版本更新管理器对象： updateManager，用于管理小程序更新。
  * vk.updateManager.updateReady();
  */
-updateManager.updateReady = function(obj) {
+updateManager.updateReady = function (obj) {
   // #ifdef MP
   updateManagerByMP(obj);
   // #endif
@@ -12,14 +12,8 @@ updateManager.updateReady = function(obj) {
 export default updateManager;
 
 function updateManagerByMP(obj = {}) {
-  let {
-    title = "更新提示",
-      content = "新版本已经准备好，点击更新！",
-      autoUpdate = true,
-      showCancel = false,
-      confirmText = "一键更新"
-  } = obj;
-  if (typeof uni.getUpdateManager !== "function") {
+  let { title = '更新提示', content = '新版本已经准备好，点击更新！', autoUpdate = true, showCancel = false, confirmText = '一键更新' } = obj;
+  if (typeof uni.getUpdateManager !== 'function') {
     return;
   }
   const updateManager = uni.getUpdateManager();
@@ -37,25 +31,25 @@ function updateManagerByMP(obj = {}) {
       confirmText,
       success: (res) => {
         if (res.confirm) {
-          if (typeof obj.success === "function") {
+          if (typeof obj.success === 'function') {
             obj.success({
-              applyUpdate: updateManager.applyUpdate
+              applyUpdate: updateManager.applyUpdate,
             });
           }
-          if (typeof obj.complete === "function") obj.complete();
+          if (typeof obj.complete === 'function') obj.complete();
           if (autoUpdate) {
             // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
             updateManager.applyUpdate();
           }
         }
-      }
+      },
     });
   });
 
   updateManager.onUpdateFailed((res) => {
     // 新的版本下载失败
-    console.error("onUpdateFailed", res);
-    if (typeof obj.fail === "function") obj.fail(res);
-    if (typeof obj.complete === "function") obj.complete(res);
+    console.error('onUpdateFailed', res);
+    if (typeof obj.fail === 'function') obj.fail(res);
+    if (typeof obj.complete === 'function') obj.complete(res);
   });
 }

@@ -24,33 +24,33 @@ module.exports = {
       mobile, // 新手机号码
       code, // 新手机收到的验证码
     } = data;
-    if (!code || !oldMobileCode) return { code: -1, msg: "验证码不能为空！" };
-    if (!mobile || !oldMobile) return { code: -1, msg: "手机号不能为空！" };
+    if (!code || !oldMobileCode) return { code: -1, msg: '验证码不能为空！' };
+    if (!mobile || !oldMobile) return { code: -1, msg: '手机号不能为空！' };
     // 先检查下旧手机号码和验证码是否正确
     let verifyCodeRes = await uniID.verifyCode({
       mobile: oldMobile,
       code: oldMobileCode,
-      type: 'unbind'
+      type: 'unbind',
     });
     if (verifyCodeRes.code !== 0) {
-      verifyCodeRes.msg = `旧手机${verifyCodeRes.msg}`
+      verifyCodeRes.msg = `旧手机${verifyCodeRes.msg}`;
       return verifyCodeRes;
     }
     // 先检查下新手机号码和验证码是否正确
     verifyCodeRes = await uniID.verifyCode({
       mobile,
       code: code,
-      type: 'bind'
+      type: 'bind',
     });
     if (verifyCodeRes.code !== 0) {
-      verifyCodeRes.msg = `新手机${verifyCodeRes.msg}`
+      verifyCodeRes.msg = `新手机${verifyCodeRes.msg}`;
       return verifyCodeRes;
     }
     // 解绑前先判断下新手机号是否已存在
     let dcloud_appid = originalParam.context.appId;
     let num = await vk.daoCenter.userDao.count({
       mobile,
-      dcloud_appid: _.or(_.eq(dcloud_appid), _.exists(false))
+      dcloud_appid: _.or(_.eq(dcloud_appid), _.exists(false)),
     });
     if (num > 0) {
       return { code: -1, msg: `手机号 ${mobile} 已存在，请更换其他手机号绑定` };
@@ -58,7 +58,7 @@ module.exports = {
     // 解绑手机号
     let unbindMobileRes = await uniID.unbindMobile({
       uid,
-      mobile: oldMobile
+      mobile: oldMobile,
     });
     if (unbindMobileRes.code !== 0) {
       return unbindMobileRes;
@@ -66,13 +66,13 @@ module.exports = {
     // 绑定新手机号
     res = await uniID.bindMobile({
       uid,
-      mobile
+      mobile,
     });
     if (res.code !== 0) {
       return res;
     }
-    res.msg = "换绑手机号成功！";
+    res.msg = '换绑手机号成功！';
     // 业务逻辑结束-----------------------------------------------------------
     return res;
-  }
-}
+  },
+};

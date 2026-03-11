@@ -2,8 +2,8 @@ export default {
   beforeCreate() {
     // 将vuex方法挂在到vk实例中 beforeCreate created
     let { vk, $store } = this;
-    if (typeof $store !== "undefined" && typeof vk.getVuexStore === "undefined") {
-      vk.getVuexStore = function() {
+    if (typeof $store !== 'undefined' && typeof vk.getVuexStore === 'undefined') {
+      vk.getVuexStore = function () {
         return $store;
       };
       vk.vuex = (name, value) => {
@@ -22,12 +22,12 @@ export default {
        */
       vk.vuex.get = (name, defaultValue) => {
         let value = vk.pubfn.getData($store.state, name);
-        if (typeof value === "undefined") return (typeof defaultValue !== "undefined") ? defaultValue : "";
+        if (typeof value === 'undefined') return typeof defaultValue !== 'undefined' ? defaultValue : '';
         return JSON.parse(JSON.stringify(value));
       };
       vk.vuex.getters = (name, ...e) => {
         let ters = $store.getters[name];
-        if (typeof ters === "function") {
+        if (typeof ters === 'function') {
           return ters(...e);
         } else {
           return ters;
@@ -60,13 +60,11 @@ export default {
       try {
         if (!vk.checkToken()) {
           vk.callFunctionUtil.deleteUserInfo({
-            log: false
+            log: false,
           });
         }
       } catch (err) {}
     }
   },
-  computed: {
-
-  }
-}
+  computed: {},
+};

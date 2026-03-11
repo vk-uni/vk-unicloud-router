@@ -1,4 +1,4 @@
-import deepClone from "./deepClone";
+import deepClone from './deepClone';
 
 // JS对象深度合并
 function deepMerge(target = {}, source = {}) {

@@ -9,7 +9,7 @@ let lifeData = uni.getStorageSync('lifeData') || {};
 // #ifdef VUE2
 const modulesFiles = require.context('./modules', true, /\.js$/);
 modulesFiles.keys().map((modulePath, index) => {
-  let moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
+  let moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1');
   modulesTemp[moduleName] = modulesFiles(modulePath).default;
 });
 // #endif
@@ -19,7 +19,7 @@ modulesFiles.keys().map((modulePath, index) => {
 // hbx4.14开始需要使用下方的写法
 const modulesFiles = import.meta.glob('./modules/**/*.js', { eager: true });
 for (const modulePath in modulesFiles) {
-  const moduleName = modulePath.replace(/^\.\/modules\/(.*)\.\w+$/, '$1')
+  const moduleName = modulePath.replace(/^\.\/modules\/(.*)\.\w+$/, '$1');
   modulesTemp[moduleName] = modulesFiles[modulePath].default;
 }
 // #endif
@@ -27,9 +27,9 @@ const modules = {};
 for (let moduleName in modulesTemp) {
   const moduleItem = modulesTemp[moduleName];
   if (moduleItem && moduleItem.namespaced) {
-    let moduleNameArr = moduleName.split("/");
+    let moduleNameArr = moduleName.split('/');
     let lastName = moduleNameArr[moduleNameArr.length - 1];
-    if (lastName === "index") {
+    if (lastName === 'index') {
       moduleName = moduleName.replace(/\/index$/, '');
     }
     modules[moduleName] = moduleItem;
@@ -45,7 +45,7 @@ for (let moduleName in modules) {
 uni.setStorageSync('lifeData', lifeData);
 
 // 保存变量到本地存储中
-const saveLifeData = function(key, value) {
+const saveLifeData = function (key, value) {
   // 判断变量名是否在需要存储的数组中
   if (notSaveStateKeys.indexOf(key) === -1) {
     // 获取本地存储的lifeData对象，将变量添加到对象中
@@ -56,13 +56,13 @@ const saveLifeData = function(key, value) {
     // 执行这一步后，所有需要存储的变量，都挂载在本地的lifeData对象中
     uni.setStorageSync('lifeData', tmp);
   }
-}
+};
 
 // #ifdef VUE2
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules,
@@ -72,7 +72,7 @@ const store = new Vuex.Store({
   mutations: {
     updateStore(state, payload) {
       // 判断是否多层级调用，state中为对象存在的情况，诸如user.info.score = 1
-      if (typeof payload.value === "undefined") payload.value = "";
+      if (typeof payload.value === 'undefined') payload.value = '';
       let nameArr = payload.name.split('.');
       let saveKey = '';
       let len = nameArr.length;
@@ -80,7 +80,7 @@ const store = new Vuex.Store({
         let obj = state[nameArr[0]];
         for (let i = 1; i < len - 1; i++) {
           let keyName = nameArr[i];
-          if (typeof obj[keyName] !== "object") Vue.set(obj, keyName, {});
+          if (typeof obj[keyName] !== 'object') Vue.set(obj, keyName, {});
           obj = obj[keyName];
         }
         Vue.set(obj, nameArr[len - 1], JSON.parse(JSON.stringify(payload.value)));
@@ -91,14 +91,14 @@ const store = new Vuex.Store({
         saveKey = payload.name;
       }
       // 保存变量到本地，见顶部函数定义
-      saveLifeData(saveKey, state[saveKey])
-    }
-  }
-})
+      saveLifeData(saveKey, state[saveKey]);
+    },
+  },
+});
 // #endif
 
 // #ifdef VUE3
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 const store = createStore({
   modules,
   // 如果是开发环境,则开启严格模式
@@ -107,7 +107,7 @@ const store = createStore({
   mutations: {
     updateStore(state, payload) {
       // 判断是否多层级调用，state中为对象存在的情况，诸如user.info.score = 1
-      if (typeof payload.value === "undefined") payload.value = "";
+      if (typeof payload.value === 'undefined') payload.value = '';
       let nameArr = payload.name.split('.');
       let saveKey = '';
       let len = nameArr.length;
@@ -115,7 +115,7 @@ const store = createStore({
         let obj = state[nameArr[0]];
         for (let i = 1; i < len - 1; i++) {
           let keyName = nameArr[i];
-          if (typeof obj[keyName] !== "object") obj[keyName] = {};
+          if (typeof obj[keyName] !== 'object') obj[keyName] = {};
           obj = obj[keyName];
         }
         obj[nameArr[len - 1]] = JSON.parse(JSON.stringify(payload.value));
@@ -126,10 +126,10 @@ const store = createStore({
         saveKey = payload.name;
       }
       // 保存变量到本地，见顶部函数定义
-      saveLifeData(saveKey, state[saveKey])
-    }
-  }
-})
+      saveLifeData(saveKey, state[saveKey]);
+    },
+  },
+});
 // #endif
 
-export default store
+export default store;

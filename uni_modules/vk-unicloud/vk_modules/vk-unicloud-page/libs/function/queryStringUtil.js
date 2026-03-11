@@ -4,10 +4,10 @@
  */
 function jsonToQueryString(data = {}, arrayFormat = 'brackets') {
   let newData = JSON.parse(JSON.stringify(data));
-  let _result = []
+  let _result = [];
   if (['indices', 'brackets', 'repeat', 'comma'].indexOf(arrayFormat) == -1) arrayFormat = 'brackets';
   for (let key in newData) {
-    let value = newData[key]
+    let value = newData[key];
     // 去掉为空的参数
     if (['', undefined, null].indexOf(value) >= 0) {
       continue;
@@ -19,39 +19,39 @@ function jsonToQueryString(data = {}, arrayFormat = 'brackets') {
         case 'indices':
           // 结果: ids[0]=1&ids[1]=2&ids[2]=3
           for (let i = 0; i < value.length; i++) {
-            _result.push(key + '[' + i + ']=' + value[i])
+            _result.push(key + '[' + i + ']=' + value[i]);
           }
           break;
         case 'brackets':
           // 结果: ids[]=1&ids[]=2&ids[]=3
-          value.forEach(_value => {
-            _result.push(key + '[]=' + _value)
-          })
+          value.forEach((_value) => {
+            _result.push(key + '[]=' + _value);
+          });
           break;
         case 'repeat':
           // 结果: ids=1&ids=2&ids=3
-          value.forEach(_value => {
-            _result.push(key + '=' + _value)
-          })
+          value.forEach((_value) => {
+            _result.push(key + '=' + _value);
+          });
           break;
         case 'comma':
           // 结果: ids=1,2,3
-          let commaStr = "";
-          value.forEach(_value => {
-            commaStr += (commaStr ? "," : "") + _value;
-          })
-          _result.push(key + '=' + commaStr)
+          let commaStr = '';
+          value.forEach((_value) => {
+            commaStr += (commaStr ? ',' : '') + _value;
+          });
+          _result.push(key + '=' + commaStr);
           break;
         default:
-          value.forEach(_value => {
-            _result.push(key + '[]=' + _value)
-          })
+          value.forEach((_value) => {
+            _result.push(key + '[]=' + _value);
+          });
       }
     } else {
-      _result.push(key + '=' + value)
+      _result.push(key + '=' + value);
     }
   }
-  return _result.length ? _result.join('&') : ''
+  return _result.length ? _result.join('&') : '';
 }
 
 /**
@@ -61,11 +61,10 @@ function jsonToQueryString(data = {}, arrayFormat = 'brackets') {
  * @returns {Object}
  */
 function queryStringToJson(query = '', arrayFormat = 'brackets') {
-
   let json = {};
   let params = query.replace(/^\?/, '').split('&'); // 移除可能的?并按&分割
 
-  params.forEach(param => {
+  params.forEach((param) => {
     let [key, value] = param.split('=');
     value = decodeURIComponent(value); // 解码URL编码的值
 
@@ -73,9 +72,9 @@ function queryStringToJson(query = '', arrayFormat = 'brackets') {
     if (key.match(/\[\]$/) || key.match(/\[\d+\]$/)) {
       // 处理brackets和indices模式
       let arrayKey;
-      if (arrayFormat === "brackets") {
+      if (arrayFormat === 'brackets') {
         arrayKey = key.replace(/\[]$/, '');
-      } else if (arrayFormat === "indices") {
+      } else if (arrayFormat === 'indices') {
         arrayKey = key.replace(/\[\d+\]$/, '');
       }
       if (!json[arrayKey]) json[arrayKey] = [];
@@ -94,7 +93,7 @@ function queryStringToJson(query = '', arrayFormat = 'brackets') {
       if (arrayFormat === 'comma') {
         // 如果值包含逗号，将其分割为数组
         if (value.includes(',')) {
-          json[key] = value.split(',').map(item => decodeURIComponent(item));
+          json[key] = value.split(',').map((item) => decodeURIComponent(item));
         } else {
           json[key] = value;
         }
@@ -121,5 +120,5 @@ function queryStringToJson(query = '', arrayFormat = 'brackets') {
 
 export default {
   jsonToQueryString,
-  queryStringToJson
+  queryStringToJson,
 };

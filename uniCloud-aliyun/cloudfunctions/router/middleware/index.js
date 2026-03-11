@@ -1,19 +1,19 @@
 // 加载模块 - 中间件 请勿改动此文件-----------------------------------
-const modulesPath = __dirname + "/modules";
+const modulesPath = __dirname + '/modules';
 const fs = require('fs');
 const fileList = fs.readdirSync(modulesPath);
 let moduleList = [];
 let modulesNames = [];
 
 fileList.map((file, index) => {
-  if (file.indexOf(".js") > -1) {
+  if (file.indexOf('.js') > -1) {
     modulesNames.push(file.substring(0, file.length - 3));
   }
 });
 
 modulesNames.map((modulesName, index) => {
   try {
-    let moduleItem = require(modulesPath + "/" + modulesName);
+    let moduleItem = require(modulesPath + '/' + modulesName);
     moduleItem.map((item) => {
       item.modulesName = modulesName;
     });

@@ -14,8 +14,8 @@
   export default {
     data() {
       return {
-        userInfo: {}
-      }
+        userInfo: {},
+      };
     },
     onLoad(options) {
       vk = uni.vk;
@@ -28,11 +28,11 @@
         const univerifyManager = uni.getUniverifyManager();
         univerifyManager.preLogin({
           success: (res) => {
-            console.log('preLoginRes: ', res)
+            console.log('preLoginRes: ', res);
           },
           fail: (err) => {
-            console.log("preLoginErr: ", err);
-          }
+            console.log('preLoginErr: ', err);
+          },
         });
         // #endif
       },
@@ -40,36 +40,34 @@
         vk.userCenter.loginByUniverify({
           // 更多配置请查看 https://uniapp.dcloud.io/univerify
           univerifyStyle: {
-            "fullScreen": true, // 是否全屏显示(hbx3.1.5起支持全屏)，true表示全屏模式，false表示非全屏模式，默认值为false。
-            "backgroundColor": "#f5f5f5", // 授权页面背景颜色，默认值：#ffffff
-            "icon": {
-              "path": "/static/logo.png"
+            fullScreen: true, // 是否全屏显示(hbx3.1.5起支持全屏)，true表示全屏模式，false表示非全屏模式，默认值为false。
+            backgroundColor: '#f5f5f5', // 授权页面背景颜色，默认值：#ffffff
+            icon: {
+              path: '/static/logo.png',
             },
-            "authButton": {
-              "normalColor": "#19be6b", // 授权按钮正常状态背景颜色 默认值：#3479f5
-              "highlightColor": "#18b566", // 授权按钮按下状态背景颜色 默认值：#2861c5（仅ios支持）
-              "disabledColor": "#71d5a1", // 授权按钮不可点击时背景颜色 默认值：#73aaf5（仅ios支持）
-              "textColor": "#ffffff", // 授权按钮文字颜色 默认值：#ffffff
-              "title": "本机号码一键登录" // 授权按钮文案 默认值：“本机号码一键登录”
+            authButton: {
+              normalColor: '#19be6b', // 授权按钮正常状态背景颜色 默认值：#3479f5
+              highlightColor: '#18b566', // 授权按钮按下状态背景颜色 默认值：#2861c5（仅ios支持）
+              disabledColor: '#71d5a1', // 授权按钮不可点击时背景颜色 默认值：#73aaf5（仅ios支持）
+              textColor: '#ffffff', // 授权按钮文字颜色 默认值：#ffffff
+              title: '本机号码一键登录', // 授权按钮文案 默认值：“本机号码一键登录”
             },
-            "privacyTerms": {
-              "suffix": "使用本机号码登录", // 条款后的文案 默认值：“并使用本机号码登录”
-              "termsColor": "#555555"
-            }
+            privacyTerms: {
+              suffix: '使用本机号码登录', // 条款后的文案 默认值：“并使用本机号码登录”
+              termsColor: '#555555',
+            },
           },
-          data: {
-
-          },
+          data: {},
           success: (data) => {
             this.userInfo = data.userInfo;
             setTimeout(() => {
               vk.alert(data.msg);
             }, 300);
-          }
+          },
         });
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>

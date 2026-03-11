@@ -1,7 +1,7 @@
 let isOnLaunch = true;
 export default {
   data() {
-    return {}
+    return {};
   },
   onLoad() {
     // 将vk实例挂载到app.globalData上，方便在非Vue页面自身函数中调用vk实例（因为获取不到this）
@@ -35,6 +35,6 @@ export default {
     $getData(data, key, defaultValue) {
       let { vk } = this;
       return vk.pubfn.getData(data, key, defaultValue);
-    }
-  }
-}
+    },
+  },
+};

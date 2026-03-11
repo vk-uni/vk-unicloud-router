@@ -8,7 +8,6 @@ const { BaseDao, Tables } = require('../base.js');
  * @extends BaseDao
  */
 class TestDao extends BaseDao {
-
   constructor(obj) {
     super(obj);
     this.tableName = Tables.test;
@@ -146,7 +145,6 @@ class TestDao extends BaseDao {
   // 	// 或者调用父类方法
   // 	return await this.findByWhereJson(params);
   // }
-
 }
 
 module.exports = TestDao;

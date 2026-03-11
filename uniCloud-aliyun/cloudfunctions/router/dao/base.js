@@ -6,17 +6,16 @@ const Tables = require('./config.js');
  * @class BaseDao
  */
 class BaseDao {
-
   constructor(util) {
     const { vk, db } = util;
     this.dao = vk.baseDao;
     this.db = db;
     this._ = db.command;
     this.$ = db.command.aggregate;
-    this.tableName = ""; // 表名
+    this.tableName = ''; // 表名
     this._getUtil = () => {
       return util;
-    }
+    };
   }
 
   get util() {
@@ -56,7 +55,7 @@ class BaseDao {
    */
   async findById(condition, fieldJson) {
     let res = {};
-    if (typeof condition === "object") {
+    if (typeof condition === 'object') {
       // 支持事务和指定db对象
       res = await this.dao.findById({
         ...condition,
@@ -67,7 +66,7 @@ class BaseDao {
       res = await this.dao.findById({
         dbName: this.tableName,
         id: condition,
-        fieldJson
+        fieldJson,
       });
     }
     return res;
@@ -90,17 +89,17 @@ class BaseDao {
    */
   async findByWhereJson(condition, fieldJson) {
     let res = {};
-    if (condition && typeof condition.whereJson === "object") {
+    if (condition && typeof condition.whereJson === 'object') {
       // 支持指定db对象
       res = await this.dao.findByWhereJson({
         ...condition,
-        dbName: this.tableName
+        dbName: this.tableName,
       });
     } else {
       res = await this.dao.findByWhereJson({
         dbName: this.tableName,
         whereJson: condition,
-        fieldJson
+        fieldJson,
       });
     }
     return res;
@@ -135,7 +134,7 @@ class BaseDao {
       res = await this.dao.add({
         db,
         dbName: this.tableName,
-        dataJson: condition
+        dataJson: condition,
       });
     }
     return res;
@@ -166,7 +165,7 @@ class BaseDao {
       res = await this.dao.adds({
         db,
         dbName: this.tableName,
-        dataJson: condition
+        dataJson: condition,
       });
     }
     return res;
@@ -188,7 +187,7 @@ class BaseDao {
     res = await this.dao.del({
       db,
       dbName: this.tableName,
-      whereJson
+      whereJson,
     });
     return res;
   }
@@ -209,7 +208,7 @@ class BaseDao {
     res = await this.dao.deleteById({
       db,
       dbName: this.tableName,
-      id: _id
+      id: _id,
     });
     return res;
   }
@@ -253,7 +252,7 @@ class BaseDao {
     let res = {};
     res = await this.dao.updateById({
       ...obj,
-      dbName: this.tableName
+      dbName: this.tableName,
     });
     return res;
   }
@@ -276,7 +275,7 @@ class BaseDao {
     let res = {};
     res = await this.dao.updateAndReturn({
       ...obj,
-      dbName: this.tableName
+      dbName: this.tableName,
     });
     return res;
   }
@@ -297,7 +296,7 @@ class BaseDao {
     let res = {};
     res = await this.dao.setById({
       ...obj,
-      dbName: this.tableName
+      dbName: this.tableName,
     });
     return res;
   }
@@ -330,7 +329,7 @@ class BaseDao {
       res = await this.dao.count({
         db,
         dbName: this.tableName,
-        whereJson: condition
+        whereJson: condition,
       });
     }
     return res;
@@ -465,7 +464,7 @@ class BaseDao {
     let res = {};
     res = await this.dao.select({
       ...obj,
-      dbName: this.tableName
+      dbName: this.tableName,
     });
     return res;
   }
@@ -531,7 +530,7 @@ class BaseDao {
     let res = {};
     res = await this.dao.selects({
       ...obj,
-      dbName: this.tableName
+      dbName: this.tableName,
     });
     return res;
   }
@@ -584,14 +583,13 @@ class BaseDao {
     let res = {};
     res = await this.dao.getTableData({
       ...obj,
-      dbName: this.tableName
+      dbName: this.tableName,
     });
     return res;
   }
-
 }
 
 module.exports = {
   BaseDao,
-  Tables
+  Tables,
 };

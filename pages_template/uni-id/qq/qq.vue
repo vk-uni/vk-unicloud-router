@@ -12,9 +12,7 @@
   let vk = uni.vk;
   export default {
     data() {
-      return {
-
-      }
+      return {};
     },
     onLoad(options) {
       vk = uni.vk;
@@ -24,31 +22,31 @@
       loginByQQ(type) {
         vk.userCenter.loginByQQ({
           data: {
-            type
+            type,
           },
           success: (data) => {
-            vk.alert("登录成功");
-          }
+            vk.alert('登录成功');
+          },
         });
       },
       // 绑定QQ
       bindQQ() {
         vk.userCenter.bindQQ({
           success: (data) => {
-            vk.alert("绑定成功");
-          }
+            vk.alert('绑定成功');
+          },
         });
       },
       // 解绑QQ
       unbindQQ() {
         vk.userCenter.unbindQQ({
           success: (data) => {
-            vk.alert("解绑成功");
-          }
+            vk.alert('解绑成功');
+          },
         });
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -58,7 +56,7 @@
 
   .content input {
     height: 46px;
-    border: solid 1px #DDDDDD;
+    border: solid 1px #dddddd;
     border-radius: 5px;
     margin-bottom: 15px;
     padding: 0px 15px;
@@ -70,8 +68,8 @@
 
   .content navigator {
     display: inline-block;
-    color: #007AFF;
-    border-bottom: solid 1px #007AFF;
+    color: #007aff;
+    border-bottom: solid 1px #007aff;
     font-size: 16px;
     line-height: 24px;
     margin-bottom: 15px;

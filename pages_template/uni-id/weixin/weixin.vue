@@ -44,10 +44,10 @@
     data() {
       return {
         hasWeixinAuth: true,
-        encryptedKey: "",
-        image: "",
-        data: {}
-      }
+        encryptedKey: '',
+        image: '',
+        data: {},
+      };
     },
     onLoad(options) {
       vk = uni.vk;
@@ -58,7 +58,7 @@
         // #ifdef MP-WEIXIN
         vk.userCenter.code2SessionWeixin({
           data: {
-            needCache: true
+            needCache: true,
           },
           success: (data) => {
             this.encryptedKey = data.encryptedKey;
@@ -70,12 +70,12 @@
       loginByWeixin(type) {
         vk.userCenter.loginByWeixin({
           data: {
-            type
+            type,
           },
           success: (data) => {
             vk.alert(data.msg);
             this.data = data;
-          }
+          },
         });
       },
       code2SessionWeixin() {
@@ -107,7 +107,7 @@
           // 	}
           // });
         } catch (err) {
-          vk.alert("您的微信版本过低，请先更新微信!");
+          vk.alert('您的微信版本过低，请先更新微信!');
         }
         // #endif
 
@@ -125,15 +125,15 @@
                   data: {
                     nickname: userInfo.nickName,
                     avatar: userInfo.avatarUrl,
-                    gender: userInfo.gender
+                    gender: userInfo.gender,
                   },
                   success: (data) => {
-                    vk.alert("设置成功");
-                  }
+                    vk.alert('设置成功');
+                  },
                 });
-              }
+              },
             });
-          }
+          },
         });
         // #endif
       },
@@ -141,18 +141,18 @@
       bindWeixin() {
         vk.userCenter.bindWeixin({
           success: (data) => {
-            vk.alert("绑定成功");
+            vk.alert('绑定成功');
             this.data = data;
-          }
+          },
         });
       },
       // 解绑微信
       unbindWeixin() {
         vk.userCenter.unbindWeixin({
           success: (data) => {
-            vk.alert("解绑成功");
+            vk.alert('解绑成功');
             this.data = data;
-          }
+          },
         });
       },
       // 获取微信绑定的手机号码（新方式）
@@ -165,11 +165,11 @@
         vk.userCenter.getPhoneNumber({
           data: {
             code,
-            encryptedKey: this.encryptedKey
+            encryptedKey: this.encryptedKey,
           },
           success: (data) => {
-            vk.alert("手机号:" + data.phone);
-          }
+            vk.alert('手机号:' + data.phone);
+          },
         });
       },
       // 获取微信绑定的手机号码（旧方式）
@@ -182,11 +182,11 @@
           data: {
             encryptedData,
             iv,
-            encryptedKey: this.encryptedKey
+            encryptedKey: this.encryptedKey,
           },
           success: (data) => {
-            vk.alert("手机号:" + data.phone);
-          }
+            vk.alert('手机号:' + data.phone);
+          },
         });
       },
       // 使用微信绑定的手机号登录/注册（新方式）
@@ -198,11 +198,11 @@
         vk.userCenter.loginByWeixinPhoneNumber({
           data: {
             code,
-            encryptedKey: this.encryptedKey
+            encryptedKey: this.encryptedKey,
           },
           success(data) {
             vk.alert(data.msg);
-          }
+          },
         });
       },
       // 使用微信绑定的手机号登录/注册（旧方式）
@@ -215,15 +215,15 @@
           data: {
             encryptedData,
             iv,
-            encryptedKey: this.encryptedKey
+            encryptedKey: this.encryptedKey,
           },
           success(data) {
             vk.alert(data.msg);
-          }
+          },
         });
       },
-    }
-  }
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -233,7 +233,7 @@
 
   .content input {
     height: 46px;
-    border: solid 1px #DDDDDD;
+    border: solid 1px #dddddd;
     border-radius: 5px;
     margin-bottom: 15px;
     padding: 0px 15px;
@@ -245,8 +245,8 @@
 
   .content navigator {
     display: inline-block;
-    color: #007AFF;
-    border-bottom: solid 1px #007AFF;
+    color: #007aff;
+    border-bottom: solid 1px #007aff;
     font-size: 16px;
     line-height: 24px;
     margin-bottom: 15px;

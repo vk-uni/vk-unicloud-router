@@ -26,9 +26,7 @@
   let vk = uni.vk;
   export default {
     data() {
-      return {
-
-      };
+      return {};
     },
     onLoad(options) {
       vk = uni.vk;
@@ -36,9 +34,7 @@
     },
     methods: {
       // 页面数据初始化函数
-      init(options) {
-
-      },
+      init(options) {},
       openWeb(url) {
         // #ifdef WEB
         window.open(url);
@@ -48,11 +44,11 @@
           data: url,
           success: () => {
             vk.toast('地址复制成功');
-          }
+          },
         });
         // #endif
-      }
-    }
+      },
+    },
   };
 </script>
 

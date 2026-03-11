@@ -23,5 +23,5 @@ module.exports = {
     res = await uniID.setVerifyCode(data);
     // 业务逻辑结束-----------------------------------------------------------
     return res;
-  }
-}
+  },
+};

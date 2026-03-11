@@ -15,15 +15,11 @@
       // 页面数据变量
       return {
         // init请求返回的数据
-        data: {
-
-        },
+        data: {},
         // 表单请求数据
-        form1: {
-
-        },
+        form1: {},
         scrollTop: 0,
-      }
+      };
     },
     onPageScroll(e) {
       this.scrollTop = e.scrollTop;
@@ -52,26 +48,18 @@
      * 监听 - 点击右上角转发时 文档 https://uniapp.dcloud.io/api/plugins/share?id=onshareappmessage
      * 如果删除onShareAppMessage函数，则微信小程序右上角转发按钮会自动变灰
      */
-    onShareAppMessage(options) {
-
-    },
+    onShareAppMessage(options) {},
     // 函数
     methods: {
       // 页面数据初始化函数
       init(options = {}) {
-        console.log("init: ", options);
-      }
+        console.log('init: ', options);
+      },
     },
     // 监听器
-    watch: {
-
-    },
+    watch: {},
     // 计算属性
-    computed: {
-
-    }
-  }
+    computed: {},
+  };
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

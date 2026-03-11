@@ -5,7 +5,7 @@ const moduleObj = {};
 
 // 自动扫描当前目录下的所有 js 文件（排除 index.js）
 const files = fs.readdirSync(__dirname);
-files.forEach(file => {
+files.forEach((file) => {
   if (file !== 'index.js' && file.endsWith('.js')) {
     const moduleName = path.basename(file, '.js');
     moduleObj[moduleName] = require(`./${file}`);

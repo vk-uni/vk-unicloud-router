@@ -16,10 +16,9 @@
       return {
         form1: {
           username: 'admin',
-          password: '123456'
-        }
-
-      }
+          password: '123456',
+        },
+      };
     },
     onLoad(options) {
       vk = uni.vk;
@@ -31,8 +30,8 @@
         vk.userCenter.register({
           data: form1,
           success: (data) => {
-            vk.alert("注册成功!");
-          }
+            vk.alert('注册成功!');
+          },
         });
       },
       // 用户登录
@@ -41,8 +40,8 @@
         vk.userCenter.login({
           data: form1,
           success: (data) => {
-            vk.alert("登录成功");
-          }
+            vk.alert('登录成功');
+          },
         });
       },
       // 修改密码
@@ -50,13 +49,13 @@
         let form1 = this.form1;
         vk.userCenter.updatePwd({
           data: {
-            oldPassword: "123456",
-            newPassword: "123456",
-            password_confirmation: "123456"
+            oldPassword: '123456',
+            newPassword: '123456',
+            password_confirmation: '123456',
           },
           success: (data) => {
-            vk.alert("修改成功");
-          }
+            vk.alert('修改成功');
+          },
         });
       },
       // 重置密码
@@ -64,12 +63,12 @@
         let form1 = this.form1;
         vk.userCenter.resetPwd({
           success: (data) => {
-            vk.alert("密码已重置为123456");
-          }
+            vk.alert('密码已重置为123456');
+          },
         });
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -79,7 +78,7 @@
 
   .content input {
     height: 46px;
-    border: solid 1px #DDDDDD;
+    border: solid 1px #dddddd;
     border-radius: 5px;
     margin-bottom: 15px;
     padding: 0px 15px;
@@ -92,8 +91,8 @@
 
   .content navigator {
     display: inline-block;
-    color: #007AFF;
-    border-bottom: solid 1px #007AFF;
+    color: #007aff;
+    border-bottom: solid 1px #007aff;
     font-size: 16px;
     line-height: 24px;
     margin-bottom: 15px;

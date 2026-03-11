@@ -6,15 +6,15 @@ const WebSocketPool = {
   // 根据url获取连接
   getConnection(obj = {}) {
     let { url, channel } = obj;
-    return this.connections.find(item => (item.url === url || item.wsUrl === url) && item.channel === channel);
+    return this.connections.find((item) => (item.url === url || item.wsUrl === url) && item.channel === channel);
   },
   getCloudObjectUrl(url) {
     // 从url中获取?后面名为url的参数的值
-    let urlObj = vk.pubfn.queryStringToJson(url.split("?")[1]);
+    let urlObj = vk.pubfn.queryStringToJson(url.split('?')[1]);
     if (urlObj && urlObj.url) {
       return urlObj.url;
     }
-    throw new Error("WebSocket连接地址错误");
+    throw new Error('WebSocket连接地址错误');
   },
   // 预添加连接
   preAddConnection(obj = {}) {
@@ -30,13 +30,13 @@ const WebSocketPool = {
       channel,
       awaitConnect,
       resolve: resolveFun,
-      reject: rejectFun
+      reject: rejectFun,
     });
   },
   // 添加连接
   addConnection(connection = {}) {
     // 移除预添加的连接
-    const index = this.connections.findIndex(item => item.url === connection.wsUrl && item.channel === connection.channel);
+    const index = this.connections.findIndex((item) => item.url === connection.wsUrl && item.channel === connection.channel);
     // 添加连接
     this.connections.push(connection);
     if (index > -1) {
@@ -48,12 +48,11 @@ const WebSocketPool = {
   // 移除连接
   removeConnection(obj = {}) {
     let { url, channel } = obj;
-    const index = this.connections.findIndex(item => item.url === url && item.channel === channel);
+    const index = this.connections.findIndex((item) => item.url === url && item.channel === channel);
     if (index > -1) {
       this.connections.splice(index, 1);
     }
-  }
-
+  },
 };
 /**
  * 连接 WebSocket 的函数
@@ -66,14 +65,14 @@ async function connectWebSocket(obj = {}) {
     data,
     title,
     encrypt,
-    channel = "default", // 渠道\频道，用于连接同一个云对象时，标识不同的 WebSocket 连接
+    channel = 'default', // 渠道\频道，用于连接同一个云对象时，标识不同的 WebSocket 连接
     cache = true, // 如果传入cache为true，则相同的channel会缓存连接，避免重复创建
   } = obj;
   if (!name) {
-    name = vk.getConfig("functionName");
+    name = vk.getConfig('functionName');
   }
   if (!url) {
-    throw new Error("请传入 WebSocket 的 url 参数");
+    throw new Error('请传入 WebSocket 的 url 参数');
   }
   if (cache) {
     // 判断是否已经存在连接
@@ -90,28 +89,28 @@ async function connectWebSocket(obj = {}) {
   let wsUrl = url;
   let webSocket;
   if (title) vk.showLoading(title);
-  if (url.indexOf("wss://") === 0 || url.indexOf("ws://") === 0) {
+  if (url.indexOf('wss://') === 0 || url.indexOf('ws://') === 0) {
     webSocket = uni.connectSocket({
       url,
       header: {
-        "content-type": "application/json"
+        'content-type': 'application/json',
       },
-      complete: () => {}
+      complete: () => {},
     });
     // 从url中获取?后面名为url的参数的值
     url = WebSocketPool.getCloudObjectUrl(url);
   } else {
-    if (typeof uniCloud.connectWebSocket === "undefined") {
+    if (typeof uniCloud.connectWebSocket === 'undefined') {
       if (title) vk.hideLoading();
-      let errMsg = "当前环境不支持WebSocket";
+      let errMsg = '当前环境不支持WebSocket';
       vk.toast(errMsg);
       throw new Error(errMsg + `（仅支付宝云支持）`);
     }
     webSocket = await uniCloud.connectWebSocket({
       name,
       query: {
-        url
-      }
+        url,
+      },
     });
   }
 
@@ -123,7 +122,7 @@ async function connectWebSocket(obj = {}) {
     data,
     title,
     encrypt,
-    channel
+    channel,
   });
 
   if (cache) {
@@ -136,35 +135,27 @@ async function connectWebSocket(obj = {}) {
 
 class WebSocketService {
   constructor(obj = {}) {
-    let {
-      webSocket,
-      wsUrl,
-      url,
-      data,
-      title,
-      encrypt,
-      channel
-    } = obj;
+    let { webSocket, wsUrl, url, data, title, encrypt, channel } = obj;
     this.webSocket = webSocket;
     this.wsUrl = wsUrl;
     this.url = url;
     this.data = data;
     this.encrypt = encrypt;
     this.channel = channel;
-    this.cid = "";
+    this.cid = '';
     this.isLoading = title ? true : false;
     this.status = 0;
     this.awaitConnect = new Promise((resolve, reject) => {
       this.success = resolve;
       this.fail = reject;
     });
-    this.encryptMode = "aes-256-ecb";
+    this.encryptMode = 'aes-256-ecb';
     this.callbackStack = {
       onOpen: [],
       onMessage: [],
       onClose: [],
       onError: [],
-      onVkMessage: []
+      onVkMessage: [],
     };
     this.init();
   }
@@ -175,15 +166,15 @@ class WebSocketService {
       this.status = 1;
       this.send({
         data: {
-          "vkWebSocket": {
-            type: "connect",
-            data: this.data
-          }
-        }
+          vkWebSocket: {
+            type: 'connect',
+            data: this.data,
+          },
+        },
       });
     });
 
-    this.webSocket.onMessage(event => {
+    this.webSocket.onMessage((event) => {
       // 处理data
       let data = event.data;
       try {
@@ -195,7 +186,7 @@ class WebSocketService {
         data = vk.crypto.aes.decrypt({
           mode: this.encryptMode,
           data: data.data,
-          key: vk.crypto.md5(data.timeStamp)
+          key: vk.crypto.md5(data.timeStamp),
         });
       }
       // 判断是否是vk框架发出的系统级错误消息
@@ -204,57 +195,57 @@ class WebSocketService {
           vk.hideLoading();
           this.isLoading = false;
         }
-        if (data.vkWebSocket.type === "error") {
+        if (data.vkWebSocket.type === 'error') {
           let err = data.vkWebSocket.data;
-          if ([1301, 1302, 30201, 30202, 30203, 30204].indexOf(err.code) > -1 && err.msg.indexOf("token") > -1) {
+          if ([1301, 1302, 30201, 30202, 30203, 30204].indexOf(err.code) > -1 && err.msg.indexOf('token') > -1) {
             // uniIdToken失效触发
-            console.warn("【WebSocketInvalidToken】: ", err);
-            this.emitEvent("onVkMessage", {
-              type: "invalidToken",
-              err
+            console.warn('【WebSocketInvalidToken】: ', err);
+            this.emitEvent('onVkMessage', {
+              type: 'invalidToken',
+              err,
             });
             return;
           }
           if (err && err.stack) {
             // 云函数执行异常触发
-            console.error("【WebSocketError】: ", err);
-            console.error("【WebSocketStack】: ", err.stack);
+            console.error('【WebSocketError】: ', err);
+            console.error('【WebSocketStack】: ', err.stack);
           } else {
             // code非0触发
-            console.warn("【WebSocketError】: ", err);
+            console.warn('【WebSocketError】: ', err);
           }
-          this.emitEvent("onVkMessage", {
-            type: "error",
-            err
+          this.emitEvent('onVkMessage', {
+            type: 'error',
+            err,
           });
           return;
-        } else if (data.vkWebSocket.type === "connect") {
+        } else if (data.vkWebSocket.type === 'connect') {
           // 保存cid到本地缓存
           this.status = 2;
           this.success();
           this.cid = data.vkWebSocket.data.cid;
-          this.emitEvent("onOpen", data.vkWebSocket.data);
+          this.emitEvent('onOpen', data.vkWebSocket.data);
           return;
-        } else if (data.vkWebSocket.type === "forceLogout") {
+        } else if (data.vkWebSocket.type === 'forceLogout') {
           // 强制用户退出登录
-          this.emitEvent("onVkMessage", {
-            type: "forceLogout",
-            data: data.vkWebSocket.data
+          this.emitEvent('onVkMessage', {
+            type: 'forceLogout',
+            data: data.vkWebSocket.data,
           });
           return;
         }
       }
       // 正常的消息
-      this.emitEvent("onMessage", data);
+      this.emitEvent('onMessage', data);
     });
 
-    this.webSocket.onClose(event => {
-      this.emitEvent("onClose", event);
+    this.webSocket.onClose((event) => {
+      this.emitEvent('onClose', event);
       this.close();
     });
 
-    this.webSocket.onError(event => {
-      this.emitEvent("onError", event);
+    this.webSocket.onError((event) => {
+      this.emitEvent('onError', event);
     });
   }
 
@@ -262,31 +253,31 @@ class WebSocketService {
   onOpen(callback) {
     if (this.status === 2) {
       callback({
-        cid: this.cid
+        cid: this.cid,
       });
     } else {
-      this.onEvent("onOpen", callback);
+      this.onEvent('onOpen', callback);
     }
   }
 
   // 监听消息事件
   onMessage(callback) {
-    this.onEvent("onMessage", callback);
+    this.onEvent('onMessage', callback);
   }
 
   // 监听连接关闭事件
   onClose(callback) {
-    this.onEvent("onClose", callback);
+    this.onEvent('onClose', callback);
   }
 
   // 监听连接错误事件
   onError(callback) {
-    this.onEvent("onError", callback);
+    this.onEvent('onError', callback);
   }
 
   // 监听vk框架事件
   onVkMessage(callback) {
-    this.onEvent("onVkMessage", callback);
+    this.onEvent('onVkMessage', callback);
   }
 
   // 监听事件
@@ -296,7 +287,7 @@ class WebSocketService {
 
   // 触发事件
   emitEvent(name, data) {
-    this.callbackStack[name].forEach(callback => {
+    this.callbackStack[name].forEach((callback) => {
       callback(data);
     });
   }
@@ -328,9 +319,7 @@ class WebSocketService {
 
   // 发送消息
   async send(obj = {}) {
-    let {
-      data
-    } = obj;
+    let { data } = obj;
 
     if (!this.status) {
       await this.awaitConnect;
@@ -346,7 +335,7 @@ class WebSocketService {
       locale: sysInfo.language,
       os: sysInfo.osName,
       deviceId: sysInfo.deviceId,
-      userAgent: sysInfo.ua
+      userAgent: sysInfo.ua,
     };
 
     let clientData = {
@@ -354,11 +343,11 @@ class WebSocketService {
       channel: this.channel,
       uniIdToken,
       clientInfo,
-      data
+      data,
     };
     let sendData = {
       data: clientData,
-      deviceId: sysInfo.deviceId
+      deviceId: sysInfo.deviceId,
     };
     let encrypt = this.encrypt;
     if (encrypt) {
@@ -367,7 +356,7 @@ class WebSocketService {
       clientData = vk.crypto.aes.encrypt({
         mode: this.encryptMode,
         data: clientData,
-        key: vk.crypto.md5(sysInfo.deviceId)
+        key: vk.crypto.md5(sysInfo.deviceId),
       });
       sendData.encrypt = true;
     }
@@ -376,9 +365,8 @@ class WebSocketService {
     sendData.data = clientData;
     return this.webSocket.send({
       ...obj,
-      data: JSON.stringify(sendData)
+      data: JSON.stringify(sendData),
     });
   }
-
 }
 export default connectWebSocket;

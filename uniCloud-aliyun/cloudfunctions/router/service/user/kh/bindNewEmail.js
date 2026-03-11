@@ -24,34 +24,34 @@ module.exports = {
       email, // 新邮箱码
       code, // 新邮箱收到的验证码
     } = data;
-    if (!code || !oldEmailCode) return { code: -1, msg: "验证码不能为空！" };
-    if (!email || !oldEmail) return { code: -1, msg: "邮箱不能为空！" };
+    if (!code || !oldEmailCode) return { code: -1, msg: '验证码不能为空！' };
+    if (!email || !oldEmail) return { code: -1, msg: '邮箱不能为空！' };
     // 先检查下旧邮箱码和验证码是否正确
     let verifyCodeRes;
     verifyCodeRes = await uniID.verifyCode({
       email: oldEmail,
       code: oldEmailCode,
-      type: 'unbind'
+      type: 'unbind',
     });
     if (verifyCodeRes.code !== 0) {
-      verifyCodeRes.msg = `旧邮箱${verifyCodeRes.msg}`
+      verifyCodeRes.msg = `旧邮箱${verifyCodeRes.msg}`;
       return verifyCodeRes;
     }
     // 先检查下新邮箱码和验证码是否正确
     verifyCodeRes = await uniID.verifyCode({
       email,
       code: code,
-      type: 'bind'
+      type: 'bind',
     });
     if (verifyCodeRes.code !== 0) {
-      verifyCodeRes.msg = `新邮箱${verifyCodeRes.msg}`
+      verifyCodeRes.msg = `新邮箱${verifyCodeRes.msg}`;
       return verifyCodeRes;
     }
     // 解绑前先判断下新邮箱是否已存在
     let dcloud_appid = originalParam.context.appId;
     let num = await vk.daoCenter.userDao.count({
       email,
-      dcloud_appid: _.or(_.eq(dcloud_appid), _.exists(false))
+      dcloud_appid: _.or(_.eq(dcloud_appid), _.exists(false)),
     });
     if (num > 0) {
       return { code: -1, msg: `邮箱 ${email} 已存在，请更换其他邮箱绑定` };
@@ -59,23 +59,23 @@ module.exports = {
     // 解绑邮箱
     let unbindEmailRes = await uniID.unbindEmail({
       uid,
-      email: oldEmail
+      email: oldEmail,
     });
     if (unbindEmailRes.code !== 0) {
       return unbindEmailRes;
     }
-    await uniID.setVerifyCode({ code, email, type: "bind" });
+    await uniID.setVerifyCode({ code, email, type: 'bind' });
     // 绑定新邮箱
     res = await uniID.bindEmail({
       uid,
       email,
-      code
+      code,
     });
     if (res.code !== 0) {
       return res;
     }
-    res.msg = "换绑邮箱成功！";
+    res.msg = '换绑邮箱成功！';
     // 业务逻辑结束-----------------------------------------------------------
     return res;
-  }
-}
+  },
+};

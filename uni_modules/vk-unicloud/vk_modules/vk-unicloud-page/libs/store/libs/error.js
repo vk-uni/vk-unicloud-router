@@ -1,4 +1,4 @@
-const install = Vue => {
+const install = (Vue) => {
   const debug = process.env.NODE_ENV !== 'production';
   let vk = Vue.prototype ? Vue.prototype.vk : Vue.config.globalProperties.vk;
   if (debug && vk) {
@@ -11,14 +11,14 @@ const install = Vue => {
         info,
         route,
         time: date.getTime(),
-        timeStr: date.toLocaleTimeString()
+        timeStr: date.toLocaleTimeString(),
       };
       if (vk.vuex) vk.vuex.dispatch('$error/add', log);
       return oldErrorHandler(err, vm, info);
-    }
+    };
   }
-}
+};
 
 export default {
-  install
-}
+  install,
+};

@@ -5,7 +5,7 @@ const { BaseDao, Tables } = require('../base.js');
 // 用户表统一不返回 token 和 password
 const userFieldJson = {
   token: false,
-  password: false
+  password: false,
 };
 
 /**
@@ -14,7 +14,6 @@ const userFieldJson = {
  * @extends BaseDao
  */
 class UserDao extends BaseDao {
-
   constructor(obj) {
     super(obj);
     this.tableName = Tables.user;
@@ -148,19 +147,19 @@ class UserDao extends BaseDao {
   async findById(condition, fieldJson = userFieldJson) {
     let res = {};
     // 数据库操作开始-----------------------------------------------------------
-    if (typeof condition === "object") {
+    if (typeof condition === 'object') {
       // 支持事务和指定db对象
       res = await this.dao.findById({
         ...condition,
         dbName: this.tableName,
-        fieldJson: condition.fieldJson || fieldJson
+        fieldJson: condition.fieldJson || fieldJson,
       });
     } else {
       // 不支持事务
       res = await this.dao.findById({
         dbName: this.tableName,
         id: condition,
-        fieldJson
+        fieldJson,
       });
     }
     // 数据库操作结束-----------------------------------------------------------
@@ -180,18 +179,18 @@ class UserDao extends BaseDao {
   async findByWhereJson(condition, fieldJson = userFieldJson) {
     let res = {};
     // 数据库操作开始-----------------------------------------------------------
-    if (condition && typeof condition.whereJson === "object") {
+    if (condition && typeof condition.whereJson === 'object') {
       // 支持指定db对象
       res = await this.dao.findByWhereJson({
         ...condition,
         dbName: this.tableName,
-        fieldJson: condition.fieldJson || fieldJson
+        fieldJson: condition.fieldJson || fieldJson,
       });
     } else {
       res = await this.dao.findByWhereJson({
         dbName: this.tableName,
         whereJson: condition,
-        fieldJson
+        fieldJson,
       });
     }
     // 数据库操作结束-----------------------------------------------------------
@@ -208,7 +207,7 @@ class UserDao extends BaseDao {
     let res = {};
     // 数据库操作开始-----------------------------------------------------------
     res = await this.findByWhereJson({
-      my_invite_code: invite_code
+      my_invite_code: invite_code,
     });
     // 数据库操作结束-----------------------------------------------------------
     return res;
@@ -246,7 +245,7 @@ class UserDao extends BaseDao {
       res = await this.dao.add({
         dbName: this.tableName,
         cancelAddTime: true, // 因为user表使用了register_date作为创建时间
-        dataJson: obj
+        dataJson: obj,
       });
     }
     // 数据库操作结束-----------------------------------------------------------
@@ -266,7 +265,7 @@ class UserDao extends BaseDao {
     res = await this.dao.adds({
       dbName: this.tableName,
       cancelAddTime: true, // 因为user表使用了register_date作为创建时间
-      dataJson: dataArr
+      dataJson: dataArr,
     });
     // 数据库操作结束-----------------------------------------------------------
     return res;
@@ -299,17 +298,7 @@ class UserDao extends BaseDao {
     let res;
     // 数据库操作开始-----------------------------------------------------------
     let whereJson = {};
-    let list = [
-      "_id",
-      "username",
-      "mobile",
-      "email",
-      "wx_openid.app-plus",
-      "wx_openid.mp-weixin",
-      "wx_unionid",
-      "ali_openid",
-      "my_invite_code"
-    ];
+    let list = ['_id', 'username', 'mobile', 'email', 'wx_openid.app-plus', 'wx_openid.mp-weixin', 'wx_unionid', 'ali_openid', 'my_invite_code'];
     let orArr = [];
     for (let i = 0; i < list.length; i++) {
       let keyName = list[i];
@@ -341,7 +330,7 @@ class UserDao extends BaseDao {
       getMain: true,
       fieldJson: userFieldJson,
       whereJson: {
-        _id: this._.in(userIdArr)
+        _id: this._.in(userIdArr),
       },
     });
     // 数据库操作结束-----------------------------------------------------------
@@ -366,13 +355,7 @@ class UserDao extends BaseDao {
   async registerUserByMobile(data) {
     const { uniID } = this.util;
     let res = {};
-    let {
-      mobile,
-      password,
-      inviteCode,
-      myInviteCode,
-      needPermission
-    } = data;
+    let { mobile, password, inviteCode, myInviteCode, needPermission } = data;
     // 数据库操作开始-----------------------------------------------------------
     let code = this.vk.pubfn.random(6);
     // 设置验证码
@@ -380,7 +363,7 @@ class UserDao extends BaseDao {
       mobile,
       code,
       expiresIn: 60,
-      type: "login"
+      type: 'login',
     });
     // 若手机号不存在，则注册并登录。存在，则直接登录。
     res = await uniID.loginBySms({
@@ -389,7 +372,7 @@ class UserDao extends BaseDao {
       password,
       inviteCode,
       myInviteCode,
-      needPermission
+      needPermission,
     });
     if (res.uid && this.vk.pubfn.isNull(res.userInfo)) {
       res.userInfo = await this.findById(res.uid);
@@ -414,10 +397,7 @@ class UserDao extends BaseDao {
   async resetPwd(data) {
     const { uniID } = this.util;
     let res = {};
-    let {
-      uid,
-      password
-    } = data;
+    let { uid, password } = data;
     // 数据库操作开始-----------------------------------------------------------
     res = await uniID.resetPwd({ uid, password });
     // 数据库操作结束-----------------------------------------------------------
@@ -434,24 +414,27 @@ class UserDao extends BaseDao {
    */
   async getValidInviteCode(data = {}) {
     // 数据库操作开始-----------------------------------------------------------
-    let {
-      my_invite_code
-    } = data;
+    let { my_invite_code } = data;
     if (my_invite_code) {
       // 如果用户传了自定义的分享码，也需要判断下是否存在
       let num = await this.count({
-        my_invite_code
+        my_invite_code,
       });
       if (num === 0) {
         return my_invite_code;
       }
     }
-    let inviteCode = await this.vk.pubfn.randomAsync(7, "23456789ABCDEFGHJKLMNPQRSTUVWXYZ", async (val) => {
-      let num = await this.count({
-        my_invite_code: val
-      });
-      return num === 0 ? true : false;
-    }, 10); // 最大重试10次
+    let inviteCode = await this.vk.pubfn.randomAsync(
+      7,
+      '23456789ABCDEFGHJKLMNPQRSTUVWXYZ',
+      async (val) => {
+        let num = await this.count({
+          my_invite_code: val,
+        });
+        return num === 0 ? true : false;
+      },
+      10
+    ); // 最大重试10次
     // 数据库操作结束-----------------------------------------------------------
     return inviteCode;
   }
@@ -472,9 +455,9 @@ class UserDao extends BaseDao {
    */
   async closeAccount(data = {}) {
     let { uid, delay = 0, reason } = data;
-    if (this.vk.pubfn.isNull(uid)) return { code: -1, msg: "参数uid不能为空" };
+    if (this.vk.pubfn.isNull(uid)) return { code: -1, msg: '参数uid不能为空' };
     const userInfo = await this.findById(uid, { token: false });
-    if (this.vk.pubfn.isNull(userInfo)) return { code: -1, msg: "要注销的用户不存在" };
+    if (this.vk.pubfn.isNull(userInfo)) return { code: -1, msg: '要注销的用户不存在' };
     const nowTime = Date.now();
     const closeStatus = 4;
     if (userInfo.status === closeStatus && userInfo.close_account) {
@@ -485,17 +468,16 @@ class UserDao extends BaseDao {
         } else {
           return {
             code: 0,
-            msg: `该账号已提交过注销申请，账号将在${this.vk.pubfn.timeFormat(userInfo.close_account.close_time, "yyyy-MM-dd hh:mm")}后自动注销`,
-            close_account: userInfo
-              .close_account
+            msg: `该账号已提交过注销申请，账号将在${this.vk.pubfn.timeFormat(userInfo.close_account.close_time, 'yyyy-MM-dd hh:mm')}后自动注销`,
+            close_account: userInfo.close_account,
           };
         }
       } else {
-        return { code: -1, msg: "该账号已注销" };
+        return { code: -1, msg: '该账号已注销' };
       }
     }
     let dataJson;
-    const close_time = nowTime + (delay * 1000); // 实际注销时间
+    const close_time = nowTime + delay * 1000; // 实际注销时间
     if (delay > 0) {
       // 延时注销
       dataJson = {
@@ -505,24 +487,24 @@ class UserDao extends BaseDao {
           apply_time: nowTime, // 注销申请时间
           close_time, // 实际注销时间
           status: userInfo.status, // 注销前的状态
-          reason // 注销原因
-        })
-      }
+          reason, // 注销原因
+        }),
+      };
     } else {
       // 立即注销
       // 指定需要删除的字段
       const baseRemoveKeys = ['username', 'password', 'my_invite_code', 'token', 'mobile', 'mobile_confirmed', 'email', 'email_confirmed'];
       // 再删除 _openid 或 _unionid 结尾的字段
       const reg = new RegExp('(_openid|_unionid)$');
-      const removeKeys = [
-        ...baseRemoveKeys,
-        ...Object.keys(userInfo).filter(key => reg.test(key))
-      ];
-      const { removeFields, backup } = removeKeys.reduce((acc, key) => {
-        acc.removeFields[key] = this._.remove();
-        acc.backup[key] = userInfo[key];
-        return acc;
-      }, { removeFields: {}, backup: {} });
+      const removeKeys = [...baseRemoveKeys, ...Object.keys(userInfo).filter((key) => reg.test(key))];
+      const { removeFields, backup } = removeKeys.reduce(
+        (acc, key) => {
+          acc.removeFields[key] = this._.remove();
+          acc.backup[key] = userInfo[key];
+          return acc;
+        },
+        { removeFields: {}, backup: {} }
+      );
       dataJson = {
         status: closeStatus, // 用户状态：0 正常 1 禁用 2 审核中 3 审核拒绝 4 已注销
         close_account: this._.set({
@@ -531,21 +513,21 @@ class UserDao extends BaseDao {
           close_time: nowTime, // 实际注销时间
           status: userInfo.status, // 注销前的状态
           reason, // 注销原因
-          backup
+          backup,
         }),
-        ...removeFields
-      }
+        ...removeFields,
+      };
     }
     // 修改数据库
     const num = await this.updateById({
       id: uid,
-      dataJson
+      dataJson,
     });
-    if (num === 0) return { code: -1, msg: "注销账号失败" };
+    if (num === 0) return { code: -1, msg: '注销账号失败' };
     return {
       code: 0,
-      msg: delay > 0 ? `注销申请成功，账号将在${this.vk.pubfn.timeFormat(close_time, "yyyy-MM-dd hh:mm")}后自动注销` : "注销成功",
-      destroyed: delay > 0 ? false : true
+      msg: delay > 0 ? `注销申请成功，账号将在${this.vk.pubfn.timeFormat(close_time, 'yyyy-MM-dd hh:mm')}后自动注销` : '注销成功',
+      destroyed: delay > 0 ? false : true,
     };
   }
 
@@ -561,26 +543,25 @@ class UserDao extends BaseDao {
    */
   async openAccount(data = {}) {
     const { uid, delay = 0 } = data;
-    if (this.vk.pubfn.isNull(uid)) return { code: -1, msg: "参数uid不能为空" };
+    if (this.vk.pubfn.isNull(uid)) return { code: -1, msg: '参数uid不能为空' };
     const userInfo = await this.findById(uid, { token: false });
-    if (this.vk.pubfn.isNull(userInfo)) return { code: -1, msg: "用户不存在" };
+    if (this.vk.pubfn.isNull(userInfo)) return { code: -1, msg: '用户不存在' };
     const closeStatus = 4;
-    if (userInfo.status !== closeStatus) return { code: -1, msg: "该账号未注销，无需恢复" };
+    if (userInfo.status !== closeStatus) return { code: -1, msg: '该账号未注销，无需恢复' };
     if (userInfo.close_account) {
-      if (userInfo.close_account.confirmed) return { code: -1, msg: "该账号已注销，无法恢复" };
+      if (userInfo.close_account.confirmed) return { code: -1, msg: '该账号已注销，无法恢复' };
     }
     // 修改数据库
     const num = await this.updateById({
       id: uid,
       dataJson: {
         status: userInfo.close_account.status, // 恢复注销前的状态
-        close_account: this._.remove()
-      }
+        close_account: this._.remove(),
+      },
     });
-    if (num === 0) return { code: -1, msg: "恢复账号失败" };
-    return { code: 0, msg: "恢复账号成功" };
+    if (num === 0) return { code: -1, msg: '恢复账号失败' };
+    return { code: 0, msg: '恢复账号成功' };
   }
-
 }
 
 module.exports = UserDao;

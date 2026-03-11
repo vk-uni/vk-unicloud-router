@@ -22,10 +22,7 @@
     "match_mode": 1,
     "curd_category": 1,
     "level": 3,
-    "url": [
-      "*/add*",
-      "*.add*"
-    ]
+    "url": ["*/add*", "*.add*"]
   },
   {
     "_id": "sys-permission-delete",
@@ -40,10 +37,7 @@
     "match_mode": 1,
     "curd_category": 2,
     "level": 4,
-    "url": [
-      "*/delete*",
-      "*.delete*"
-    ]
+    "url": ["*/delete*", "*.delete*"]
   },
   {
     "_id": "sys-permission-update",
@@ -58,10 +52,7 @@
     "match_mode": 1,
     "curd_category": 3,
     "level": 3,
-    "url": [
-      "*/update*",
-      "*.update*"
-    ]
+    "url": ["*/update*", "*.update*"]
   },
   {
     "_id": "sys-permission-read",
@@ -76,14 +67,7 @@
     "match_mode": 1,
     "curd_category": 4,
     "level": 3,
-    "url": [
-      "*/get*",
-      "*/find*",
-      "*/select*",
-      "*.get*",
-      "*.find*",
-      "*.select*"
-    ]
+    "url": ["*/get*", "*/find*", "*/select*", "*.get*", "*.find*", "*.select*"]
   },
   {
     "_id": "sys-manage",
@@ -100,9 +84,7 @@
     "permission_id": "sys-manage-user",
     "permission_name": "系统 - 用户管理",
     "comment": "",
-    "url": [
-      "admin/system/user/sys/*"
-    ],
+    "url": ["admin/system/user/sys/*"],
     "sort": 1,
     "enable": true,
     "match_mode": 1,
@@ -114,9 +96,7 @@
     "permission_id": "sys-manage-role",
     "permission_name": "系统 - 角色管理",
     "comment": "",
-    "url": [
-      "admin/system/role/sys/*"
-    ],
+    "url": ["admin/system/role/sys/*"],
     "sort": 2,
     "enable": true,
     "match_mode": 1,
@@ -128,9 +108,7 @@
     "permission_id": "sys-manage-permission",
     "permission_name": "系统 - 权限管理",
     "comment": "",
-    "url": [
-      "admin/system/permission/sys/*"
-    ],
+    "url": ["admin/system/permission/sys/*"],
     "sort": 3,
     "enable": true,
     "match_mode": 1,
@@ -142,9 +120,7 @@
     "permission_id": "sys-manage-menu",
     "permission_name": "系统 - 菜单管理",
     "comment": "",
-    "url": [
-      "admin/system/menu/sys/*"
-    ],
+    "url": ["admin/system/menu/sys/*"],
     "sort": 4,
     "enable": true,
     "match_mode": 1,
@@ -156,9 +132,7 @@
     "permission_id": "sys-manage-app",
     "permission_name": "系统 - 应用管理",
     "comment": "",
-    "url": [
-      "admin/system/app/sys/*"
-    ],
+    "url": ["admin/system/app/sys/*"],
     "sort": 5,
     "enable": true,
     "match_mode": 1,
@@ -170,9 +144,7 @@
     "permission_id": "sys-manage-app-upgrade-center",
     "permission_name": "系统 - App升级中心",
     "comment": "",
-    "url": [
-      "admin/system/app-upgrade-center/sys/*"
-    ],
+    "url": ["admin/system/app-upgrade-center/sys/*"],
     "sort": 6,
     "enable": true,
     "match_mode": 1,
@@ -193,9 +165,7 @@
     "permission_id": "system-uni-uni-id-files",
     "permission_name": "系统 - 素材管理",
     "comment": "",
-    "url": [
-      "admin/system_uni/uni-id-files/*"
-    ],
+    "url": ["admin/system_uni/uni-id-files/*"],
     "sort": 1,
     "enable": true,
     "match_mode": 1,
@@ -207,9 +177,7 @@
     "permission_id": "system-uni-vk-global-data",
     "permission_name": "系统 - 缓存管理",
     "comment": "",
-    "url": [
-      "admin/system_uni/global-data/sys/*"
-    ],
+    "url": ["admin/system_uni/global-data/sys/*"],
     "sort": 2,
     "enable": true,
     "match_mode": 1,
@@ -221,9 +189,7 @@
     "permission_id": "system-uni-vk-components-dynamic",
     "permission_name": "系统 - 动态组件数据管理",
     "comment": "",
-    "url": [
-      "admin/system_uni/components-dynamic/sys/*"
-    ],
+    "url": ["admin/system_uni/components-dynamic/sys/*"],
     "sort": 3,
     "enable": true,
     "match_mode": 1,
@@ -235,9 +201,7 @@
     "permission_id": "system-uni-vk-pay-orders",
     "permission_name": "系统 - 支付订单管理",
     "comment": "",
-    "url": [
-      "admin/system_uni/pay-orders/sys/*"
-    ],
+    "url": ["admin/system_uni/pay-orders/sys/*"],
     "sort": 4,
     "enable": true,
     "match_mode": 1,
@@ -249,9 +213,7 @@
     "permission_id": "system-uni-uni-id-log",
     "permission_name": "系统 - 用户登录日志管理",
     "comment": "",
-    "url": [
-      "admin/system_uni/uni-id-log/sys/*"
-    ],
+    "url": ["admin/system_uni/uni-id-log/sys/*"],
     "sort": 5,
     "enable": true,
     "match_mode": 1,
@@ -263,9 +225,7 @@
     "permission_id": "system-uni-opendb-admin-log",
     "permission_name": "系统 - 操作日志管理",
     "comment": "",
-    "url": [
-      "admin/system_uni/admin-log/sys/*"
-    ],
+    "url": ["admin/system_uni/admin-log/sys/*"],
     "sort": 6,
     "enable": true,
     "match_mode": 1,
@@ -277,9 +237,7 @@
     "permission_id": "system-uni-vk-error-log",
     "permission_name": "系统 - 错误日志管理",
     "comment": "",
-    "url": [
-      "admin/system_uni/error-log/sys/*"
-    ],
+    "url": ["admin/system_uni/error-log/sys/*"],
     "sort": 7,
     "enable": true,
     "match_mode": 1,
@@ -291,9 +249,7 @@
     "permission_id": "system-uni-vk-ws-connection",
     "permission_name": "系统 - ws连接管理",
     "comment": "",
-    "url": [
-      "admin/system_uni/ws-connection/sys/*"
-    ],
+    "url": ["admin/system_uni/ws-connection/sys/*"],
     "sort": 8,
     "enable": true,
     "match_mode": 1,
@@ -305,9 +261,7 @@
     "permission_id": "system-uni-vk-lucky-draw",
     "permission_name": "抽奖活动管理",
     "comment": "",
-    "url": [
-      "plugs/lucky-draw/admin/sys.luckyDraw.*"
-    ],
+    "url": ["plugs/lucky-draw/admin/sys.luckyDraw.*"],
     "sort": 9,
     "enable": true,
     "match_mode": 1,

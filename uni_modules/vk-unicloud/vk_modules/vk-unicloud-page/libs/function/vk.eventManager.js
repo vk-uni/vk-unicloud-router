@@ -30,7 +30,7 @@
  *      let data = await vk.awaitEventReady("onLaunch");
  *      console.log('onLaunch-awaitEventReady: ', data);
  */
-const eventManager = (function() {
+const eventManager = (function () {
   // 创建一个对象，用于存储不同 eventName 对应的状态和回调函数
   const eventStatus = {};
 
@@ -70,7 +70,7 @@ const eventManager = (function() {
         // 如果指定的 eventName 存在且已执行过
         if (eventStatus[eventName] && eventStatus[eventName].executed) {
           // 执行回调函数
-          if (typeof callback === "function") {
+          if (typeof callback === 'function') {
             callback(eventStatus[eventName].data);
           }
           resolve(eventStatus[eventName].data);
@@ -84,7 +84,7 @@ const eventManager = (function() {
             };
           }
           // 将回调函数加入相应 eventName 的待执行函数队列数组
-          if (typeof callback === "function") {
+          if (typeof callback === 'function') {
             eventStatus[eventName].callbacks.push(callback);
           }
           // 将resolve函数加入相应 eventName 的待执行函数队列数组
@@ -109,7 +109,7 @@ const eventManager = (function() {
       } else {
         return null;
       }
-    }
+    },
   };
 })();
 

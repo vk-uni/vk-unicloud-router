@@ -1,8 +1,6 @@
 <template>
   <view class="content">
-    <view class="tips">
-      注意：仅支持在微信小程序、微信公众号、App、浏览器（若是PC浏览器需先登录PC版微信）中使用，其他平台暂不支持。
-    </view>
+    <view class="tips"> 注意：仅支持在微信小程序、微信公众号、App、浏览器（若是PC浏览器需先登录PC版微信）中使用，其他平台暂不支持。 </view>
     <button type="default" @click="navigateToLuckyDraw(`pages/activity/detail/detail?_id=${activity_id}`)">前往抽奖</button>
     <button type="default" @click="navigateToLuckyDraw(`pages/activity/user-list/user-list?_id=${activity_id}`)">查看指定活动的参与人员列表</button>
     <button type="default" @click="navigateToLuckyDraw(`pages/activity/win-user-list/win-user-list?_id=${activity_id}`)">查看指定活动的中奖人员列表</button>
@@ -23,7 +21,7 @@
   export default {
     data() {
       return {
-        activity_id: "685b95a6e9f982fde4835c85", // 活动ID，具体活动ID请在vk-admin后台-系统设置-抽奖活动中查看，如有疑问，可联系QQ：370725567
+        activity_id: '685b95a6e9f982fde4835c85', // 活动ID，具体活动ID请在vk-admin后台-系统设置-抽奖活动中查看，如有疑问，可联系QQ：370725567
       };
     },
     onLoad(options) {
@@ -32,14 +30,14 @@
     methods: {
       navigateToLuckyDraw(path) {
         // #ifndef MP-WEIXIN || APP || WEB
-        vk.alert("当前环境不支持抽奖功能，请在微信小程序、微信公众号、App或PC浏览器中使用");
+        vk.alert('当前环境不支持抽奖功能，请在微信小程序、微信公众号、App或PC浏览器中使用');
         return;
         // #endif
         vk.navigateToLuckyDraw({
-          path
+          path,
         });
-      }
-    }
+      },
+    },
   };
 </script>
 

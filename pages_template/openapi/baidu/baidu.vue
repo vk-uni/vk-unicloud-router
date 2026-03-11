@@ -14,7 +14,7 @@
   export default {
     data() {
       return {
-        data: {}
+        data: {},
       };
     },
     onLoad(options) {
@@ -24,9 +24,7 @@
     },
     methods: {
       // 初始化
-      init(options) {
-
-      },
+      init(options) {},
       // 营业执照识别
       business_license() {
         uni.chooseImage({
@@ -35,18 +33,18 @@
           success: (res) => {
             let file = res.tempFiles[0];
             vk.openapi.baidu.open.ocr.business_license({
-              title: "识别中...",
+              title: '识别中...',
               data: {
-                file
+                file,
               },
               success: (data) => {
                 this.data = data;
               },
               fail: (err) => {
                 this.data = err;
-              }
+              },
             });
-          }
+          },
         });
       },
       // 身份证识别
@@ -57,18 +55,18 @@
           success: (res) => {
             let file = res.tempFiles[0];
             vk.openapi.baidu.open.ocr.idcard({
-              title: "识别中...",
+              title: '识别中...',
               data: {
-                file
+                file,
               },
               success: (data) => {
                 this.data = data;
               },
             });
-          }
+          },
         });
       },
-    }
+    },
   };
 </script>
 

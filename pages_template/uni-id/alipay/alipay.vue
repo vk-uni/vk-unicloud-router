@@ -23,38 +23,38 @@
       loginByAlipay(type) {
         vk.userCenter.loginByAlipay({
           data: {
-            type
+            type,
           },
-          success: data => {
-            vk.alert("登录成功");
-          }
+          success: (data) => {
+            vk.alert('登录成功');
+          },
         });
       },
       // 获取支付宝openid
       code2SessionAlipay() {
         vk.userCenter.code2SessionAlipay({
-          success: data => {
+          success: (data) => {
             vk.alert(JSON.stringify(data));
-          }
+          },
         });
       },
       // 绑定支付宝
       bindAlipay() {
         vk.userCenter.bindAlipay({
-          success: data => {
-            vk.alert("绑定成功");
-          }
+          success: (data) => {
+            vk.alert('绑定成功');
+          },
         });
       },
       // 解绑支付宝
       unbindAlipay() {
         vk.userCenter.unbindAlipay({
-          success: data => {
-            vk.alert("解绑成功");
-          }
+          success: (data) => {
+            vk.alert('解绑成功');
+          },
         });
-      }
-    }
+      },
+    },
   };
 </script>
 

@@ -1,8 +1,8 @@
 function $hasRole(...args) {
   const userRoles = this.$store.state.$user.userInfo.role || [];
-  return args.some(arg => {
+  return args.some((arg) => {
     if (Array.isArray(arg)) {
-      return arg.every(role => userRoles.includes(role));
+      return arg.every((role) => userRoles.includes(role));
     } else {
       return userRoles.includes(arg);
     }
@@ -10,17 +10,17 @@ function $hasRole(...args) {
 }
 
 function $hasPermission(...args) {
-  const userPermission = this.$store.state.$user.permission || []
-  return args.some(arg => {
+  const userPermission = this.$store.state.$user.permission || [];
+  return args.some((arg) => {
     if (Array.isArray(arg)) {
-      return arg.every(permission => userPermission.includes(permission));
+      return arg.every((permission) => userPermission.includes(permission));
     } else {
       return userPermission.includes(arg);
     }
   });
 }
 
-export default function(Vue) {
+export default function (Vue) {
   // #ifdef VUE2
   Vue.prototype.$hasRole = $hasRole;
   Vue.prototype.$hasPermission = $hasPermission;

@@ -11,7 +11,7 @@ vk.pubfn.debounce(() => {
 
 }, 1000);
  */
-function debounce(fn, time = 500, isImmediate = true, timeoutName = "default") {
+function debounce(fn, time = 500, isImmediate = true, timeoutName = 'default') {
   // 清除定时器
   if (!timeoutArr[timeoutName]) timeoutArr[timeoutName] = null;
   if (timeoutArr[timeoutName] !== null) clearTimeout(timeoutArr[timeoutName]);
@@ -31,4 +31,4 @@ function debounce(fn, time = 500, isImmediate = true, timeoutName = "default") {
     }, time);
   }
 }
-export default debounce
+export default debounce;

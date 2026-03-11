@@ -51,9 +51,7 @@
   let vk = uni.vk;
   export default {
     data() {
-      return {
-
-      }
+      return {};
     },
     onLoad(options) {
       vk = uni.vk;
@@ -71,12 +69,12 @@
           data: url,
           success: () => {
             vk.toast('地址复制成功');
-          }
+          },
         });
         // #endif
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>

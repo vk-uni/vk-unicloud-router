@@ -1,6 +1,6 @@
-import App from './App'
-import store from './store'
-import config from '@/app.config.js'
+import App from './App';
+import store from './store';
+import config from '@/app.config.js';
 
 // 引入 uView UI
 // import uView from './uni_modules/vk-uview-ui';
@@ -8,7 +8,7 @@ import config from '@/app.config.js'
 import vk from './uni_modules/vk-unicloud';
 
 // #ifdef VUE2
-import Vue from 'vue'
+import Vue from 'vue';
 
 // 引入 uView UI
 // Vue.use(uView);
@@ -16,26 +16,26 @@ import Vue from 'vue'
 // 引入 vk框架前端
 Vue.use(vk, config);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-App.mpType = 'app'
+App.mpType = 'app';
 
 const app = new Vue({
   store,
-  ...App
+  ...App,
 });
 
 app.$mount();
 // #endif
 
 // #ifdef VUE3
-import { createSSRApp } from 'vue'
+import { createSSRApp } from 'vue';
 
 export function createApp() {
-  const app = createSSRApp(App)
+  const app = createSSRApp(App);
 
   // 引入vuex
-  app.use(store)
+  app.use(store);
 
   // 引入 uView UI
   // app.use(uView)
@@ -43,6 +43,6 @@ export function createApp() {
   // 引入 vk框架前端
   app.use(vk, config);
 
-  return { app }
+  return { app };
 }
 // #endif

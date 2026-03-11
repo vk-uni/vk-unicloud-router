@@ -8,7 +8,10 @@ uni-modal,
   z-index: 999999 !important;
 }
 /* 禁用双击缩放，直接触发点击，解决Web端点击响应延迟的问题 */
-a, button, view, text {
+a,
+button,
+view,
+text {
   touch-action: manipulation;
 }
 /* #endif */

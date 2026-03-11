@@ -6,7 +6,7 @@
     </u-form>
     <u-button @click="submit">提交</u-button>
 
-    <button type="default" @click="show = true" style="margin-top: 100rpx;">弹窗</button>
+    <button type="default" @click="show = true" style="margin-top: 100rpx">弹窗</button>
   </view>
 </template>
 
@@ -17,29 +17,32 @@
       return {
         show: false,
         form: {
-          name: "",
-          intro: ""
+          name: '',
+          intro: '',
         },
         rules: {
-          name: [{
-            required: true,
-            message: "请输入姓名",
-            // 可以单个或者同时写两个触发验证方式
-            trigger: ["change", "blur"]
-          }],
-          intro: [{
+          name: [
+            {
               required: true,
-              message: "请输入简介",
+              message: '请输入姓名',
               // 可以单个或者同时写两个触发验证方式
-              trigger: ["change", "blur"]
+              trigger: ['change', 'blur'],
+            },
+          ],
+          intro: [
+            {
+              required: true,
+              message: '请输入简介',
+              // 可以单个或者同时写两个触发验证方式
+              trigger: ['change', 'blur'],
             },
             {
               min: 5,
-              message: "简介不能少于5个字",
-              trigger: "change"
-            }
-          ]
-        }
+              message: '简介不能少于5个字',
+              trigger: 'change',
+            },
+          ],
+        },
       };
     },
     onPageScroll(e) {
@@ -59,15 +62,15 @@
         this.current = index;
       },
       submit() {
-        this.$refs.uForm.validate(valid => {
+        this.$refs.uForm.validate((valid) => {
           if (valid) {
-            console.log("验证通过");
+            console.log('验证通过');
           } else {
-            console.log("验证失败");
+            console.log('验证失败');
           }
         });
-      }
-    }
+      },
+    },
   };
 </script>
 

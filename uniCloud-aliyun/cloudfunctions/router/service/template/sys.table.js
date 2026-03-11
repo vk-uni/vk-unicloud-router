@@ -16,7 +16,7 @@ const cloudObject = {
    * 请求前处理，主要用于调用方法之前进行预处理，一般用于拦截器、统一的身份验证、参数校验、定义全局对象等。
    * 文档地址：https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#before-预处理
    */
-  _before: async function() {
+  _before: async function () {
     vk = this.vk; // 将vk定义为全局对象
     // let { customUtil, uniID, config, pubFun } = this.getUtil(); // 获取工具包
   },
@@ -24,7 +24,7 @@ const cloudObject = {
    * 请求后处理，主要用于处理本次调用方法的返回结果或者抛出的错误
    * 文档地址：https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#after-后处理
    */
-  _after: async function(options) {
+  _after: async function (options) {
     let { err, res } = options;
     if (err) {
       return; // 如果方法抛出错误，直接return;不处理
@@ -35,12 +35,12 @@ const cloudObject = {
    * 获取列表
    * @url template/sys.table.getList 前端调用的url参数地址
    */
-  getList: async function(data) {
+  getList: async function (data) {
     let res = { code: 0, msg: '' };
     let { uid } = this.getClientInfo(); // 获取客户端信息
     // 业务逻辑开始-----------------------------------------------------------
     res = await vk.daoCenter.testDao.getTableData({
-      data
+      data,
     });
     // 业务逻辑结束-----------------------------------------------------------
     return res;
@@ -49,15 +49,13 @@ const cloudObject = {
    * 获取详情
    * @url template/sys.table.getInfo 前端调用的url参数地址
    */
-  getInfo: async function(data) {
+  getInfo: async function (data) {
     let res = { code: 0, msg: '' };
     let { uid } = this.getClientInfo(); // 获取客户端信息
     // 业务逻辑开始-----------------------------------------------------------
-    let {
-      _id
-    } = data;
+    let { _id } = data;
     if (vk.pubfn.isNull(_id)) {
-      return { code: -1, msg: "缺少_id参数" };
+      return { code: -1, msg: '缺少_id参数' };
     }
     res.info = await vk.daoCenter.testDao.findById(_id);
     // 业务逻辑结束-----------------------------------------------------------
@@ -67,7 +65,7 @@ const cloudObject = {
    * 添加或修改
    * @url template/sys.table.save 前端调用的url参数地址
    */
-  save: async function(data) {
+  save: async function (data) {
     let res = { code: 0, msg: '' };
     let { uid } = this.getClientInfo(); // 获取客户端信息
     // 业务逻辑开始-----------------------------------------------------------
@@ -100,7 +98,7 @@ const cloudObject = {
       checkbox_value,
       string_array,
       password,
-      color
+      color,
     } = data;
 
     const isAdd = vk.pubfn.isNull(_id);
@@ -133,29 +131,29 @@ const cloudObject = {
       checkbox_value,
       string_array,
       password,
-      color
+      color,
     };
 
     if (isAdd) {
       // 添加
       vk.pubfn.objectAssign(dataJson, {
         // 仅添加时才需要的参数
-        status: status || 0
+        status: status || 0,
       });
       res.id = await vk.daoCenter.testDao.add(dataJson);
-      res.msg = "添加成功";
+      res.msg = '添加成功';
     } else {
       // 修改
       let info = await vk.daoCenter.testDao.findById(_id);
       if (vk.pubfn.isNull(info)) {
-        return { code: -1, msg: "修改失败，记录不存在" };
+        return { code: -1, msg: '修改失败，记录不存在' };
       }
       await vk.daoCenter.testDao.updateById({
         id: _id,
-        dataJson
+        dataJson,
       });
       res.id = _id;
-      res.msg = "修改成功";
+      res.msg = '修改成功';
     }
     // 业务逻辑结束-----------------------------------------------------------
     return res;
@@ -164,27 +162,23 @@ const cloudObject = {
    * 修改基础信息
    * @url template/sys.table.updateBase 前端调用的url参数地址
    */
-  updateBase: async function(data) {
+  updateBase: async function (data) {
     let res = { code: 0, msg: '' };
     let { uid } = this.getClientInfo(); // 获取客户端信息
     // 业务逻辑开始-----------------------------------------------------------
-    let {
-      _id,
-      enable,
-      sort
-    } = data;
+    let { _id, enable, sort } = data;
     // 只解构需要通过 updateBase 修改的字段
     if (vk.pubfn.isNull(_id)) {
-      return { code: -1, msg: "缺少_id参数" };
+      return { code: -1, msg: '缺少_id参数' };
     }
     res.num = await vk.daoCenter.testDao.updateById({
       id: _id,
       dataJson: {
         enable,
-        sort
-      }
+        sort,
+      },
     });
-    res.msg = "修改成功";
+    res.msg = '修改成功';
     // 业务逻辑结束-----------------------------------------------------------
     return res;
   },
@@ -192,13 +186,13 @@ const cloudObject = {
    * 删除
    * @url template/sys.table.delete 前端调用的url参数地址
    */
-  delete: async function(data) {
+  delete: async function (data) {
     let res = { code: 0, msg: '' };
     let { uid } = this.getClientInfo(); // 获取客户端信息
     // 业务逻辑开始-----------------------------------------------------------
     let { _id } = data;
     if (vk.pubfn.isNull(_id)) {
-      return { code: -1, msg: "缺少_id参数" };
+      return { code: -1, msg: '缺少_id参数' };
     }
     let whereJson = {};
     if (Array.isArray(_id)) {
@@ -217,11 +211,10 @@ const cloudObject = {
    * 模板函数
    * @url template/sys.table.test 前端调用的url参数地址
    */
-  test: async function(data) {
+  test: async function (data) {
     let res = { code: 0, msg: '' };
     let { uid } = this.getClientInfo(); // 获取客户端信息
     // 业务逻辑开始-----------------------------------------------------------
-
 
     // 业务逻辑结束-----------------------------------------------------------
     return res;

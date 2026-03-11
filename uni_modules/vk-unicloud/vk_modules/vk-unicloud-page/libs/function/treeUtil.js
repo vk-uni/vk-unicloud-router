@@ -1,4 +1,4 @@
-import deepClone from './deepClone'
+import deepClone from './deepClone';
 const util = {};
 /**
  * 将树形结构转成数组结构
@@ -6,12 +6,12 @@ const util = {};
  * @param {Object} treeProps 树结构配置 { id : "menu_id", children : "children" }
  * vk.pubfn.treeToArray(treeData);
  */
-util.treeToArray = function(treeData, treeProps) {
+util.treeToArray = function (treeData, treeProps) {
   let newTreeData = deepClone(treeData);
   return util.treeToArrayFn(newTreeData, treeProps);
 };
-util.treeToArrayFn = function(treeData, treeProps = {}, arr = [], current_parent_id) {
-  let { id = "_id", parent_id = "parent_id", children = "children", deleteChildren = true } = treeProps;
+util.treeToArrayFn = function (treeData, treeProps = {}, arr = [], current_parent_id) {
+  let { id = '_id', parent_id = 'parent_id', children = 'children', deleteChildren = true } = treeProps;
   for (let i in treeData) {
     let item = treeData[i];
     if (current_parent_id) item[parent_id] = current_parent_id;
@@ -33,15 +33,9 @@ let tree = vk.pubfn.arrayToTree(arrayData,{
 });
  */
 
-util.arrayToTree = function(originalArrayData, treeProps) {
+util.arrayToTree = function (originalArrayData, treeProps) {
   let arrayData = deepClone(originalArrayData);
-  let {
-    id = "_id",
-      parent_id = "parent_id",
-      children = "children",
-      deleteParentId = false,
-      need_field
-  } = treeProps;
+  let { id = '_id', parent_id = 'parent_id', children = 'children', deleteParentId = false, need_field } = treeProps;
   let result = [];
   let temp = {};
   for (let i = 0; i < arrayData.length; i++) {

@@ -2,25 +2,26 @@
   <view class="content">
     <input type="text" placeholder="邮箱" v-model="form1.email" />
     <input type="text" placeholder="验证码" v-model="form1.code" />
-    <view class="tips" style="color: red;">上次发送的验证码：{{form1.code}}</view>
+    <view class="tips" style="color: red">上次发送的验证码：{{ form1.code }}</view>
     <view class="title">邮箱注册&登录相关</view>
-    <view class="tips" style="text-align: left;">如需要使用此功能，先确保已安装npm包
+    <view class="tips" style="text-align: left"
+      >如需要使用此功能，先确保已安装npm包
       <view>"nodemailer": "^6.4.11"</view>
     </view>
-    <view style="display: flex;">
+    <view style="display: flex">
       <button type="default" @click="sendEmailCode('login')">真实-发送验证码</button>
       <button type="default" @click="setVerifyCode('login')">模拟-发送验证码</button>
     </view>
     <button type="default" @click="loginByEmail">邮箱验证码登录（不存在则注册）</button>
     <view class="title">绑定邮箱相关</view>
-    <view style="display: flex;">
+    <view style="display: flex">
       <button type="default" @click="sendEmailCode('bind')">真实-发送验证码</button>
       <button type="default" @click="setVerifyCode('bind')">模拟-发送验证码</button>
     </view>
     <button type="default" @click="bindEmail">绑定邮箱（需先登录）</button>
     <view class="tips">绑定邮箱时如果不传验证码或者传空则直接绑定并设置email_confirmed为1，不会去校验验证码</view>
     <view class="title">解绑邮箱相关</view>
-    <view style="display: flex;">
+    <view style="display: flex">
       <button type="default" @click="sendEmailCode('unbind')">真实-发送验证码</button>
       <button type="default" @click="setVerifyCode('unbind')">模拟-发送验证码</button>
     </view>
@@ -36,9 +37,9 @@
       return {
         form1: {
           email: '',
-          code: ''
-        }
-      }
+          code: '',
+        },
+      };
     },
     onLoad(options) {
       vk = uni.vk;
@@ -46,36 +47,36 @@
     methods: {
       // 为了演示把这个逻辑放在客户端
       getCode() {
-        const randomStr = '00000' + Math.floor(Math.random() * 1000000)
-        this.form1.code = randomStr.substring(randomStr.length - 6)
+        const randomStr = '00000' + Math.floor(Math.random() * 1000000);
+        this.form1.code = randomStr.substring(randomStr.length - 6);
       },
       sendEmailCode(type) {
         if (!/.+@.+/.test(this.form1.email)) {
           uni.showModal({
             content: '请输入正确的邮箱',
-            showCancel: false
-          })
-          return
+            showCancel: false,
+          });
+          return;
         }
         let form1 = this.form1;
         vk.userCenter.sendEmailCode({
           data: {
-            serviceType: "qq",
+            serviceType: 'qq',
             email: form1.email,
             type: type,
           },
           success: (data) => {
-            vk.alert("邮件发送成功");
-          }
+            vk.alert('邮件发送成功');
+          },
         });
       },
       setVerifyCode(type) {
         if (!/.+@.+/.test(this.form1.email)) {
           uni.showModal({
             content: '请输入正确的邮箱',
-            showCancel: false
-          })
-          return
+            showCancel: false,
+          });
+          return;
         }
         this.getCode();
         let form1 = this.form1;
@@ -86,8 +87,8 @@
             type: type,
           },
           success: (data) => {
-            vk.toast("发送成功");
-          }
+            vk.toast('发送成功');
+          },
         });
       },
       // 邮箱登录
@@ -96,8 +97,8 @@
         vk.userCenter.loginByEmail({
           data: form1,
           success: (data) => {
-            vk.alert("登录成功");
-          }
+            vk.alert('登录成功');
+          },
         });
       },
       // 绑定邮箱
@@ -106,8 +107,8 @@
         vk.userCenter.bindEmail({
           data: form1,
           success: (data) => {
-            vk.alert("绑定成功");
-          }
+            vk.alert('绑定成功');
+          },
         });
       },
       // 解绑邮箱
@@ -116,12 +117,12 @@
         vk.userCenter.unbindEmail({
           data: form1,
           success: (data) => {
-            vk.alert("解绑成功");
-          }
+            vk.alert('解绑成功');
+          },
         });
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -131,7 +132,7 @@
 
   .content input {
     height: 46px;
-    border: solid 1px #DDDDDD;
+    border: solid 1px #dddddd;
     border-radius: 5px;
     margin-bottom: 15px;
     padding: 0px 15px;
@@ -148,8 +149,8 @@
 
   .content navigator {
     display: inline-block;
-    color: #007AFF;
-    border-bottom: solid 1px #007AFF;
+    color: #007aff;
+    border-bottom: solid 1px #007aff;
     font-size: 16px;
     line-height: 24px;
     margin-bottom: 15px;

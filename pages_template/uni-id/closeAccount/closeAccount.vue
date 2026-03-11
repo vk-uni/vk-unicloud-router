@@ -37,8 +37,14 @@
       </button>
 
       <!-- 确认注销按钮 -->
-      <button v-if="isInCoolingPeriod" type="warn" class="action-btn" :loading="loading.confirm" :disabled="loading.open || loading.confirm || duration > 0"
-        @click="confirmCloseAccount">
+      <button
+        v-if="isInCoolingPeriod"
+        type="warn"
+        class="action-btn"
+        :loading="loading.confirm"
+        :disabled="loading.open || loading.confirm || duration > 0"
+        @click="confirmCloseAccount"
+      >
         <text class="btn-text">确认注销</text>
       </button>
     </view>
@@ -111,7 +117,7 @@
           status: false,
           close: false,
           open: false,
-          confirm: false
+          confirm: false,
         },
         isLogin: null,
         confirmed: false, // 是否已确认过注销账号
@@ -122,7 +128,7 @@
         countdownTimer: null, // 倒计时定时器
         totalCoolingTime: 7 * 24 * 60 * 60 * 1000, // 总冷静期时间（7天）
         showSuccessPage: false, // 是否显示注销成功页面
-      }
+      };
     },
     onLoad(options) {
       vk = uni.vk;
@@ -146,8 +152,8 @@
       // 获取注销冷静期状态
       getCoolingStatus(obj = {}) {
         vk.userCenter.getCoolingStatus({
-          loading: { that: this, name: "loading.status" },
-          success: data => {
+          loading: { that: this, name: 'loading.status' },
+          success: (data) => {
             if (!this.isLoad) this.isLoad = true;
             if (data.close_account) {
               this.confirmed = data.close_account.confirmed;
@@ -158,9 +164,9 @@
               this.startCountdown();
             }
           },
-          complete: res => {
-            if (typeof obj.complete === "function") obj.complete(res);
-          }
+          complete: (res) => {
+            if (typeof obj.complete === 'function') obj.complete(res);
+          },
         });
       },
 
@@ -191,7 +197,7 @@
             if (res.confirm) {
               this.closeAccount();
             }
-          }
+          },
         });
       },
 
@@ -200,17 +206,17 @@
         this.loading.close = true;
         vk.userCenter.closeAccount({
           loading: false,
-          success: data => {
+          success: (data) => {
             this.getCoolingStatus({
-              complete: res => {
+              complete: (res) => {
                 this.loading.close = false;
-              }
+              },
             });
           },
-          fail: err => {
-            vk.alert(err.msg || "注销失败");
+          fail: (err) => {
+            vk.alert(err.msg || '注销失败');
             this.loading.close = false;
-          }
+          },
         });
       },
 
@@ -225,30 +231,30 @@
             if (res.confirm) {
               this.openAccount();
             }
-          }
+          },
         });
       },
 
       // 执行恢复账号
       openAccount() {
-        this.loading.open = true
+        this.loading.open = true;
         vk.userCenter.openAccount({
           loading: false,
-          success: data => {
+          success: (data) => {
             if (this.countdownTimer) {
               clearInterval(this.countdownTimer);
               this.countdownTimer = null;
             }
             this.getCoolingStatus({
-              complete: res => {
+              complete: (res) => {
                 this.loading.open = false;
-              }
+              },
             });
           },
-          fail: err => {
-            vk.alert(err.msg || "恢复失败");
+          fail: (err) => {
+            vk.alert(err.msg || '恢复失败');
             this.loading.open = false;
-          }
+          },
         });
       },
 
@@ -276,25 +282,25 @@
         this.loading.confirm = true;
         vk.userCenter.closeAccount({
           loading: false,
-          success: data => {
+          success: (data) => {
             this.closeModal();
             vk.toast(data.msg);
             // 显示注销成功页面
             this.showSuccessPage = true;
           },
-          fail: err => {
-            vk.alert(err.msg || "注销失败");
+          fail: (err) => {
+            vk.alert(err.msg || '注销失败');
             this.loading.confirm = false;
-          }
+          },
         });
       },
 
       // 返回登录页面
       goToLogin() {
         vk.navigateToLogin({
-          mode: "reLaunch"
+          mode: 'reLaunch',
         });
-      }
+      },
     },
     computed: {
       // 是否在冷静期
@@ -358,14 +364,14 @@
       progressWidth() {
         if (this.duration <= 0) return 100;
         return ((this.totalCoolingTime - this.duration) / this.totalCoolingTime) * 100;
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped>
   page {
-    background: #F8F8F8;
+    background: #f8f8f8;
   }
 
   .account-close-page {
@@ -401,15 +407,15 @@
     animation: pulse 2s infinite;
 
     &.status-normal {
-      background: linear-gradient(135deg, #4CAF50, #45a049);
+      background: linear-gradient(135deg, #4caf50, #45a049);
     }
 
     &.status-cooling {
-      background: linear-gradient(135deg, #FF9800, #F57C00);
+      background: linear-gradient(135deg, #ff9800, #f57c00);
     }
 
     &.status-closed {
-      background: linear-gradient(135deg, #F44336, #D32F2F);
+      background: linear-gradient(135deg, #f44336, #d32f2f);
     }
 
     .icon {
@@ -441,12 +447,12 @@
     background: rgba(255, 152, 0, 0.1);
     border-radius: 7.5px;
     padding: 15px;
-    border-left: 3px solid #FF9800;
+    border-left: 3px solid #ff9800;
   }
 
   .countdown-label {
     font-size: 12px;
-    color: #FF9800;
+    color: #ff9800;
     margin-bottom: 7.5px;
     font-weight: 500;
   }
@@ -459,7 +465,7 @@
   .countdown-time {
     font-size: 18px;
     font-weight: bold;
-    color: #FF9800;
+    color: #ff9800;
     text-shadow: 0 1px 2px rgba(255, 152, 0, 0.3);
   }
 
@@ -472,7 +478,7 @@
 
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #FF9800, #FFC107);
+    background: linear-gradient(90deg, #ff9800, #ffc107);
     border-radius: 2px;
     transition: width 0.3s ease;
     animation: progressGlow 2s ease-in-out infinite alternate;
@@ -505,15 +511,15 @@
   }
 
   .success-btn {
-    background: #4CAF50;
+    background: #4caf50;
     color: white;
 
     &:not(:disabled):hover {
-      background: #388E3C;
+      background: #388e3c;
     }
 
     &:disabled {
-      background: #BDBDBD;
+      background: #bdbdbd;
       color: #757575;
     }
   }
@@ -592,7 +598,7 @@
     justify-content: space-between;
     padding: 15px 20px;
     border-bottom: 0.5px solid #eee;
-    background: linear-gradient(135deg, #F44336, #D32F2F);
+    background: linear-gradient(135deg, #f44336, #d32f2f);
     color: white;
   }
 
@@ -618,7 +624,7 @@
 
   .modal-warning {
     font-size: 14px;
-    color: #F44336;
+    color: #f44336;
     text-align: center;
     margin-bottom: 15px;
     line-height: 1.5;
@@ -643,7 +649,7 @@
       transition: border-color 0.3s ease;
 
       &:focus {
-        border-color: #F44336;
+        border-color: #f44336;
         outline: none;
       }
     }
@@ -724,7 +730,6 @@
   }
 
   @keyframes pulse {
-
     0%,
     100% {
       transform: scale(1);
@@ -774,7 +779,7 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #4CAF50, #45a049);
+      background: linear-gradient(135deg, #4caf50, #45a049);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -815,7 +820,7 @@
     .success-btn {
       width: 100%;
       height: 50px;
-      background: linear-gradient(135deg, #4CAF50, #45a049);
+      background: linear-gradient(135deg, #4caf50, #45a049);
       color: white;
       border: none;
       border-radius: 10px;
@@ -857,8 +862,6 @@
     }
   }
 
-
-
   /* 成功页面动画 */
   @keyframes successSlideIn {
     from {
@@ -873,7 +876,6 @@
   }
 
   @keyframes successPulse {
-
     0%,
     100% {
       transform: scale(1);

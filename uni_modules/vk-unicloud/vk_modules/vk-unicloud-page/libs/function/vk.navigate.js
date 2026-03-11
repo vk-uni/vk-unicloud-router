@@ -5,7 +5,7 @@
 let config;
 try {
   config = require('@/app.config.js');
-  if (typeof config.default === "object") {
+  if (typeof config.default === 'object') {
     config = config.default;
   }
 } catch (e) {
@@ -14,94 +14,87 @@ try {
 // #endif
 
 // #ifdef VUE3
-import config from '@/app.config.js'
+import config from '@/app.config.js';
 // #endif
-
 
 const util = {};
 let lastNavigate = {
-  url: "",
-  time: 0
+  url: '',
+  time: 0,
 };
 /**
  * 保留当前页面，跳转到应用内的某个页面，使用vk.navigateBack可以返回到原页面。
  * vk.navigateTo(url);
  */
-util.navigateTo = function(obj) {
+util.navigateTo = function (obj) {
   let vk = uni.vk;
-  if (typeof obj == "string") {
+  if (typeof obj == 'string') {
     let url = obj;
     obj = {
-      url: url
+      url: url,
     };
-  } else if (typeof obj == "undefined") {
+  } else if (typeof obj == 'undefined') {
     obj = {};
   }
   if (!obj.url) {
-    vk.toast("url不能为空!");
+    vk.toast('url不能为空!');
     return false;
   }
   let time = Date.now();
-  if (lastNavigate.url === obj.url && (time - lastNavigate.time) < 200) {
+  if (lastNavigate.url === obj.url && time - lastNavigate.time < 200) {
     return false;
   }
   lastNavigate = { url: obj.url, time };
   util.checkNeedLogin({
     url: obj.url,
-    success: function(res) {
+    success: function (res) {
       if (res.needLogin) {
         obj.url = vk.pubfn.getPageFullPath(obj.url);
         vk.navigate.setOriginalPage(obj);
         obj.url = config.login.url;
         // login拦截器开始-----------------------------------------------------------
         let { interceptor = {} } = config;
-        if (typeof interceptor.login === "function") {
+        if (typeof interceptor.login === 'function') {
           let key = interceptor.login({
             vk,
             params: obj,
             res: {
               ...res,
               code: 30204,
-              msg: "本地token校验未通过"
-            }
+              msg: '本地token校验未通过',
+            },
           });
-          if (typeof key === "undefined" || key !== true) return false;
+          if (typeof key === 'undefined' || key !== true) return false;
         }
         // login拦截器结束-----------------------------------------------------------
       } else {
         vk.navigate.setOriginalPage(null);
       }
       util._navigateTo(obj);
-    }
+    },
   });
 };
-util._navigateTo = function(obj) {
+util._navigateTo = function (obj) {
   let { interceptor = {} } = config;
-  if (typeof interceptor.navigateTo === "function") {
+  if (typeof interceptor.navigateTo === 'function') {
     let vk = uni.vk;
     obj.pagePath = vk.pubfn.getPageFullPath(obj.url);
     let key = interceptor.navigateTo({
       ...obj,
-      vk
+      vk,
     });
-    if (typeof key == "boolean" && key === false) return false;
+    if (typeof key == 'boolean' && key === false) return false;
   }
-  let {
-    url,
-    animationType = "pop-in",
-    animationDuration = 300,
-    events,
-    mode = "navigateTo"
-  } = obj;
+  let { url, animationType = 'pop-in', animationDuration = 300, events, mode = 'navigateTo' } = obj;
   // 此处写法仅为支持vue3，vue3不支持uni[apiName]的形式调用
   let navigateFn;
-  if (mode === "navigateTo") {
+  if (mode === 'navigateTo') {
     navigateFn = uni.navigateTo;
-  } else if (mode === "redirectTo") {
+  } else if (mode === 'redirectTo') {
     navigateFn = uni.redirectTo;
-  } else if (mode === "reLaunch") {
+  } else if (mode === 'reLaunch') {
     navigateFn = uni.reLaunch;
-  } else if (mode === "switchTab") {
+  } else if (mode === 'switchTab') {
     navigateFn = uni.switchTab;
   } else {
     navigateFn = uni.navigateTo;
@@ -112,35 +105,35 @@ util._navigateTo = function(obj) {
     animationType: animationType,
     animationDuration: animationDuration,
     events: events, // 参考 https://uniapp.dcloud.io/api/router?id=navigateto
-    success: function(res) {
-      if (typeof obj.success == "function") obj.success(res);
+    success: function (res) {
+      if (typeof obj.success == 'function') obj.success(res);
     },
-    fail: function(err) {
-      if (err.errMsg.indexOf("not found") > -1) {
+    fail: function (err) {
+      if (err.errMsg.indexOf('not found') > -1) {
         let vk = uni.vk;
         let errUrl = vk.pubfn.getPageFullPath(url);
-        vk.toast(`页面 ${errUrl} 不存在`, "none");
+        vk.toast(`页面 ${errUrl} 不存在`, 'none');
         console.error(err);
         return false;
       }
       uni.switchTab({
         url: url,
         success: obj.success,
-        fail: function() {
+        fail: function () {
           uni.redirectTo({
             url: url,
             success: obj.success,
-            fail: function(err) {
+            fail: function (err) {
               console.error(err);
-              if (typeof obj.fail == "function") obj.fail(err);
-            }
+              if (typeof obj.fail == 'function') obj.fail(err);
+            },
           });
-        }
+        },
       });
     },
-    complete: function(res) {
-      if (typeof obj.complete == "function") obj.complete(res);
-    }
+    complete: function (res) {
+      if (typeof obj.complete == 'function') obj.complete(res);
+    },
   });
 };
 
@@ -148,9 +141,9 @@ util._navigateTo = function(obj) {
  * 关闭当前页面，跳转到应用内的某个页面。
  * vk.redirectTo(url);
  */
-util.redirectTo = function(obj) {
+util.redirectTo = function (obj) {
   obj = util.paramsInit(obj);
-  obj.mode = "redirectTo";
+  obj.mode = 'redirectTo';
   util.navigateTo(obj);
 };
 
@@ -158,9 +151,9 @@ util.redirectTo = function(obj) {
  * 关闭所有页面，打开到应用内的某个页面。
  * vk.reLaunch(url);
  */
-util.reLaunch = function(obj) {
+util.reLaunch = function (obj) {
   obj = util.paramsInit(obj);
-  obj.mode = "reLaunch";
+  obj.mode = 'reLaunch';
   util.navigateTo(obj);
 };
 
@@ -168,51 +161,47 @@ util.reLaunch = function(obj) {
  * 跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面。
  * vk.switchTab(url);
  */
-util.switchTab = function(obj) {
+util.switchTab = function (obj) {
   obj = util.paramsInit(obj);
-  obj.mode = "switchTab";
+  obj.mode = 'switchTab';
   util.navigateTo(obj);
 };
 /**
  * 关闭当前页面，返回上一页面或多级页面。可通过 getCurrentPages() 获取当前的页面栈，决定需要返回几层。
  * vk.navigateBack();
  */
-util.navigateBack = function(obj) {
+util.navigateBack = function (obj) {
   let vk = uni.vk;
-  if (typeof obj == "number") {
+  if (typeof obj == 'number') {
     let delta = obj;
     obj = {
-      delta: delta
+      delta: delta,
     };
-  } else if (typeof obj == "undefined") {
+  } else if (typeof obj == 'undefined') {
     obj = {};
   }
-  let {
-    delta = 1,
-      animationType = "pop-out",
-      animationDuration = 300
-  } = obj;
+  let { delta = 1, animationType = 'pop-out', animationDuration = 300 } = obj;
   uni.navigateBack({
     delta: delta,
     animationType: animationType,
     animationDuration: animationDuration,
-    success: function() {
-      if (typeof obj.success == "function") obj.success();
+    success: function () {
+      if (typeof obj.success == 'function') obj.success();
     },
-    fail: function(res) {
+    fail: function (res) {
       console.error(res);
-      if (typeof obj.fail == "function") obj.fail();
+      if (typeof obj.fail == 'function') obj.fail();
     },
-    complete: function() {
-      if (typeof obj.complete == "function") obj.complete();
-    }
+    complete: function () {
+      if (typeof obj.complete == 'function') obj.complete();
+    },
   });
 };
 /**
  * 跳转到登录前的页面
  * vk.navigate.originalTo();
  */
-util.originalTo = function() {
+util.originalTo = function () {
   let vk = uni.vk;
   let originalPage = vk.navigate.getOriginalPage();
   vk.navigate.setOriginalPage(null);
@@ -223,8 +212,8 @@ util.originalTo = function() {
  * 获取登录前的页面
  * vk.navigate.getOriginalPage();
  */
-util.getOriginalPage = function() {
-  if (typeof uni.vk.getVuex === "function") {
+util.getOriginalPage = function () {
+  if (typeof uni.vk.getVuex === 'function') {
     // 有安装vuex则使用vuex
     return uni.vk.getVuex('$app.originalPage');
   } else {
@@ -237,10 +226,10 @@ util.getOriginalPage = function() {
  * 设置登录前的页面
  * vk.navigate.setOriginalPage(originalPage);
  */
-util.setOriginalPage = function(originalPage) {
-  if (originalPage === null) originalPage = "";
+util.setOriginalPage = function (originalPage) {
+  if (originalPage === null) originalPage = '';
   uni.vk.navigate.originalPage = originalPage; // 兼容老版本
-  if (typeof uni.vk.getVuex === "function") {
+  if (typeof uni.vk.getVuex === 'function') {
     // 有安装vuex则使用vuex
     return uni.vk.setVuex('$app.originalPage', originalPage);
   } else {
@@ -249,16 +238,13 @@ util.setOriginalPage = function(originalPage) {
   }
 };
 
-
 /**
  * 跳转到首页
  * vk.navigateToHome();
  */
-util.navigateToHome = function(obj = {}) {
+util.navigateToHome = function (obj = {}) {
   let vk = uni.vk;
-  let {
-    mode = "reLaunch"
-  } = obj;
+  let { mode = 'reLaunch' } = obj;
   vk[mode](config.index.url);
 };
 
@@ -266,12 +252,12 @@ util.navigateToHome = function(obj = {}) {
  * 跳转到登录页
  * vk.navigateToLogin();
  */
-util.navigateToLogin = function(obj = {}) {
+util.navigateToLogin = function (obj = {}) {
   let vk = uni.vk;
   let {
     redirectUrl, // 当mode为reLaunch或redirectTo时，指定登录成功后跳转的地址，redirectUrl的优先级高于needBack
     needBack, // 当mode为reLaunch或redirectTo时，登录成功是否需要返回当前页面
-    mode = "reLaunch", // 可选值为 navigateTo redirectTo reLaunch
+    mode = 'reLaunch', // 可选值为 navigateTo redirectTo reLaunch
     query, // 传递给登录页的参数
   } = obj;
 
@@ -279,28 +265,28 @@ util.navigateToLogin = function(obj = {}) {
   let { pagePath, fullPath } = vk.pubfn.getCurrentPage();
   // 如果已经在登录页面则不跳转
   if (pagePath === url) {
-    return false
+    return false;
   }
-  if (mode !== "navigateTo") {
+  if (mode !== 'navigateTo') {
     let uniIdRedirectUrl;
-    if (typeof redirectUrl === "string") {
+    if (typeof redirectUrl === 'string') {
       uniIdRedirectUrl = encodeURIComponent(redirectUrl);
     } else if (needBack) {
       uniIdRedirectUrl = encodeURIComponent(fullPath);
     }
     if (uniIdRedirectUrl) {
       // 如果url中有参数则用&连接，否则用?连接
-      url += url.indexOf("?") > -1 ? `&` : `?`;
+      url += url.indexOf('?') > -1 ? `&` : `?`;
       url += `uniIdRedirectUrl=${uniIdRedirectUrl}`;
     }
   }
   if (query) {
-    url += url.indexOf("?") > -1 ? `&` : `?`;
+    url += url.indexOf('?') > -1 ? `&` : `?`;
     url += query;
   }
   vk[mode]({
     ...obj,
-    url
+    url,
   });
 };
 
@@ -316,12 +302,9 @@ util.navigateToLogin = function(obj = {}) {
 	 }
  })
  */
-util.checkWildcardTest = function(obj) {
+util.checkWildcardTest = function (obj) {
   let vk = uni.vk;
-  let {
-    url,
-    pagesRule
-  } = obj;
+  let { url, pagesRule } = obj;
   // ../ 转成绝对路径
   url = vk.pubfn.getPageFullPath(url);
   let key = false;
@@ -346,10 +329,9 @@ util.checkWildcardTest = function(obj) {
   }
   return {
     url,
-    key
+    key,
   };
 };
-
 
 /**
  * 检测是否需要登录(内部方法)
@@ -362,7 +344,7 @@ util.checkWildcardTest = function(obj) {
 	 }
  })
  */
-util.checkNeedLogin = function(obj) {
+util.checkNeedLogin = function (obj) {
   let vk = uni.vk;
   let { url, success } = obj;
   let needLogin = false; // 用户是否需要重新登录
@@ -371,7 +353,7 @@ util.checkNeedLogin = function(obj) {
   if (pagesRule) {
     let res = util.checkWildcardTest({
       url,
-      pagesRule
+      pagesRule,
     });
     pageNeedLogin = res.key;
     if (pageNeedLogin) {
@@ -384,14 +366,13 @@ util.checkNeedLogin = function(obj) {
   success({
     url,
     needLogin,
-    pageNeedLogin
+    pageNeedLogin,
   });
 };
 
-
 // 获取?前面的地址
-util.getPagePath = function(url) {
-  let pathIndex = url.indexOf("?");
+util.getPagePath = function (url) {
+  let pathIndex = url.indexOf('?');
   let path = url;
   if (pathIndex > -1) {
     path = path.substring(0, pathIndex);
@@ -399,24 +380,22 @@ util.getPagePath = function(url) {
   return path;
 };
 
-util.paramsInit = function(obj) {
+util.paramsInit = function (obj) {
   let vk = uni.vk;
-  if (typeof obj == "string") {
+  if (typeof obj == 'string') {
     let url = obj;
     obj = {
-      url: url
+      url: url,
     };
-  } else if (typeof obj == "undefined") {
+  } else if (typeof obj == 'undefined') {
     obj = {};
   }
   if (!obj.url) {
-    vk.toast("url不能为空!");
+    vk.toast('url不能为空!');
     return false;
   }
   return obj;
-}
-
-
+};
 
 /**
  * 跳转到小程序
@@ -432,10 +411,10 @@ util.paramsInit = function(obj) {
 		}
 	})
  */
-util.navigateToMiniProgram = function(obj) {
+util.navigateToMiniProgram = function (obj) {
   let vk = uni.vk;
   // #ifdef H5
-  vk.toast("不支持打开小程序", "none");
+  vk.toast('不支持打开小程序', 'none');
   // #endif
 
   // #ifndef H5
@@ -443,24 +422,23 @@ util.navigateToMiniProgram = function(obj) {
   // #endif
 };
 
-
 /**
  * 检测是否可以分享(内部方法)
 let allowShare = vk.navigate.checkAllowShare({
 	url: url,
 });
  */
-util.checkAllowShare = function(obj) {
+util.checkAllowShare = function (obj) {
   let vk = uni.vk;
   let { url, success } = obj;
   let pagesRule = config.checkSharePages || {};
   if (pagesRule && pagesRule.mode > 0) {
-    if (url === "/") {
+    if (url === '/') {
       url = config.index.url;
     }
     let res = util.checkWildcardTest({
       url,
-      pagesRule
+      pagesRule,
     });
     // console.log('res.key: ', res.key)
     // #ifdef MP-WEIXIN || MP-ALIPAY || MP-TOUTIAO || MP-QQ || MP-KUAISHOU || MP-JD
@@ -472,12 +450,12 @@ util.checkAllowShare = function(obj) {
       //console.log("允许分享");
       uni.showShareMenu({
         withShareTicket: false,
-        menus
+        menus,
       });
     } else {
       //console.log("禁止分享");
       uni.hideShareMenu({
-        menus
+        menus,
       });
     }
     // #endif
@@ -485,16 +463,16 @@ util.checkAllowShare = function(obj) {
   }
 };
 
-util.$emit = function(...obj) {
+util.$emit = function (...obj) {
   return uni.$emit(...obj);
 };
-util.$on = function(...obj) {
+util.$on = function (...obj) {
   return uni.$on(...obj);
 };
-util.$once = function(...obj) {
+util.$once = function (...obj) {
   return uni.$once(...obj);
 };
-util.$off = function(...obj) {
+util.$off = function (...obj) {
   return uni.$off(...obj);
 };
 
@@ -504,18 +482,18 @@ vk.navigateToLuckyDraw({
 	path: `pages/activity/detail/detail?_id=${activity_id}`
 });
  */
-util.navigateToLuckyDraw = function(obj = {}) {
+util.navigateToLuckyDraw = function (obj = {}) {
   let vk = uni.vk;
   // #ifndef APP-PLUS || MP-WEIXIN || WEB
   vk.alert('请在微信小程序中打开');
   // #endif
   const mpConfig = {
-    appid: "wx2c55b235ad6553e3", // 抽奖服务小程序的appid（请勿修改）
-    ghId: "gh_fbd003114768", // 抽奖服务小程序的原始ID（请勿修改）
+    appid: 'wx2c55b235ad6553e3', // 抽奖服务小程序的appid（请勿修改）
+    ghId: 'gh_fbd003114768', // 抽奖服务小程序的原始ID（请勿修改）
   };
   let {
     path, // 页面地址
-    envVersion = "release", // 小程序版本，正式版为release，开发版为develop，体验版为trial
+    envVersion = 'release', // 小程序版本，正式版为release，开发版为develop，体验版为trial
     extraData,
     shortLink,
     noRelaunchIfPathUnchanged,
@@ -523,18 +501,18 @@ util.navigateToLuckyDraw = function(obj = {}) {
     success,
     fail,
     complete,
-    openEmbedded
+    openEmbedded,
   } = obj;
   const successCallback = (res) => {
-    if (typeof success === "function") success(res);
-    if (typeof complete === "function") complete(res);
+    if (typeof success === 'function') success(res);
+    if (typeof complete === 'function') complete(res);
   };
   const failCallback = (err) => {
-    if (typeof fail === "function") fail(err);
-    if (typeof complete === "function") complete(err);
+    if (typeof fail === 'function') fail(err);
+    if (typeof complete === 'function') complete(err);
   };
   // #ifdef WEB
-  let pathArr = path.split("?");
+  let pathArr = path.split('?');
   let page = pathArr[0];
   let query = pathArr[1];
   let url = `weixin://dl/business/?appid=${mpConfig.appid}&path=${page}&env_version=${envVersion}`;
@@ -544,12 +522,12 @@ util.navigateToLuckyDraw = function(obj = {}) {
   }
   window.location.href = url;
   successCallback({
-    errMsg: "navigateToMiniProgram:ok"
+    errMsg: 'navigateToMiniProgram:ok',
   });
   // #endif
 
   // #ifdef APP-PLUS
-  plus.share.getServices(res => {
+  plus.share.getServices((res) => {
     let sweixin = null;
     for (let i in res) {
       if (res[i].id === 'weixin') {
@@ -559,17 +537,21 @@ util.navigateToLuckyDraw = function(obj = {}) {
     }
     if (sweixin) {
       let typeObj = {
-        "release": 0,
-        "develop": 1,
-        "trial": 2
+        release: 0,
+        develop: 1,
+        trial: 2,
       };
-      sweixin.launchMiniProgram({
-        id: mpConfig.ghId, // 需在微信开放平台绑定的小程序原始ID
-        type: typeObj[envVersion], // 0-正式版，1-开发版，2-体验版
-        path
-      }, successCallback, failCallback);
+      sweixin.launchMiniProgram(
+        {
+          id: mpConfig.ghId, // 需在微信开放平台绑定的小程序原始ID
+          type: typeObj[envVersion], // 0-正式版，1-开发版，2-体验版
+          path,
+        },
+        successCallback,
+        failCallback
+      );
     } else {
-      vk.alert("跳转失败：未安装微信");
+      vk.alert('跳转失败：未安装微信');
     }
   });
   // #endif
@@ -589,18 +571,18 @@ util.navigateToLuckyDraw = function(obj = {}) {
     fail: (err) => {
       failCallback(err);
       let subMsg = err.errMsg || err.message;
-      if (subMsg && subMsg.indexOf("cancel") > -1) {
+      if (subMsg && subMsg.indexOf('cancel') > -1) {
         return;
       }
-      if (subMsg && subMsg.indexOf("jump miniprogram banded") > -1) {
+      if (subMsg && subMsg.indexOf('jump miniprogram banded') > -1) {
         subMsg = `当前小程序不具备打开其他小程序的能力`;
       }
-      let errMsg = "跳转失败";
+      let errMsg = '跳转失败';
       if (subMsg) {
         errMsg += `：${subMsg}`;
       }
       console.error(errMsg);
-    }
+    },
   });
   // #endif
 };

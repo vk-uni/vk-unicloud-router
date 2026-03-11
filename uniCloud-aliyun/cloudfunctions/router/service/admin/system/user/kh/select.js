@@ -19,7 +19,7 @@ module.exports = {
     if (!searchvalue) {
       return { code: 0, list: [] };
     }
-    let dbName = "uni-id-users";
+    let dbName = 'uni-id-users';
     let fieldJson = {
       _id: true,
       username: true,
@@ -29,8 +29,8 @@ module.exports = {
     let sortArr = [];
     // 排序规则开始-----------------------------------------------------------
     sortArr.push({
-      "name": "register_date",
-      "type": "desc"
+      name: 'register_date',
+      type: 'desc',
     });
     // 排序规则结束-----------------------------------------------------------
     // 查询条件开始-----------------------------------------------------------
@@ -42,17 +42,17 @@ module.exports = {
         let regExp = new RegExp(searchvalue);
         let orObj = _.or([
           {
-            "username": regExp
+            username: regExp,
           },
           {
-            "nickname": regExp
+            nickname: regExp,
           },
           {
-            "mobile": regExp
+            mobile: regExp,
           },
           {
-            "_id": searchvalue
-          }
+            _id: searchvalue,
+          },
         ]);
         andArr.push(orObj);
       } catch (err) {
@@ -63,19 +63,22 @@ module.exports = {
       whereJson = _.and(andArr);
     }
     // 查询条件结束-----------------------------------------------------------
-    let selectRes = await vk.baseDao.select({
-      dbName: dbName,
-      pageIndex: 1,
-      pageSize: 10,
-      fieldJson: fieldJson,
-      whereJson: whereJson,
-      sortArr: sortArr
-    }, util);
+    let selectRes = await vk.baseDao.select(
+      {
+        dbName: dbName,
+        pageIndex: 1,
+        pageSize: 10,
+        fieldJson: fieldJson,
+        whereJson: whereJson,
+        sortArr: sortArr,
+      },
+      util
+    );
     let list = [];
     for (let i in selectRes.rows) {
       let item = selectRes.rows[i];
       let value = item._id;
-      let label = item.nickname || "未设置昵称";
+      let label = item.nickname || '未设置昵称';
       if (item.mobile) {
         item.mobile = vk.pubfn.hidden(item.mobile, 3, 4);
         label += `（${item.mobile}）`;
@@ -85,12 +88,11 @@ module.exports = {
       }
       list.push({
         value: value,
-        label: label
+        label: label,
       });
     }
     res.list = list;
     // 业务逻辑结束-----------------------------------------------------------
     return res;
-  }
-
-}
+  },
+};

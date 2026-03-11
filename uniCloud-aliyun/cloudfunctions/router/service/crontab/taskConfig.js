@@ -19,7 +19,7 @@ module.exports = {
     // timer7: { times: ['10s', '1m', '1h'], desc: '多时间任务' },  // 多个时间点（每10秒、1分钟、1小时）
     // timer8: [30, 60, 120],                              // 每30秒、1分钟、2分钟执行
     // timer9: { hours: 1, enabled: false },               // 已禁用
-  }
+  },
 };
 
 /**

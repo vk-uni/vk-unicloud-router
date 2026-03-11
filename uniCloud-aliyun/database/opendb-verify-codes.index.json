@@ -1,11 +1,23 @@
 [
   {
     "IndexName": "mobile",
-    "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "mobile", "Direction": "1" }, { "Name": "code", "Direction": "1" }], "MgoIsUnique": false }
+    "MgoKeySchema": {
+      "MgoIndexKeys": [
+        { "Name": "mobile", "Direction": "1" },
+        { "Name": "code", "Direction": "1" }
+      ],
+      "MgoIsUnique": false
+    }
   },
   {
     "IndexName": "email",
-    "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "email", "Direction": "1" }, { "Name": "code", "Direction": "1" }], "MgoIsUnique": false }
+    "MgoKeySchema": {
+      "MgoIndexKeys": [
+        { "Name": "email", "Direction": "1" },
+        { "Name": "code", "Direction": "1" }
+      ],
+      "MgoIsUnique": false
+    }
   },
   {
     "IndexName": "type",

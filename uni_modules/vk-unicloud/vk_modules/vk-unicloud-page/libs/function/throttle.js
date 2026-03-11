@@ -12,7 +12,7 @@ vk.pubfn.throttle(function() {
 
 }, 1000);
  */
-function throttle(fn, time = 500, isImmediate = true, timeoutName = "default") {
+function throttle(fn, time = 500, isImmediate = true, timeoutName = 'default') {
   if (!timeoutArr[timeoutName]) timeoutArr[timeoutName] = null;
   if (isImmediate) {
     if (!flagArr[timeoutName]) {
@@ -33,5 +33,5 @@ function throttle(fn, time = 500, isImmediate = true, timeoutName = "default") {
       }, time);
     }
   }
-};
-export default throttle
+}
+export default throttle;

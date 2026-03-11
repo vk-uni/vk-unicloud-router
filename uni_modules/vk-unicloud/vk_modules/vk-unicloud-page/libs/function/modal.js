@@ -3,57 +3,57 @@
  */
 const localeObj = {
   title: {
-    "zh-Hans": "提示",
-    "zh-Hant": "提示",
-    "en": "Tips",
-    "de": "Hinweis",
-    "es": "Consejo",
-    "fr": "Conseil",
-    "it": "Suggerimento",
-    "ja": "ヒント",
-    "pl": "Wskazówka",
-    "pt": "Dica",
-    "uk": "Підказка"
+    'zh-Hans': '提示',
+    'zh-Hant': '提示',
+    en: 'Tips',
+    de: 'Hinweis',
+    es: 'Consejo',
+    fr: 'Conseil',
+    it: 'Suggerimento',
+    ja: 'ヒント',
+    pl: 'Wskazówka',
+    pt: 'Dica',
+    uk: 'Підказка',
   },
   confirmText: {
-    "zh-Hans": "确定",
-    "zh-Hant": "確定",
-    "en": "OK",
-    "de": "OK",
-    "es": "Aceptar",
-    "fr": "OK",
-    "it": "OK",
-    "ja": "OK",
-    "pl": "OK",
-    "pt": "OK",
-    "uk": "OK"
+    'zh-Hans': '确定',
+    'zh-Hant': '確定',
+    en: 'OK',
+    de: 'OK',
+    es: 'Aceptar',
+    fr: 'OK',
+    it: 'OK',
+    ja: 'OK',
+    pl: 'OK',
+    pt: 'OK',
+    uk: 'OK',
   },
   cancelText: {
-    "zh-Hans": "取消",
-    "zh-Hant": "取消",
-    "en": "Cancel",
-    "de": "Abbrechen",
-    "es": "Cancelar",
-    "fr": "Annuler",
-    "it": "Annulla",
-    "ja": "キャンセル",
-    "pl": "Anuluj",
-    "pt": "Cancelar",
-    "uk": "Скасувати"
+    'zh-Hans': '取消',
+    'zh-Hant': '取消',
+    en: 'Cancel',
+    de: 'Abbrechen',
+    es: 'Cancelar',
+    fr: 'Annuler',
+    it: 'Annulla',
+    ja: 'キャンセル',
+    pl: 'Anuluj',
+    pt: 'Cancelar',
+    uk: 'Скасувати',
   },
   placeholderText: {
-    "zh-Hans": "请输入",
-    "zh-Hant": "請輸入",
-    "en": "Please enter",
-    "de": "Bitte eingeben",
-    "es": "Por favor ingrese",
-    "fr": "Veuillez saisir",
-    "it": "Si prega di inserire",
-    "ja": "入力してください",
-    "pl": "Proszę wprowadzić",
-    "pt": "Por favor insira",
-    "uk": "Будь ласка, введіть"
-  }
+    'zh-Hans': '请输入',
+    'zh-Hant': '請輸入',
+    en: 'Please enter',
+    de: 'Bitte eingeben',
+    es: 'Por favor ingrese',
+    fr: 'Veuillez saisir',
+    it: 'Si prega di inserire',
+    ja: '入力してください',
+    pl: 'Proszę wprowadzić',
+    pt: 'Por favor insira',
+    uk: 'Будь ласка, введіть',
+  },
 };
 
 let loadingCounterObj = {};
@@ -61,8 +61,8 @@ let loadingCounterObj = {};
 function getLocale() {
   let vk = uni.vk;
   let locale = vk.getLocale();
-  if (["zh-Hans", "zh-Hant", "en"].indexOf(locale) === -1) {
-    locale = "en";
+  if (['zh-Hans', 'zh-Hant', 'en'].indexOf(locale) === -1) {
+    locale = 'en';
   }
   return locale;
 }
@@ -73,7 +73,7 @@ export default {
 
   });
    */
-  alert: function(a = " ", b, c, d) {
+  alert: function (a = ' ', b, c, d) {
     let vk = uni.vk;
     let locale = getLocale();
     let obj = {
@@ -84,7 +84,7 @@ export default {
       showCancel: false,
       fail: (err) => {
         console.error('alert-err: ', err);
-      }
+      },
     };
     if (typeof d === 'function') {
       obj.title = b;
@@ -102,7 +102,7 @@ export default {
       }
     }
     if (typeof obj.content === 'number') {
-      obj.content = obj.content + "";
+      obj.content = obj.content + '';
     } else if (typeof obj.content === 'object') {
       obj.content = JSON.stringify(obj.content);
     }
@@ -118,23 +118,23 @@ export default {
   	}
   });
    */
-  confirm: function(a, b, c, d, e) {
+  confirm: function (a, b, c, d, e) {
     let vk = uni.vk;
     let locale = getLocale();
     let obj = {
       showCancel: true,
       // #ifndef MP-ALIPAY
-      cancelColor: "#999999",
+      cancelColor: '#999999',
       // #endif
       title: localeObj.title[locale],
       confirmText: localeObj.confirmText[locale],
       cancelText: localeObj.cancelText[locale],
       placeholderText: localeObj.placeholderText[locale],
     };
-    if (typeof a === "object") {
+    if (typeof a === 'object') {
       obj = a;
     } else {
-      if (typeof a === "string") {
+      if (typeof a === 'string') {
         obj.content = a;
       }
       if (typeof e === 'function') {
@@ -173,22 +173,22 @@ export default {
   	}
   }, "输入框内初始内容");
    */
-  prompt: function(a, b, c, d, e, f) {
+  prompt: function (a, b, c, d, e, f) {
     let vk = uni.vk;
     let locale = getLocale();
     let obj = {
       showCancel: true,
       editable: true,
-      cancelColor: "#999999",
+      cancelColor: '#999999',
       title: localeObj.title[locale],
       confirmText: localeObj.confirmText[locale],
       cancelText: localeObj.cancelText[locale],
       placeholderText: localeObj.placeholderText[locale],
     };
-    if (typeof a === "object") {
+    if (typeof a === 'object') {
       obj = a;
     } else {
-      if (typeof a === "string") {
+      if (typeof a === 'string') {
         obj.placeholderText = a;
       }
       if (typeof e === 'function') {
@@ -219,7 +219,7 @@ export default {
     }
     // #ifndef MP-ALIPAY
     if (!obj.content) {
-      obj.content = "";
+      obj.content = '';
     }
     return uni.showModal(obj);
     // #endif
@@ -247,12 +247,11 @@ export default {
       complete: obj.complete,
     });
     // #endif
-
   },
   /**
   vk.toast("提示内容","none");
    */
-  toast: function(a, b, c, d, e) {
+  toast: function (a, b, c, d, e) {
     let vk = uni.vk;
     if (typeof a === 'number') {
       a = a.toString();
@@ -260,35 +259,35 @@ export default {
       a = JSON.stringify(a);
     }
     let title = a;
-    let icon = "none";
-    let image = "";
+    let icon = 'none';
+    let image = '';
     let mask = false;
     let duration = 1500;
     let fn;
 
-    if (typeof e !== "undefined") {
-      if (typeof e == "function") fn = e;
-      if (typeof e == "number") duration = e;
-      if (typeof e == "boolean") mask = e;
+    if (typeof e !== 'undefined') {
+      if (typeof e == 'function') fn = e;
+      if (typeof e == 'number') duration = e;
+      if (typeof e == 'boolean') mask = e;
     }
-    if (typeof d !== "undefined") {
-      if (typeof d == "function") fn = d;
-      if (typeof d == "number") duration = d;
-      if (typeof d == "boolean") mask = d;
+    if (typeof d !== 'undefined') {
+      if (typeof d == 'function') fn = d;
+      if (typeof d == 'number') duration = d;
+      if (typeof d == 'boolean') mask = d;
     }
-    if (typeof c !== "undefined") {
-      if (typeof c == "function") fn = c;
-      if (typeof c == "number") duration = c;
-      if (typeof c == "boolean") mask = c;
+    if (typeof c !== 'undefined') {
+      if (typeof c == 'function') fn = c;
+      if (typeof c == 'number') duration = c;
+      if (typeof c == 'boolean') mask = c;
     }
 
-    if (typeof b !== "undefined") {
-      if (typeof b == "function") fn = b;
-      if (typeof b == "number") duration = b;
-      if (typeof b == "boolean") mask = b;
+    if (typeof b !== 'undefined') {
+      if (typeof b == 'function') fn = b;
+      if (typeof b == 'number') duration = b;
+      if (typeof b == 'boolean') mask = b;
       if (typeof b == 'string') {
-        if (b == "ok") b = "success";
-        if (b == "success" || b == "loading" || b == "none" || b == "error") {
+        if (b == 'ok') b = 'success';
+        if (b == 'success' || b == 'loading' || b == 'none' || b == 'error') {
           icon = b;
         } else {
           image = b;
@@ -303,13 +302,13 @@ export default {
       mask: mask,
       // #endif
       duration: duration,
-      success: function(res) {
+      success: function (res) {
         if (typeof fn === 'function') {
-          setTimeout(function() {
+          setTimeout(function () {
             fn(res);
           }, duration);
         }
-      }
+      },
     });
   },
   /**
@@ -328,11 +327,11 @@ export default {
    	}
    });
    */
-  showActionSheet: function(object) {
+  showActionSheet: function (object) {
     let vk = uni.vk;
     let title = object.title;
     let list = object.list;
-    let color = object.color || "#000000";
+    let color = object.color || '#000000';
     let success = object.success;
     let fail = object.fail;
     let complete = object.complete;
@@ -341,40 +340,40 @@ export default {
       // #ifndef MP-ALIPAY
       itemColor: color,
       // #endif
-      success: function(res) {
+      success: function (res) {
         let index = res.tapIndex;
         let text = list[index];
         let g = { index, text };
         //console.log(g);
-        if (typeof success == "function") success(g);
+        if (typeof success == 'function') success(g);
       },
-      fail: function(res) {
+      fail: function (res) {
         //console.log(res);
-        if (typeof fail == "function") fail(res);
+        if (typeof fail == 'function') fail(res);
       },
-      complete: function(res) {
-        if (typeof complete == "function") complete(res);
-      }
+      complete: function (res) {
+        if (typeof complete == 'function') complete(res);
+      },
     });
   },
-  showLoading: function(obj = {}, name) {
-    if (typeof obj == "string") {
+  showLoading: function (obj = {}, name) {
+    if (typeof obj == 'string') {
       let title = obj;
       obj = {
         title: title,
-        mask: true
+        mask: true,
       };
     }
-    if (obj && typeof obj.mask === "undefined") {
+    if (obj && typeof obj.mask === 'undefined') {
       obj.mask = true;
     }
     uni.showLoading(obj);
     if (name) {
-      if (typeof loadingCounterObj[name] !== "number") loadingCounterObj[name] = 0;
+      if (typeof loadingCounterObj[name] !== 'number') loadingCounterObj[name] = 0;
       loadingCounterObj[name]++;
     }
   },
-  hideLoading: function(name) {
+  hideLoading: function (name) {
     if (name && loadingCounterObj[name] > 0) {
       loadingCounterObj[name]--;
       if (loadingCounterObj[name] <= 0) {
@@ -386,22 +385,22 @@ export default {
     }
   },
   // 设置当前页面的loading变量的值
-  setLoading: function(loading = true, obj = true) {
+  setLoading: function (loading = true, obj = true) {
     try {
       let vk = uni.vk;
-      if (typeof obj === "boolean") {
+      if (typeof obj === 'boolean') {
         let pages = getCurrentPages();
         let page = pages[pages.length - 1];
         let that = page.$vm;
-        let name = "loading";
+        let name = 'loading';
         updateCustomLoading({ loading, name, that });
         return { that, name };
-      } else if (typeof obj === "object") {
+      } else if (typeof obj === 'object') {
         let { data, name, that } = obj;
         if (!data) data = that;
         updateCustomLoading({ loading, name, that: data });
         return { that, name };
-      } else if (typeof obj === "string") {
+      } else if (typeof obj === 'string') {
         let pages = getCurrentPages();
         let page = pages[pages.length - 1];
         let that = page.$vm;
@@ -411,18 +410,14 @@ export default {
       }
     } catch (err) {}
   },
-}
+};
 
 function updateCustomLoading(obj = {}) {
   let vk = uni.vk;
-  let {
-    loading,
-    name,
-    that
-  } = obj;
-  const keyName = "___loadingCounterObj";
+  let { loading, name, that } = obj;
+  const keyName = '___loadingCounterObj';
   if (!that[keyName]) that[keyName] = {};
-  if (typeof that[keyName][name] !== "number") that[keyName][name] = 0;
+  if (typeof that[keyName][name] !== 'number') that[keyName][name] = 0;
   if (loading) {
     that[keyName][name]++;
     vk.pubfn.setData(that, name, loading);

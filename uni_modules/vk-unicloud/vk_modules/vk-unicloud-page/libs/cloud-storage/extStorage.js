@@ -33,14 +33,14 @@ class CloudStorage {
         data: {
           cloudPath,
           provider: cloudStorageConfig.provider,
-          domain: cloudStorageConfig.domain
+          domain: cloudStorageConfig.domain,
         },
         success: (res) => {
           resolve(res);
         },
         fail: (res) => {
           reject(res);
-        }
+        },
       });
     }).then((uploadFileOptionsRes) => {
       return new Promise((resolve, reject) => {
@@ -54,14 +54,14 @@ class CloudStorage {
               // 上传成功
               let extendInfo = {};
               try {
-                if (cloudStorageConfig.provider === "qiniu") {
+                if (cloudStorageConfig.provider === 'qiniu') {
                   extendInfo = JSON.parse(uploadFileRes.data);
                   if (!isNaN(extendInfo.width)) extendInfo.width = Number(extendInfo.width);
                   if (!isNaN(extendInfo.height)) extendInfo.height = Number(extendInfo.height);
                   if (!isNaN(extendInfo.size)) extendInfo.size = Number(extendInfo.size);
                 }
               } catch (err) {
-                console.error('err: ', err)
+                console.error('err: ', err);
               }
               const { cloudPath, fileID, fileURL } = uploadFileOptionsRes;
               const res = {
@@ -77,19 +77,20 @@ class CloudStorage {
           },
           fail: (res) => {
             reject(res);
-          }
+          },
         });
         uploadTask.onProgressUpdate((res) => {
           if (res.progress > 0) {
-            if (typeof obj.onUploadProgress === "function") obj.onUploadProgress({
-              total: res.totalBytesExpectedToSend,
-              loaded: res.totalBytesSent,
-              progress: res.progress
-            });
+            if (typeof obj.onUploadProgress === 'function')
+              obj.onUploadProgress({
+                total: res.totalBytesExpectedToSend,
+                loaded: res.totalBytesSent,
+                progress: res.progress,
+              });
           }
         });
       });
-    })
+    });
   }
 }
 
@@ -97,34 +98,27 @@ export default new CloudStorage();
 
 // 获取配置
 function getConfig() {
-  return uni.vk.getConfig("service.cloudStorage.extStorage");
+  return uni.vk.getConfig('service.cloudStorage.extStorage');
 }
 
 // 生成文件名
 function createFileName(obj = {}) {
-  let {
-    file,
-    filePath,
-    suffix,
-    index = 0,
-    cloudPathRemoveChinese = true,
-    cloudDirectory
-  } = obj;
+  let { file, filePath, suffix, index = 0, cloudPathRemoveChinese = true, cloudDirectory } = obj;
   let vk = uni.vk;
   let cloudStorageConfig = getConfig();
   let dirname = cloudStorageConfig.dirname;
-  let oldName = index + "." + suffix;
+  let oldName = index + '.' + suffix;
   if (file && file.name) {
-    let suffixName = file.name.substring(file.name.lastIndexOf(".") + 1);
+    let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
     if (suffixName && suffixName.length < 5) oldName = file.name;
     // 只保留["数字","英文",".","-"]
     if (cloudPathRemoveChinese) {
       oldName = oldName.replace(/[^a-zA-Z.-d]/g, '');
     }
-    if (oldName.indexOf(".") == 0) oldName = "0" + oldName;
+    if (oldName.indexOf('.') == 0) oldName = '0' + oldName;
   }
   let date = new Date();
-  let dateYYYYMMDD = vk.pubfn.timeFormat(date, "yyyy/MM/dd");
+  let dateYYYYMMDD = vk.pubfn.timeFormat(date, 'yyyy/MM/dd');
   let dateTime = date.getTime().toString(); // 时间戳
   // 时间戳后8位
   let dateTimeEnd8 = dateTime.substring(dateTime.length - 8, dateTime.length);
@@ -132,20 +126,20 @@ function createFileName(obj = {}) {
   // 文件路径 = 固定路径名 + 业务路径
 
   // 业务路径
-  let servicePath = "";
+  let servicePath = '';
   if (cloudDirectory) {
     // 如果自定义了上传目录，则使用自定义的上传目录
-    if (cloudDirectory.lastIndexOf("/") !== cloudDirectory.length - 1) {
-      cloudDirectory = cloudDirectory + "/";
+    if (cloudDirectory.lastIndexOf('/') !== cloudDirectory.length - 1) {
+      cloudDirectory = cloudDirectory + '/';
     }
     servicePath = cloudDirectory;
   } else {
     // 否则，使用年月日作为上传目录
-    servicePath = dateYYYYMMDD + "/";
+    servicePath = dateYYYYMMDD + '/';
     try {
       // 只有开启按userId分组且开启了vk的vuex功能，才可以自动按userId分组
-      if (cloudStorageConfig.groupUserId && typeof vk.getVuex === "function") {
-        let userInfo = vk.getVuex("$user.userInfo");
+      if (cloudStorageConfig.groupUserId && typeof vk.getVuex === 'function') {
+        let userInfo = vk.getVuex('$user.userInfo');
         if (vk.pubfn.isNotNull(userInfo) && userInfo._id) {
           servicePath = `${userInfo._id}/${servicePath}`;
         }
@@ -153,10 +147,10 @@ function createFileName(obj = {}) {
     } catch (err) {}
   }
   // 文件名 = 时间戳后8位 - 随机数8位 + 后缀名
-  let fileName = dateTimeEnd8 + randomNumber + "-" + oldName;
+  let fileName = dateTimeEnd8 + randomNumber + '-' + oldName;
   // 文件相对路径 = 业务目录 + 文件名
   let fileRelativePath = servicePath + fileName;
   // 文件名全称（包含文件路径） = 根目录 + 文件相对路径
-  let cloudPath = dirname + "/" + fileRelativePath;
+  let cloudPath = dirname + '/' + fileRelativePath;
   return cloudPath;
 }

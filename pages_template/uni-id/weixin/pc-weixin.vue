@@ -17,7 +17,7 @@
   export default {
     data() {
       return {
-        options: {}
+        options: {},
       };
     },
     onLoad(options) {
@@ -29,19 +29,19 @@
       // 初始化
       init(options) {
         if (this.options.code) {
-          vk.toast("已获取到code，请点击相应操作。");
+          vk.toast('已获取到code，请点击相应操作。');
           return false;
         }
       },
       getWeixinCode(scope) {
-        let appid = ""; // 填写公众号的appid
-        let redirect_uri = window.location.href.split("?")[0];
+        let appid = ''; // 填写公众号的appid
+        let redirect_uri = window.location.href.split('?')[0];
         let url = `https://open.weixin.qq.com/connect/qrconnect?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect`;
         window.location.href = url;
       },
       code2SessionWeixin() {
         if (!this.options.code) {
-          vk.toast("请先获取code");
+          vk.toast('请先获取code');
           return false;
         }
         vk.userCenter.code2SessionWeixin({
@@ -57,47 +57,47 @@
       // 微信登录
       loginByWeixin(type) {
         if (!this.options.code) {
-          vk.toast("请先获取code");
+          vk.toast('请先获取code');
           return false;
         }
         vk.userCenter.loginByWeixin({
           data: {
             code: this.options.code,
             state: this.options.state,
-            type
+            type,
           },
           success: (data) => {
             vk.alert(data.msg);
             this.data = data;
-          }
+          },
         });
       },
       // 绑定微信
       bindWeixin() {
         if (!this.options.code) {
-          vk.toast("请先获取code");
+          vk.toast('请先获取code');
           return false;
         }
         vk.userCenter.bindWeixin({
           data: {
-            code: this.options.code
+            code: this.options.code,
           },
           success: (data) => {
-            vk.alert("绑定成功");
+            vk.alert('绑定成功');
             this.data = data;
-          }
+          },
         });
       },
       // 解绑微信
       unbindWeixin() {
         vk.userCenter.unbindWeixin({
           success: (data) => {
-            vk.alert("解绑成功");
+            vk.alert('解绑成功');
             this.data = data;
-          }
+          },
         });
       },
-    }
+    },
   };
 </script>
 

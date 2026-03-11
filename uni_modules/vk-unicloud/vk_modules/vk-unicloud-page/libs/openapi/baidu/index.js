@@ -3,8 +3,8 @@
  */
 const baidu = {};
 let vk = {};
-let baiduOpenApiAccessTokenCacheName = "vk_openapi_baidu_open_token";
-baidu.init = function(util = {}) {
+let baiduOpenApiAccessTokenCacheName = 'vk_openapi_baidu_open_token';
+baidu.init = function (util = {}) {
   vk = util.vk;
 };
 
@@ -30,11 +30,11 @@ vk.openapi.baidu.open.ocr.business_license({
 	},
 });
  */
-baidu.open.ocr.business_license = function(obj = {}) {
-  obj.action = "ocr/v1/business_license";
+baidu.open.ocr.business_license = function (obj = {}) {
+  obj.action = 'ocr/v1/business_license';
   let file = obj.data.file;
   if (file) {
-    vk.pubfn.fileToBase64({ file }).then(base64 => {
+    vk.pubfn.fileToBase64({ file }).then((base64) => {
       obj.data.image = base64;
       delete obj.data.file;
       baidu.request(obj);
@@ -42,7 +42,7 @@ baidu.open.ocr.business_license = function(obj = {}) {
   } else {
     baidu.request(obj);
   }
-}
+};
 
 /**
  * 身份证识别
@@ -61,12 +61,12 @@ vk.openapi.baidu.open.ocr.idcard({
 	},
 });
  */
-baidu.open.ocr.idcard = function(obj = {}) {
-  obj.action = "ocr/v1/idcard";
+baidu.open.ocr.idcard = function (obj = {}) {
+  obj.action = 'ocr/v1/idcard';
   let file = obj.data.file;
-  if (!obj.data.id_card_side) obj.data.id_card_side = "front";
+  if (!obj.data.id_card_side) obj.data.id_card_side = 'front';
   if (file) {
-    vk.pubfn.fileToBase64({ file }).then(base64 => {
+    vk.pubfn.fileToBase64({ file }).then((base64) => {
       obj.data.image = base64;
       delete obj.data.file;
       baidu.request(obj);
@@ -74,7 +74,7 @@ baidu.open.ocr.idcard = function(obj = {}) {
   } else {
     baidu.request(obj);
   }
-}
+};
 
 /**
  * 百度开放平台通用请求接口
@@ -97,10 +97,8 @@ vk.openapi.baidu.request({
  	},
 });
  */
-baidu.request = function(obj = {}) {
-  let {
-    title
-  } = obj;
+baidu.request = function (obj = {}) {
+  let { title } = obj;
   if (title) vk.showLoading(title);
   let baiduApiAccessToken = vk.getStorageSync(baiduOpenApiAccessTokenCacheName);
   if (baiduApiAccessToken && baiduApiAccessToken.expTime > new Date().getTime()) {
@@ -121,49 +119,42 @@ baidu.request = function(obj = {}) {
       },
       fail: (res) => {
         if (title) vk.hideLoading();
-        if (typeof obj.fail === "function") obj.fail(res);
-        if (typeof obj.complete === "function") obj.complete(res);
-      }
+        if (typeof obj.fail === 'function') obj.fail(res);
+        if (typeof obj.complete === 'function') obj.complete(res);
+      },
     });
   }
-}
+};
 
 function request(obj = {}) {
-  let {
-    action,
-    actionVersion = "2.0",
-    accessToken,
-    header = { "content-type": "application/x-www-form-urlencoded" },
-    data,
-    title
-  } = obj;
+  let { action, actionVersion = '2.0', accessToken, header = { 'content-type': 'application/x-www-form-urlencoded' }, data, title } = obj;
   vk.request({
     url: `https://aip.baidubce.com/rest/${actionVersion}/${action}?access_token=${accessToken}`,
-    method: "POST",
+    method: 'POST',
     header: {
-      "content-type": "application/x-www-form-urlencoded",
+      'content-type': 'application/x-www-form-urlencoded',
     },
-    errorCodeName: "error_code",
-    errorMsgName: "error_msg",
+    errorCodeName: 'error_code',
+    errorMsgName: 'error_msg',
     data,
     needAlert: true,
     success: (data) => {
       if (title) vk.hideLoading();
       if (data.code) {
-        if (typeof obj.fail === "function") obj.fail(data);
+        if (typeof obj.fail === 'function') obj.fail(data);
       } else {
-        if (typeof obj.success === "function") obj.success(data);
+        if (typeof obj.success === 'function') obj.success(data);
       }
     },
     fail: (data) => {
       if (title) vk.hideLoading();
       // 如果是因为token失效报的错误,则清空下本地token缓存
       if (data && data.code === 110) vk.removeStorageSync(baiduOpenApiAccessTokenCacheName);
-      if (typeof obj.fail === "function") obj.fail(data);
+      if (typeof obj.fail === 'function') obj.fail(data);
     },
     complete: (data) => {
-      if (typeof obj.complete === "function") obj.complete(data);
-    }
+      if (typeof obj.complete === 'function') obj.complete(data);
+    },
   });
 }
 

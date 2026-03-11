@@ -8,48 +8,48 @@
 
 <script>
   const localeObj = {
-    "zh-Hans": {
-      "startText": "获取验证码",
-      "changeText": "X秒重新获取",
-      "endText": "重新获取",
-      "tryAgainInSeconds": "秒后再重试",
-      "pleaseEnterTheCorrectMobileNumber": "请输入正确的手机号码",
-      "sending": "发送中...",
-      "verificationCodeSent": "验证码已发送",
-      "triggerDayLevelFlowControl": "触发天级流控",
-      "pleaseTryAgainTomorrow": "短信发送频繁，请明日再试！",
-      "pleaseTryAgainIn1Hour": "短信发送频繁，请过1小时后再试！",
-      "triggerMinuteLevelFlowControl": "触发分钟级流控",
-      "pleaseTryAgainLater": "短信发送频繁，请稍后再试！",
+    'zh-Hans': {
+      startText: '获取验证码',
+      changeText: 'X秒重新获取',
+      endText: '重新获取',
+      tryAgainInSeconds: '秒后再重试',
+      pleaseEnterTheCorrectMobileNumber: '请输入正确的手机号码',
+      sending: '发送中...',
+      verificationCodeSent: '验证码已发送',
+      triggerDayLevelFlowControl: '触发天级流控',
+      pleaseTryAgainTomorrow: '短信发送频繁，请明日再试！',
+      pleaseTryAgainIn1Hour: '短信发送频繁，请过1小时后再试！',
+      triggerMinuteLevelFlowControl: '触发分钟级流控',
+      pleaseTryAgainLater: '短信发送频繁，请稍后再试！',
     },
-    "zh-Hant": {
-      "startText": "獲取驗證碼",
-      "changeText": "X秒重新獲取",
-      "endText": "重新獲取",
-      "tryAgainInSeconds": "秒後再重試",
-      "pleaseEnterTheCorrectMobileNumber": "請輸入正確的手機號碼",
-      "sending": "發送中...",
-      "verificationCodeSent": "驗證碼已發送",
-      "triggerDayLevelFlowControl": "觸發天級流控",
-      "pleaseTryAgainTomorrow": "短信發送頻繁，請明日再試！",
-      "pleaseTryAgainIn1Hour": "短信發送頻繁，請過1小時後再試！",
-      "triggerMinuteLevelFlowControl": "觸發分鐘級流控",
-      "pleaseTryAgainLater": "短信發送頻繁，請稍後再試！",
+    'zh-Hant': {
+      startText: '獲取驗證碼',
+      changeText: 'X秒重新獲取',
+      endText: '重新獲取',
+      tryAgainInSeconds: '秒後再重試',
+      pleaseEnterTheCorrectMobileNumber: '請輸入正確的手機號碼',
+      sending: '發送中...',
+      verificationCodeSent: '驗證碼已發送',
+      triggerDayLevelFlowControl: '觸發天級流控',
+      pleaseTryAgainTomorrow: '短信發送頻繁，請明日再試！',
+      pleaseTryAgainIn1Hour: '短信發送頻繁，請過1小時後再試！',
+      triggerMinuteLevelFlowControl: '觸發分鐘級流控',
+      pleaseTryAgainLater: '短信發送頻繁，請稍後再試！',
     },
-    "en": {
-      "startText": "Get code",
-      "changeText": "X second reacquire",
-      "endText": "Reacquire",
-      "tryAgainInSeconds": "Try again in seconds",
-      "pleaseEnterTheCorrectMobileNumber": "Please enter the correct mobile number",
-      "sending": "Sending...",
-      "verificationCodeSent": "Verification code sent",
-      "triggerDayLevelFlowControl": "Trigger day level flow control",
-      "pleaseTryAgainTomorrow": "SMS sent frequently, please try again tomorrow!",
-      "pleaseTryAgainIn1Hour": "SMS sent frequently, please try again in 1 hour",
-      "triggerMinuteLevelFlowControl": "Trigger minute level flow control",
-      "pleaseTryAgainLater": "SMS sent frequently, please try again later",
-    }
+    en: {
+      startText: 'Get code',
+      changeText: 'X second reacquire',
+      endText: 'Reacquire',
+      tryAgainInSeconds: 'Try again in seconds',
+      pleaseEnterTheCorrectMobileNumber: 'Please enter the correct mobile number',
+      sending: 'Sending...',
+      verificationCodeSent: 'Verification code sent',
+      triggerDayLevelFlowControl: 'Trigger day level flow control',
+      pleaseTryAgainTomorrow: 'SMS sent frequently, please try again tomorrow!',
+      pleaseTryAgainIn1Hour: 'SMS sent frequently, please try again in 1 hour',
+      triggerMinuteLevelFlowControl: 'Trigger minute level flow control',
+      pleaseTryAgainLater: 'SMS sent frequently, please try again later',
+    },
   };
   /**
    * verificationCode 验证码输入框
@@ -75,54 +75,54 @@
       // 模式，mobile 手机验证码 custom 自定义验证码 默认 mobile
       mode: {
         type: String,
-        default: 'mobile'
+        default: 'mobile',
       },
       // 接收短信的手机号
       mobile: {
-        type: String
+        type: String,
       },
       // 短信类型，如 register、login、bind、unbind
       type: {
         type: String,
-        default: 'login'
+        default: 'login',
       },
       customStyle: {
-        type: [String, Object]
+        type: [String, Object],
       },
       // 倒计时总秒数
       seconds: {
         type: [String, Number],
-        default: 60
+        default: 60,
       },
       // 尚未开始时提示
       startText: {
         type: String,
-        default: ''
+        default: '',
       },
       // 正在倒计时中的提示
       changeText: {
         type: String,
-        default: ''
+        default: '',
       },
       // 倒计时结束时的提示
       endText: {
         type: String,
-        default: ''
+        default: '',
       },
       // 是否在H5刷新或各端返回再进入时继续倒计时
       keepRunning: {
         type: Boolean,
-        default: false
+        default: false,
       },
       // 为了区分多个页面，或者一个页面多个倒计时组件本地存储的继续倒计时变了
       uniqueKey: {
         type: String,
-        default: ''
+        default: '',
       },
       // 是否需要检测手机号对应的账号是否存在，默认false：不检测 设置为true：会检测，如果检测到用户不存在，则不发短信。
       checkUserExist: {
         type: Boolean,
-        default: false
+        default: false,
       },
     },
     data() {
@@ -135,11 +135,11 @@
       };
     },
     created() {
-      if (typeof vk !== "undefined") {
+      if (typeof vk !== 'undefined') {
         let locale = vk.pubfn.getLocale();
         this.locale = localeObj[locale];
       } else {
-        this.locale = localeObj["zh-Hans"];
+        this.locale = localeObj['zh-Hans'];
       }
     },
     mounted() {
@@ -150,20 +150,20 @@
         immediate: true,
         handler(n) {
           this.secNum = n;
-        }
-      }
+        },
+      },
     },
     // 计算属性
     computed: {
       startTextCom() {
-        return this.startText || this.locale.startText || "获取验证码";
+        return this.startText || this.locale.startText || '获取验证码';
       },
       changeTextCom() {
-        return this.changeText || this.locale.changeText || "X秒重新获取";
+        return this.changeText || this.locale.changeText || 'X秒重新获取';
       },
       endTextCom() {
-        return this.endText || this.locale.endText || "重新获取";
-      }
+        return this.endText || this.locale.endText || '重新获取';
+      },
     },
     methods: {
       checkKeepRunning() {
@@ -233,7 +233,7 @@
           // 将本该结束时候的时间戳保存起来 => 当前时间戳 + 剩余的秒数
           uni.setStorage({
             key: this.uniqueKey + '_$uCountDownTimestamp',
-            data: nowTimestamp + Number(this.secNum)
+            data: nowTimestamp + Number(this.secNum),
           });
         }
       },
@@ -245,20 +245,13 @@
       // 发送短信验证码
       sendSmsCode() {
         let vk = uni.vk;
-        let {
-          mobile,
-          type,
-          canGetCode,
-          checkUserExist,
-          secNum,
-          mode,
-        } = this;
+        let { mobile, type, canGetCode, checkUserExist, secNum, mode } = this;
         if (!canGetCode) {
           vk.toast(`${secNum}${this.locale.tryAgainInSeconds}`, 'none');
           return;
         }
-        if (mode === "custom") {
-          this.$emit("send", { type: type });
+        if (mode === 'custom') {
+          this.$emit('send', { type: type });
           return;
         }
 
@@ -272,7 +265,7 @@
           data: {
             mobile,
             type,
-            checkUserExist
+            checkUserExist,
           },
           success: (data) => {
             vk.toast(this.locale.verificationCodeSent);
@@ -282,19 +275,29 @@
           fail: (err) => {
             this.tips = this.startTextCom;
             if (err.errMsg && err.errMsg.indexOf('触发天级流控') > -1) {
-              vk.alert(this.locale.pleaseTryAgainTomorrow, () => { this.$emit('error', err); });
+              vk.alert(this.locale.pleaseTryAgainTomorrow, () => {
+                this.$emit('error', err);
+              });
             } else if (err.errMsg && err.errMsg.indexOf('触发小时级流控') > -1) {
-              vk.alert(this.locale.pleaseTryAgainIn1Hour, () => { this.$emit('error', err); });
+              vk.alert(this.locale.pleaseTryAgainIn1Hour, () => {
+                this.$emit('error', err);
+              });
             } else if (err.errMsg && err.errMsg.indexOf('触发分钟级流控') > -1) {
-              vk.alert(this.locale.pleaseTryAgainLater, () => { this.$emit('error', err); });
+              vk.alert(this.locale.pleaseTryAgainLater, () => {
+                this.$emit('error', err);
+              });
             } else if (err.msg) {
-              vk.alert(err.msg, () => { this.$emit('error', err); });
+              vk.alert(err.msg, () => {
+                this.$emit('error', err);
+              });
             } else {
-              vk.alert(this.locale.pleaseTryAgainLater, () => { this.$emit('error', err); });
+              vk.alert(this.locale.pleaseTryAgainLater, () => {
+                this.$emit('error', err);
+              });
             }
-          }
+          },
         });
-      }
+      },
     },
     // 组件销毁的时候，清除定时器，否则定时器会继续存在，系统不会自动清除
     // #ifdef VUE2
@@ -310,7 +313,7 @@
       this.setTimeToStorage();
       clearTimeout(this.timer);
       this.timer = null;
-    }
+    },
     // #endif
   };
 </script>

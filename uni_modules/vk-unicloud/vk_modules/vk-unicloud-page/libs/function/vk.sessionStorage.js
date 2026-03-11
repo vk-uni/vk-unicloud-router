@@ -19,19 +19,19 @@ const storage = {};
  * @param {Any} data 需要存储的内容，只支持原生类型、及能够通过 JSON.stringify 序列化的对象
  * vk.setSessionStorageSync(key, data);
  */
-storage.setSessionStorageSync = function(key, data = "") {
+storage.setSessionStorageSync = function (key, data = '') {
   // #ifdef H5
   let type = typeof data;
   let value = {
     type: typeof data,
-    data: data
+    data: data,
   };
   sessionStorage.setItem(key, JSON.stringify(value));
-  watchSessionStorage({ type: "set", key, data });
+  watchSessionStorage({ type: 'set', key, data });
   // #endif
 
   // #ifndef H5
-  console.warn("非H5环境不支持此API");
+  console.warn('非H5环境不支持此API');
   // #endif
 };
 
@@ -40,7 +40,7 @@ storage.setSessionStorageSync = function(key, data = "") {
  * @param {String} key 本地缓存中的指定的 key
  * vk.getSessionStorageSync(key);
  */
-storage.getSessionStorageSync = function(key) {
+storage.getSessionStorageSync = function (key) {
   // #ifdef H5
   let data;
   try {
@@ -55,7 +55,7 @@ storage.getSessionStorageSync = function(key) {
   // #endif
 
   // #ifndef H5
-  console.warn("非H5环境不支持此API");
+  console.warn('非H5环境不支持此API');
   // #endif
 };
 
@@ -64,14 +64,14 @@ storage.getSessionStorageSync = function(key) {
  * @param {String} key 本地缓存中的指定的 key
  * vk.removeSessionStorageSync(key);
  */
-storage.removeSessionStorageSync = function(key) {
+storage.removeSessionStorageSync = function (key) {
   // #ifdef H5
   sessionStorage.removeItem(key);
-  watchSessionStorage({ type: "remove", key });
+  watchSessionStorage({ type: 'remove', key });
   // #endif
 
   // #ifndef H5
-  console.warn("非H5环境不支持此API");
+  console.warn('非H5环境不支持此API');
   // #endif
 };
 
@@ -80,7 +80,7 @@ storage.removeSessionStorageSync = function(key) {
  * @param {String} key 本地缓存中的指定的 key
  * vk.clearSessionStorageSync();
  */
-storage.clearSessionStorageSync = function(key) {
+storage.clearSessionStorageSync = function (key) {
   // #ifdef H5
   if (key) {
     let keys = Object.keys(sessionStorage);
@@ -93,18 +93,16 @@ storage.clearSessionStorageSync = function(key) {
     }
   } else {
     sessionStorage.clear();
-    watchSessionStorage({ type: "clear" });
+    watchSessionStorage({ type: 'clear' });
   }
   // #endif
 
   // #ifndef H5
-  console.warn("非H5环境不支持此API");
+  console.warn('非H5环境不支持此API');
   // #endif
 };
 
 export default storage;
-
-
 
 /**
  * 单位进制换算
@@ -117,7 +115,7 @@ export default storage;
 function calcSize(length = 0, ary, precision, arr) {
   let size = parseFloat(length);
   let mySize = 0;
-  let type = "";
+  let type = '';
   if (size < ary || arr.length <= 1) {
     type = arr[0];
     mySize = parseFloat(size.toFixed(precision));
@@ -135,12 +133,12 @@ function calcSize(length = 0, ary, precision, arr) {
   return {
     size: mySize,
     type: type,
-    title: mySize + " " + type
-  }
-};
+    title: mySize + ' ' + type,
+  };
+}
 
 function watchSessionStorage(obj) {
-  if (typeof storage.watch === "function") {
+  if (typeof storage.watch === 'function') {
     storage.watch(obj);
   }
 }

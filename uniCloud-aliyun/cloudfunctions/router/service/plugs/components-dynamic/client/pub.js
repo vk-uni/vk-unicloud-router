@@ -16,7 +16,7 @@ const cloudObject = {
    * 请求前处理，主要用于调用方法之前进行预处理，一般用于拦截器、统一的身份验证、参数校验、定义全局对象等。
    * 文档地址：https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#before-预处理
    */
-  _before: async function() {
+  _before: async function () {
     vk = this.vk; // 将vk定义为全局对象
     // let { customUtil, uniID, config, pubFun } = this.getUtil(); // 获取工具包
   },
@@ -24,7 +24,7 @@ const cloudObject = {
    * 请求后处理，主要用于处理本次调用方法的返回结果或者抛出的错误
    * 文档地址：https://vkdoc.fsq.pub/client/uniCloud/cloudfunctions/cloudObject.html#after-后处理
    */
-  _after: async function(options) {
+  _after: async function (options) {
     let { err, res } = options;
     if (err) {
       if (err instanceof Error) {
@@ -38,22 +38,22 @@ const cloudObject = {
    * 获取列表
    * @url plugs/components-dynamic/client/pub.getList 前端调用的url参数地址
    */
-  getList: async function(data) {
+  getList: async function (data) {
     let res = { code: 0, msg: '' };
     let { uid } = this.getClientInfo(); // 获取客户端信息
     // 业务逻辑开始-----------------------------------------------------------
     let { ids } = data;
     let whereJson = {};
     if (vk.pubfn.isNotNull(ids)) {
-    	if (!vk.pubfn.isArray(ids)) return { code: -1, msg: "ids格式错误" };
-    	whereJson["data_id"] = _.in(ids);
+      if (!vk.pubfn.isArray(ids)) return { code: -1, msg: 'ids格式错误' };
+      whereJson['data_id'] = _.in(ids);
     }
     let list = await vk.baseDao.select({
       dbName: dbName.components,
       getCount: false,
       getMain: true,
       pageSize: 1000,
-      whereJson
+      whereJson,
     });
     // 将数组形式 转换成 组件需要的格式
     res.componentsDynamic = {};
@@ -68,11 +68,10 @@ const cloudObject = {
    * 模板函数
    * @url plugs/components-dynamic/client/pub.test 前端调用的url参数地址
    */
-  test: async function(data) {
+  test: async function (data) {
     let res = { code: 0, msg: '' };
     let { uid } = this.getClientInfo(); // 获取客户端信息
     // 业务逻辑开始-----------------------------------------------------------
-
 
     // 业务逻辑结束-----------------------------------------------------------
     return res;
