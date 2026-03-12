@@ -38,7 +38,7 @@
     <button class="button" type="default" @click="pageTo('../login/index/index')">登录注册找回密码页面模板</button>
     <view class="section-tip">三方工具对接</view>
     <button class="button" type="default" @click="vk.navigateTo('../../plugs/lucky-draw/lucky-draw')">抽奖活动小助手（新）</button>
-    <!-- #ifdef H5 -->
+    <!-- #ifdef WEB -->
     <button class="button" type="default" @click="pageTo('../weixin/h5-weixin')">微信公众号API</button>
     <!-- #endif -->
     <button class="button" type="default" @click="vk.navigateTo('../../openapi/baidu/baidu')">百度开放平台API</button>

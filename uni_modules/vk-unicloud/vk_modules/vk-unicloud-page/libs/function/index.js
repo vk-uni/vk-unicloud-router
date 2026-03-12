@@ -1988,7 +1988,7 @@ pubfn.getPlatform = function () {
   // #ifdef APP-PLUS || APP-NVUE || APP-PLUS-NVUE
   platform = 'app-plus';
   // #endif
-  // #ifdef H5
+  // #ifdef WEB
   platform = 'h5';
   // #endif
   // #ifdef MP-WEIXIN
@@ -2088,7 +2088,7 @@ pubfn.fileToBase64 = function (obj = {}) {
   let { file } = obj;
   let filePath = typeof file === 'object' ? file.path : file;
   return new Promise(function (resolve, reject) {
-    // #ifdef H5
+    // #ifdef WEB
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function (res) {
@@ -2221,7 +2221,7 @@ pubfn.base64ToFile = function (obj = {}) {
       complete: obj.complete,
     });
     // #endif
-    // #ifdef H5
+    // #ifdef WEB
     savePath = filePath;
     let blob = pubfn.base64toBlob(base64);
     let file = pubfn.blobToFile(blob, savePath);
@@ -2341,13 +2341,13 @@ pubfn.checkLogin = function (obj = {}) {
             },
           });
         } else {
-          // #ifdef H5
+          // #ifdef WEB
           // 解决微信公众号登录无法跳回原页面的问题
           if (!obj.options || !obj.options.code || !obj.options.state) {
             vk.navigate.setOriginalPage(null);
           }
           // #endif
-          // #ifndef H5
+          // #ifndef WEB
           vk.navigate.setOriginalPage(null);
           // #endif
         }

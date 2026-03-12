@@ -34,7 +34,7 @@ import crypto from './libs/function/vk.crypto';
 import connectWebSocket from './libs/function/vk.connectWebSocket';
 import setCustomClientInfo from './libs/function/vk.setCustomClientInfo';
 
-// #ifdef H5
+// #ifdef WEB
 import h5 from './libs/function/vk.h5';
 // #endif
 
@@ -57,7 +57,7 @@ const vk = {
   handleAutoLoginToken: callFunctionUtil.handleAutoLoginToken,
   pubfn,
 
-  // #ifdef H5
+  // #ifdef WEB
   h5,
   // #endif
 

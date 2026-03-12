@@ -413,11 +413,11 @@ util.paramsInit = function (obj) {
  */
 util.navigateToMiniProgram = function (obj) {
   let vk = uni.vk;
-  // #ifdef H5
+  // #ifdef WEB
   vk.toast('不支持打开小程序', 'none');
   // #endif
 
-  // #ifndef H5
+  // #ifndef WEB
   uni.navigateToMiniProgram(obj);
   // #endif
 };

@@ -1,4 +1,4 @@
-// #ifdef H5
+// #ifdef WEB
 uni.setClipboardData = function setClipboardData({ data, success, fail, complete } = {}) {
   try {
     const x = window.scrollX;

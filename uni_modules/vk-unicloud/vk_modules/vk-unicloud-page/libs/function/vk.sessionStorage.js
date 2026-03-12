@@ -20,7 +20,7 @@ const storage = {};
  * vk.setSessionStorageSync(key, data);
  */
 storage.setSessionStorageSync = function (key, data = '') {
-  // #ifdef H5
+  // #ifdef WEB
   let type = typeof data;
   let value = {
     type: typeof data,
@@ -30,7 +30,7 @@ storage.setSessionStorageSync = function (key, data = '') {
   watchSessionStorage({ type: 'set', key, data });
   // #endif
 
-  // #ifndef H5
+  // #ifndef WEB
   console.warn('非H5环境不支持此API');
   // #endif
 };
@@ -41,7 +41,7 @@ storage.setSessionStorageSync = function (key, data = '') {
  * vk.getSessionStorageSync(key);
  */
 storage.getSessionStorageSync = function (key) {
-  // #ifdef H5
+  // #ifdef WEB
   let data;
   try {
     let value = JSON.parse(sessionStorage.getItem(key));
@@ -54,7 +54,7 @@ storage.getSessionStorageSync = function (key) {
   return data;
   // #endif
 
-  // #ifndef H5
+  // #ifndef WEB
   console.warn('非H5环境不支持此API');
   // #endif
 };
@@ -65,12 +65,12 @@ storage.getSessionStorageSync = function (key) {
  * vk.removeSessionStorageSync(key);
  */
 storage.removeSessionStorageSync = function (key) {
-  // #ifdef H5
+  // #ifdef WEB
   sessionStorage.removeItem(key);
   watchSessionStorage({ type: 'remove', key });
   // #endif
 
-  // #ifndef H5
+  // #ifndef WEB
   console.warn('非H5环境不支持此API');
   // #endif
 };
@@ -81,7 +81,7 @@ storage.removeSessionStorageSync = function (key) {
  * vk.clearSessionStorageSync();
  */
 storage.clearSessionStorageSync = function (key) {
-  // #ifdef H5
+  // #ifdef WEB
   if (key) {
     let keys = Object.keys(sessionStorage);
     if (keys) {
@@ -97,7 +97,7 @@ storage.clearSessionStorageSync = function (key) {
   }
   // #endif
 
-  // #ifndef H5
+  // #ifndef WEB
   console.warn('非H5环境不支持此API');
   // #endif
 };

@@ -715,7 +715,7 @@ export default {
         }
       });
       // #endif
-      // #ifdef H5
+      // #ifdef WEB
       resolve();
       // #endif
     });
@@ -740,7 +740,7 @@ export default {
         addAppid(obj);
         let { data = {} } = obj;
         return that.getWeixinCode(data).then((code) => {
-          // #ifdef H5
+          // #ifdef WEB
           // H5平台需要区分环境（如微信公众号？网页H5?）
           data.vk_platform = uni.vk.h5.getEnv();
           // #endif
@@ -802,7 +802,7 @@ export default {
         addAppid(obj);
         let { data = {} } = obj;
         return that.getWeixinCode(data).then((code) => {
-          // #ifdef H5
+          // #ifdef WEB
           // H5平台需要区分环境（如微信公众号？网页H5?）
           data.vk_platform = uni.vk.h5.getEnv();
           // #endif
@@ -833,7 +833,7 @@ export default {
         addLoading(obj, 'loading');
         addAppid(obj);
         let { data = {} } = obj;
-        // #ifdef H5
+        // #ifdef WEB
         // H5平台需要区分环境（如微信公众号？网页H5?）
         data.vk_platform = uni.vk.h5.getEnv();
         obj.data = data;
@@ -973,7 +973,7 @@ export default {
    */
   getWeiXinJsapiSign(obj = {}) {
     // 此接口仅微信公众号可调用
-    // #ifdef H5
+    // #ifdef WEB
     let env = uni.vk.h5.getEnv();
     if (env === 'h5-weixin') {
       if (!obj.data) {
