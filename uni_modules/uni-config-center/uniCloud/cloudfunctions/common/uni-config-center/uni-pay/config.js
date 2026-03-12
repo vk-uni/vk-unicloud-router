@@ -19,6 +19,8 @@ module.exports = {
   "autoDeleteExpiredOrders": 0, // 0代表永不删除，3代表3天（单位：天）
   // 是否使用当面付接口来代替支付宝app支付（可免去申请支付宝APP支付的接口）
   "alipayAppPayToH5Pay": false,
+  // 用户白名单，数组值为uni-id-users表的_id，设置后只有白名单里的用户才能发起支付（此时createPayment接口必须传user_id），主要用于发布测试版时限制只能测试人员支付，避免不必要的支付纠纷
+  // "userWhitelist": [],
   /**
    * 微信支付官方商户配置
    * 公共参数说明
@@ -30,7 +32,9 @@ module.exports = {
    * v3Key              微信支付V3版本的api密钥
    * appCertPath        微信支付V3版本需要用到的证书（apiclient_cert.pem）配置示例："appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
    * appPrivateKeyPath  微信支付V3版本需要用到的证书（apiclient_key.pem）配置示例："appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
-   * version            启用支付的版本 2代表v2版本 3 代表v3版本，默认是2
+   * wxpayPublicKeyPath 微信支付V3版本需要用到的证书（pub_key.pem）配置示例："wxpayPublicKeyPath": path.join(__dirname, 'wxpay/pub_key.pem'), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
+   * wxpayPublicKeyId   微信支付V3版本需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
+   * version            启用支付的版本 2代表v2版本 3 代表v3版本，默认是3
    * 特别注意：          因node18不支持v2版本的.p12证书，故建议使用v3版本
    */
   "wxpay": {
@@ -44,6 +48,8 @@ module.exports = {
       "v3Key": "", // v3的api key
       "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
       "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
+      "wxpayPublicKeyPath": path.join(__dirname, "wxpay/pub_key.pem"), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
+      "wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
     // 微信 - APP支付（微信支付申请APP支付）
@@ -56,6 +62,8 @@ module.exports = {
       "v3Key": "", // v3的api key
       "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
       "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
+      "wxpayPublicKeyPath": path.join(__dirname, "wxpay/pub_key.pem"), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
+      "wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
     // 微信 - H5电脑网站二维码支付（微信支付申请Native支付）
@@ -68,6 +76,8 @@ module.exports = {
       "v3Key": "", // v3的api key
       "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
       "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
+      "wxpayPublicKeyPath": path.join(__dirname, "wxpay/pub_key.pem"), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
+      "wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
     // 微信 - 公众号支付（微信支付申请JSAPI支付）
@@ -80,6 +90,8 @@ module.exports = {
       "v3Key": "", // v3的api key
       "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
       "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
+      "wxpayPublicKeyPath": path.join(__dirname, "wxpay/pub_key.pem"), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
+      "wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
     // 微信 - 手机外部浏览器H5支付（微信支付申请H5支付）
@@ -92,6 +104,8 @@ module.exports = {
       "v3Key": "", // v3的api key
       "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
       "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
+      "wxpayPublicKeyPath": path.join(__dirname, "wxpay/pub_key.pem"), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
+      "wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
       // 场景信息，必填
       "sceneInfo": {
         "h5_info": {
@@ -102,15 +116,16 @@ module.exports = {
       },
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
-    // 微信 - 转账到零钱（固定v3版本）（微信支付申请企业转账到零钱API）
+    // 微信 - 商家转账（固定v3版本）（微信支付申请商家转账接口）
     "transfer": {
       "appId": "", // 可以是小程序或公众号或app开放平台下的应用的任意一个appid
       "mchId": "", // 微信支付的商户id
       "v3Key": "", // api v3密钥
       "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // 商家应用证书
       "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // 商家私钥证书
-      "wxpayPublicCertSn": "", // 微信支付公钥证书的序列号 参数获取教程：https://vkdoc.fsq.pub/vk-uni-pay/uniCloud/transfer3.html#参数的获取方式
-      "wxpayPublicCertContent": "", // 微信支付公钥内容 参数获取教程：https://vkdoc.fsq.pub/vk-uni-pay/uniCloud/transfer3.html#参数的获取方式
+      "wxpayPublicKeyPath": path.join(__dirname, "wxpay/pub_key.pem"), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
+      "wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
+      "version": 3, // 转账接口只支持v3版本
     },
     // 微信 - 付款码支付
     "codepay": {
@@ -121,6 +136,8 @@ module.exports = {
       "v3Key": "", // v3的api key
       "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
       "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
+      "wxpayPublicKeyPath": path.join(__dirname, "wxpay/pub_key.pem"), // v3需要用到的证书 - 微信支付公钥证书（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数），详情查看文档 https://vkdoc.fsq.pub/vk-uni-pay/config.html#wxpaypublickeypath
+      "wxpayPublicKeyId": "", // v3需要用到的微信支付公钥ID，值为以PUB_KEY_ID_开头的一串字符串（仅限开启了微信支付公钥的商户，若已开通微信支付平台证书的商户可无视此参数或注释掉此参数）
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
   },
@@ -128,7 +145,7 @@ module.exports = {
    * 支付宝官方商户配置
    * 公共参数说明
    * appId                  支付宝开放平台的应用appId
-   * privateKey             应用私钥
+   * privateKey             应用私钥（支付宝商户私钥）
    * alipayPublicCertPath   [证书模式] 支付宝公钥证书路径地址  与之对应的 alipayPublicCertContent 为支付宝公钥证书内容（值可以是字符串也可以是Buffer）
    * alipayRootCertPath     [证书模式] 支付宝根证书路径地址   与之对应的 alipayRootCertContent 为支付宝根证书内容（值可以是字符串也可以是Buffer）
    * appCertPath            [证书模式] 应用证书路径地址      与之对应的 appCertPathContent 为应用证书内容（值可以是字符串也可以是Buffer）
@@ -136,13 +153,11 @@ module.exports = {
    * sandbox                是否沙箱模式 true 沙箱模式 false 正常模式
    */
   "alipay": {
-    // 支付宝 - 小程序支付配置
+    // 支付宝 - 小程序支付配置（由于uni-id目前只支持密钥模式，所以小程序支付的配置默认也是密钥模式的配置）
     "mp-alipay": {
       "appId": "", // 支付宝小程序appid
       "privateKey": "", // 支付宝商户私钥
-      "alipayPublicCertPath": path.join(__dirname, "alipay/alipayCertPublicKey_RSA2.crt"), // 支付宝公钥路径
-      "alipayRootCertPath": path.join(__dirname, "alipay/alipayRootCert.crt"), // 支付宝根证书路径
-      "appCertPath": path.join(__dirname, "alipay/appCertPublicKey.crt"), // 支付宝商户公钥路径
+      "alipayPublicKey": "", // 支付宝公钥字符串
       "sandbox": false,
     },
     // 支付宝 - APP支付配置
@@ -220,13 +235,14 @@ module.exports = {
   },
   // 抖音支付
   "douyin": {
-    // 抖音小程序支付
+    // 抖音小程序支付，请在支付配置信息中配置URL(服务器地址)为 https://vk-pay的url化地址/vk-pay-notify/
     "mp-toutiao": {
       "appId": "", // 抖音小程序的appId
       "secret": "", // 抖音小程序的secret
       "mchId": "", // 商户id（商户号）
-      "salt": "", // salt，从支付信息 - 支付设置中获取
-      "sandbox": false, // 是否是沙箱环境（正式上线时必须配置为false）
+      "salt": "", // SALT，从支付信息 - 支付设置中获取
+      "token": "", // Token(令牌)，从支付信息 - 支付设置中获取
+      "sandbox": false, // 是否是沙箱环境
     },
   },
   // 华为支付
