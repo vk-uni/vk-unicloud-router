@@ -101,6 +101,9 @@
         "template" : "template.h5.html",
         "devServer" : {
             "disableHostCheck" : true
+        },
+        "router" : {
+            "mode" : "hash"
         }
     },
     "vueVersion" : "3",

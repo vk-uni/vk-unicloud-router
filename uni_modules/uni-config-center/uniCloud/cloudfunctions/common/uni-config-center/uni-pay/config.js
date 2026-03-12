@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 module.exports = {
   /**
    * 统一支付回调地址，格式为 "服务空间SpaceID":"URL化完整地址"
@@ -10,7 +10,7 @@ module.exports = {
     // 测试环境服务空间
     "mp-33d35e24-c2f3-47b4-80fc-7b23a6666666": "https://fc-mp-33d35e24-c2f3-47b4-80fc-7b23a6666666.next.bspapp.com/http/vk-pay",
     // 线上环境服务空间（如果只有一个服务空间，则只需要配置线上环境服务空间即可）
-    "mp-5761d885-11b8-21b2-9122-22afea666666": "https://fc-mp-5761d885-11b8-21b2-9122-22afea666666.next.bspapp.com/http/vk-pay"
+    "mp-5761d885-11b8-21b2-9122-22afea666666": "https://fc-mp-5761d885-11b8-21b2-9122-22afea666666.next.bspapp.com/http/vk-pay",
   },
   // 此密钥主要用于跨云函数回调或回调java、php等外部系统时的通信密码（建议修改成自己的，最好64位以上，更加安全）
   // 详细介绍：https://vkdoc.fsq.pub/vk-uni-pay/uniCloud/pay-notify.html#特别注意
@@ -40,10 +40,10 @@ module.exports = {
       "secret": "", // 小程序的secret
       "mchId": "", // 微信支付的商户id
       "key": "", // v2的api key
-      "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
+      "pfx": fs.readFileSync(__dirname + "/wxpay/apiclient_cert.p12"), // v2需要用到的证书
       "v3Key": "", // v3的api key
-      "appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
-      "appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
+      "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
+      "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
     // 微信 - APP支付（微信支付申请APP支付）
@@ -52,10 +52,10 @@ module.exports = {
       "secret": "", // 微信开放平台下的移动应用的secret
       "mchId": "", // 微信支付的商户id
       "key": "", // v2的api key
-      "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
+      "pfx": fs.readFileSync(__dirname + "/wxpay/apiclient_cert.p12"), // v2需要用到的证书
       "v3Key": "", // v3的api key
-      "appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
-      "appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
+      "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
+      "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
     // 微信 - H5电脑网站二维码支付（微信支付申请Native支付）
@@ -64,10 +64,10 @@ module.exports = {
       "secret": "", // secret
       "mchId": "", // 微信支付的商户id
       "key": "", // v2的api key
-      "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
+      "pfx": fs.readFileSync(__dirname + "/wxpay/apiclient_cert.p12"), // v2需要用到的证书
       "v3Key": "", // v3的api key
-      "appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
-      "appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
+      "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
+      "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
     // 微信 - 公众号支付（微信支付申请JSAPI支付）
@@ -76,10 +76,10 @@ module.exports = {
       "secret": "", // 公众号的secret
       "mchId": "", // 微信支付的商户id
       "key": "", // v2的api key
-      "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
+      "pfx": fs.readFileSync(__dirname + "/wxpay/apiclient_cert.p12"), // v2需要用到的证书
       "v3Key": "", // v3的api key
-      "appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
-      "appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
+      "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
+      "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
     // 微信 - 手机外部浏览器H5支付（微信支付申请H5支付）
@@ -88,17 +88,17 @@ module.exports = {
       "secret": "", // secret
       "mchId": "", // 微信支付的商户id
       "key": "", // v2的api key
-      "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
+      "pfx": fs.readFileSync(__dirname + "/wxpay/apiclient_cert.p12"), // v2需要用到的证书
       "v3Key": "", // v3的api key
-      "appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
-      "appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
+      "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
+      "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
       // 场景信息，必填
       "sceneInfo": {
         "h5_info": {
           "type": "Wap", // 此值固定Wap
           "wap_url": "https://www.xxxxxx.com", // 你的H5首页地址，必须和你发起支付的页面的域名一致。
           "wap_name": "网站名称", // 你的H5网站名称
-        }
+        },
       },
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
     },
@@ -107,8 +107,8 @@ module.exports = {
       "appId": "", // 可以是小程序或公众号或app开放平台下的应用的任意一个appid
       "mchId": "", // 微信支付的商户id
       "v3Key": "", // api v3密钥
-      "appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // 商家应用证书
-      "appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // 商家私钥证书
+      "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // 商家应用证书
+      "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // 商家私钥证书
       "wxpayPublicCertSn": "", // 微信支付公钥证书的序列号 参数获取教程：https://vkdoc.fsq.pub/vk-uni-pay/uniCloud/transfer3.html#参数的获取方式
       "wxpayPublicCertContent": "", // 微信支付公钥内容 参数获取教程：https://vkdoc.fsq.pub/vk-uni-pay/uniCloud/transfer3.html#参数的获取方式
     },
@@ -117,12 +117,12 @@ module.exports = {
       "appId": "", // 可以是小程序或公众号或app开放平台下的应用的任意一个appid
       "mchId": "", // 微信支付的商户id
       "key": "", // v2的api key
-      "pfx": fs.readFileSync(__dirname + '/wxpay/apiclient_cert.p12'), // v2需要用到的证书
+      "pfx": fs.readFileSync(__dirname + "/wxpay/apiclient_cert.p12"), // v2需要用到的证书
       "v3Key": "", // v3的api key
-      "appCertPath": path.join(__dirname, 'wxpay/apiclient_cert.pem'), // v3需要用到的证书
-      "appPrivateKeyPath": path.join(__dirname, 'wxpay/apiclient_key.pem'), // v3需要用到的证书
+      "appCertPath": path.join(__dirname, "wxpay/apiclient_cert.pem"), // v3需要用到的证书
+      "appPrivateKeyPath": path.join(__dirname, "wxpay/apiclient_key.pem"), // v3需要用到的证书
       "version": 3, // 启用支付的版本 2代表v2版本 3 代表v3版本（因node18不支持v2版本的.p12证书，故建议使用v3版本）
-    }
+    },
   },
   /**
    * 支付宝官方商户配置
@@ -140,47 +140,47 @@ module.exports = {
     "mp-alipay": {
       "appId": "", // 支付宝小程序appid
       "privateKey": "", // 支付宝商户私钥
-      "alipayPublicCertPath": path.join(__dirname, 'alipay/alipayCertPublicKey_RSA2.crt'), // 支付宝公钥路径
-      "alipayRootCertPath": path.join(__dirname, 'alipay/alipayRootCert.crt'), // 支付宝根证书路径
-      "appCertPath": path.join(__dirname, 'alipay/appCertPublicKey.crt'), // 支付宝商户公钥路径
-      "sandbox": false
+      "alipayPublicCertPath": path.join(__dirname, "alipay/alipayCertPublicKey_RSA2.crt"), // 支付宝公钥路径
+      "alipayRootCertPath": path.join(__dirname, "alipay/alipayRootCert.crt"), // 支付宝根证书路径
+      "appCertPath": path.join(__dirname, "alipay/appCertPublicKey.crt"), // 支付宝商户公钥路径
+      "sandbox": false,
     },
     // 支付宝 - APP支付配置
     "app-plus": {
       "appId": "", // 支付宝开放平台的应用appId
       "privateKey": "", // 支付宝商户私钥
-      "alipayPublicCertPath": path.join(__dirname, 'alipay/alipayCertPublicKey_RSA2.crt'), // 支付宝公钥路径
-      "alipayRootCertPath": path.join(__dirname, 'alipay/alipayRootCert.crt'), // 支付宝根证书路径
-      "appCertPath": path.join(__dirname, 'alipay/appCertPublicKey.crt'), // 支付宝商户公钥路径
-      "sandbox": false
+      "alipayPublicCertPath": path.join(__dirname, "alipay/alipayCertPublicKey_RSA2.crt"), // 支付宝公钥路径
+      "alipayRootCertPath": path.join(__dirname, "alipay/alipayRootCert.crt"), // 支付宝根证书路径
+      "appCertPath": path.join(__dirname, "alipay/appCertPublicKey.crt"), // 支付宝商户公钥路径
+      "sandbox": false,
     },
     // 支付宝 - H5支付配置（包含：网站二维码、手机H5，需申请支付宝当面付接口权限）
     "h5": {
       "appId": "", // 支付宝开放平台的应用appId
       "privateKey": "", // 支付宝商户私钥
-      "alipayPublicCertPath": path.join(__dirname, 'alipay/alipayCertPublicKey_RSA2.crt'), // 支付宝公钥路径
-      "alipayRootCertPath": path.join(__dirname, 'alipay/alipayRootCert.crt'), // 支付宝根证书路径
-      "appCertPath": path.join(__dirname, 'alipay/appCertPublicKey.crt'), // 支付宝商户公钥路径
-      "sandbox": false
+      "alipayPublicCertPath": path.join(__dirname, "alipay/alipayCertPublicKey_RSA2.crt"), // 支付宝公钥路径
+      "alipayRootCertPath": path.join(__dirname, "alipay/alipayRootCert.crt"), // 支付宝根证书路径
+      "appCertPath": path.join(__dirname, "alipay/appCertPublicKey.crt"), // 支付宝商户公钥路径
+      "sandbox": false,
     },
     // 支付宝 - 转账到支付宝等资金转出接口，其中 appCertSn 和 alipayRootCertSn 通过工具获取，工具地址：https://vkunicloud.fsq.pub/getCertSn/
     "transfer": {
       "appId": "", // 支付宝开放平台的应用appId
       "privateKey": "", // 支付宝商户私钥
-      "alipayPublicCertPath": path.join(__dirname, 'alipay/alipayCertPublicKey_RSA2.crt'), // 支付宝商户公钥路径
-      "alipayRootCertPath": path.join(__dirname, 'alipay/alipayRootCert.crt'), // 支付宝根证书路径
-      "appCertPath": path.join(__dirname, 'alipay/appCertPublicKey.crt'), // 支付宝商户公钥路径
-      "sandbox": false
+      "alipayPublicCertPath": path.join(__dirname, "alipay/alipayCertPublicKey_RSA2.crt"), // 支付宝商户公钥路径
+      "alipayRootCertPath": path.join(__dirname, "alipay/alipayRootCert.crt"), // 支付宝根证书路径
+      "appCertPath": path.join(__dirname, "alipay/appCertPublicKey.crt"), // 支付宝商户公钥路径
+      "sandbox": false,
     },
     // 支付宝 - 付款码支付
     "codepay": {
       "appId": "", // 支付宝开放平台的应用appId
       "privateKey": "", // 支付宝商户私钥
-      "alipayPublicCertPath": path.join(__dirname, 'alipay/alipayCertPublicKey_RSA2.crt'), // 支付宝公钥路径
-      "alipayRootCertPath": path.join(__dirname, 'alipay/alipayRootCert.crt'), // 支付宝根证书路径
-      "appCertPath": path.join(__dirname, 'alipay/appCertPublicKey.crt'), // 支付宝商户公钥路径
-      "sandbox": false
-    }
+      "alipayPublicCertPath": path.join(__dirname, "alipay/alipayCertPublicKey_RSA2.crt"), // 支付宝公钥路径
+      "alipayRootCertPath": path.join(__dirname, "alipay/alipayRootCert.crt"), // 支付宝根证书路径
+      "appCertPath": path.join(__dirname, "alipay/appCertPublicKey.crt"), // 支付宝商户公钥路径
+      "sandbox": false,
+    },
   },
   // ios内购相关
   "appleiap": {
@@ -190,7 +190,7 @@ module.exports = {
       "timeout": 10000, // 请求超时时间，单位：毫秒
       "receiptExpiresIn": 86400, // ios内购凭据有效期，单位：秒 86400 = 24小时 3600 = 1小时
       "sandbox": true, // 是否是沙箱环境（正式上线时必须配置为false）
-    }
+    },
   },
   // 微信虚拟支付
   "wxpay-virtual": {
@@ -206,7 +206,7 @@ module.exports = {
       "token": "", // 微信小程序通信的token，在开发 - 开发管理 - 消息推送 - Token(令牌)
       "encodingAESKey": "", // 必须43位，微信小程序消息加密密钥，在开发 - 开发管理 - 消息推送 - EncodingAESKey(消息加解密密钥)
       "sandbox": false, // 是否是沙箱环境（注意：沙箱环境异步回调可能有延迟，建议直接正式环境测试）
-    }
+    },
   },
   /**
    * VksPay商户支付配置
@@ -216,7 +216,7 @@ module.exports = {
    */
   "vkspay": {
     "mchId": "", // 商户号
-    "key": "" // 商户key
+    "key": "", // 商户key
   },
   // 抖音支付
   "douyin": {
@@ -227,7 +227,7 @@ module.exports = {
       "mchId": "", // 商户id（商户号）
       "salt": "", // salt，从支付信息 - 支付设置中获取
       "sandbox": false, // 是否是沙箱环境（正式上线时必须配置为false）
-    }
+    },
   },
   // 华为支付
   "huawei": {
@@ -238,7 +238,7 @@ module.exports = {
       "mchAuthId": "", // 商户证书编号
       "mchPrivateKey": "", // 商户私钥内容
       "platformPublicKey": "", // 华为支付公钥
-      "clientType": "mp-harmony" // 固定 mp-harmony 请勿修改
+      "clientType": "mp-harmony", // 固定 mp-harmony 请勿修改
     },
     // 华为 - APP支付
     "app-harmony": {
@@ -247,7 +247,7 @@ module.exports = {
       "mchAuthId": "", // 商户证书编号
       "mchPrivateKey": "", // 商户私钥内容
       "platformPublicKey": "", // 华为支付公钥
-      "clientType": "app-harmony" // 固定 app-harmony 请勿修改
-    }
-  }
-}
+      "clientType": "app-harmony", // 固定 app-harmony 请勿修改
+    },
+  },
+};

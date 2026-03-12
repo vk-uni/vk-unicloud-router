@@ -1,14 +1,14 @@
 let uniIdConfig;
 let uniPayConfig;
 try {
-  uniIdConfig = require('../uni-id/config.json');
+  uniIdConfig = require("../uni-id/config.json");
 } catch (err) {
   console.error("配置文件：uniCloud/cloudfunctions/common/uni-config-center/uni-id/config.json 编译错误，请检查！↓↓↓请查看下方的错误提示↓↓↓", err.name, err.message, err);
   throw new Error("配置文件：uniCloud/cloudfunctions/common/uni-config-center/uni-id/config.json 编译错误，请检查！↑↑↑请查看上方的错误提示↑↑↑");
 }
 
 try {
-  uniPayConfig = require('../uni-pay/config.js');
+  uniPayConfig = require("../uni-pay/config.js");
 } catch (err) {
   console.error("配置文件：uniCloud/cloudfunctions/common/uni-config-center/uni-pay/config.js 编译错误，请检查！↓↓↓请查看下方的错误提示↓↓↓", err.name, err.message, err);
   throw new Error("配置文件：uniCloud/cloudfunctions/common/uni-config-center/uni-pay/config.js 编译错误，请检查！↑↑↑请查看上方的错误提示↑↑↑");
@@ -24,7 +24,7 @@ module.exports = {
       "serviceShutdown": false,
       "serviceShutdownDescription": "系统维护中，预计2小时恢复!",
       // 云函数默认时区（中国为8）
-      "targetTimezone": 8
+      "targetTimezone": 8,
     },
     // 服务端加密的密钥
     "crypto": {
@@ -52,8 +52,8 @@ module.exports = {
           "secure": true,
           "auth": {
             "user": "你的邮箱@qq.com",
-            "pass": "邮箱授权码"
-          }
+            "pass": "邮箱授权码",
+          },
         },
         // 163邮箱配置
         "163": {
@@ -62,16 +62,16 @@ module.exports = {
           "secure": true,
           "auth": {
             "user": "",
-            "pass": ""
-          }
-        }
+            "pass": "",
+          },
+        },
       },
       // 日志服务
       "log": {
         // 用户登录日志
         "login": {
-          "status": true // 是否开启用户登录日志
-        }
+          "status": true, // 是否开启用户登录日志
+        },
       },
       // 短信服务
       "sms": {
@@ -82,9 +82,9 @@ module.exports = {
           "accessKeySecret": "", // 短信密钥secret
           "signName": "", // 默认签名
           "templateCode": {
-            "verifyCode": "" // 验证码短信模板 - 配合uni-id需要
-          }
-        }
+            "verifyCode": "", // 验证码短信模板 - 配合uni-id需要
+          },
+        },
       },
       // 开放平台api
       "openapi": {
@@ -92,8 +92,8 @@ module.exports = {
         // API Key申请地址：https://cloud.baidu.com/doc/OCR/s/rk3h7xzck 点击右上角注册
         "baidu": {
           "appid": "", // 对应的API Key
-          "appsecret": "" // 对应的Secret Key
-        }
+          "appsecret": "", // 对应的Secret Key
+        },
       },
       // 云储存相关配置
       "cloudStorage": {
@@ -115,9 +115,9 @@ module.exports = {
           "bucketSecret": "", // 存储空间密钥，可不填，不填则使用当前空间绑定的存储空间
           "endpoint": {
             "upload": "", // 上传接口的代理地址，在国内上传无需填写
-          }
-        }
-      }
+          },
+        },
+      },
     },
     "db": {
       "unicloud": {
@@ -126,8 +126,8 @@ module.exports = {
         "cancelAddTimeStr": false, // 仅取消 vk.baseDao.add 执行【添加】时自动生成的 _add_time_str，若已设置 cancelAddTime 为true，则 cancelAddTimeStr 也会强制为true
         "getTableData": {
           "sortArr": [{ "name": "_add_time", "type": "desc" }], // vk.baseDao.getTableData 默认排序规则 vk.db.unicloud.getTableData.sortArr
-        }
-      }
+        },
+      },
     },
     "cacheManage": {
       /**
@@ -144,33 +144,33 @@ module.exports = {
         // 密钥列表
         "list": [
           { "appid": "", "appsecret": "" },
-          { "appid": "", "appsecret": "" }
-        ]
+          { "appid": "", "appsecret": "" },
+        ],
       },
       // 支付宝小程序
       "alipay": {
         // 密钥列表
         "list": [
           { "appid": "", "privateKey": "" },
-          { "appid": "", "privateKey": "" }
-        ]
+          { "appid": "", "privateKey": "" },
+        ],
       },
       // qq小程序
       "qq": {
         // 密钥列表
         "list": [
           { "appid": "", "appsecret": "" },
-          { "appid": "", "appsecret": "" }
-        ]
+          { "appid": "", "appsecret": "" },
+        ],
       },
       // 抖音小程序
       "toutiao": {
         // 密钥列表
         "list": [
           { "appid": "", "appsecret": "" },
-          { "appid": "", "appsecret": "" }
-        ]
-      }
-    }
-  }
+          { "appid": "", "appsecret": "" },
+        ],
+      },
+    },
+  },
 };
