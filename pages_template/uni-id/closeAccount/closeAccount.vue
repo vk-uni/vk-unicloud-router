@@ -18,8 +18,8 @@
         <view class="countdown-display">
           <text class="countdown-time">{{ formattedDuration }}</text>
         </view>
-        <view class="progress-bar">
-          <view class="progress-fill" :style="{ width: progressWidth + '%' }"></view>
+        <view class="progress-bar" :style="{ '--progress-width': progressWidth + '%' }">
+          <view class="progress-fill"></view>
         </view>
       </view>
     </view>
@@ -27,21 +27,28 @@
     <!-- 操作按钮区域 -->
     <view class="action-section" v-if="isLoad">
       <!-- 申请注销按钮 -->
-      <button type="warn" v-if="!isInCoolingPeriod && !isAccountClosed" class="action-btn" :loading="loading.close" :disabled="loading.close" @click="applyCloseAccount">
+      <button
+        v-if="!isInCoolingPeriod && !isAccountClosed"
+        class="action-btn warn-btn"
+        :class="{ disabled: loading.close }"
+        :loading="loading.close"
+        :disabled="loading.close"
+        @click="applyCloseAccount"
+      >
         <text class="btn-text">申请注销账号</text>
       </button>
 
       <!-- 恢复账号按钮 -->
-      <button v-if="isInCoolingPeriod" class="action-btn success-btn" :loading="loading.open" :disabled="loading.open" @click="openAccount">
+      <button v-if="isInCoolingPeriod" class="action-btn success-btn" :class="{ disabled: loading.open }" :loading="loading.open" :disabled="loading.open" @click="openAccount">
         <text class="btn-text">恢复账号</text>
       </button>
 
       <!-- 确认注销按钮 -->
       <button
         v-if="isInCoolingPeriod"
-        type="warn"
-        class="action-btn"
+        class="action-btn outline-warn-btn"
         :loading="loading.confirm"
+        :class="{ disabled: loading.open || loading.confirm || duration > 0 }"
         :disabled="loading.open || loading.confirm || duration > 0"
         @click="confirmCloseAccount"
       >
@@ -56,10 +63,10 @@
         <text class="tips-title">重要提示</text>
       </view>
       <view class="tips-content">
-        <text class="tips-item">• 注销申请提交后有7天冷静期</text>
-        <text class="tips-item">• 冷静期内可以随时恢复账号</text>
-        <text class="tips-item">• 冷静期结束后需要确认才能完成注销</text>
-        <text class="tips-item">• 账号确认注销后将无法恢复，请谨慎操作</text>
+        <text class="tips-item">注销申请提交后有7天冷静期</text>
+        <text class="tips-item">冷静期内可以随时恢复账号</text>
+        <text class="tips-item">冷静期结束后需要确认才能完成注销</text>
+        <text class="tips-item">账号确认注销后将无法恢复，请谨慎操作</text>
       </view>
     </view>
 
@@ -67,19 +74,19 @@
     <view v-if="showConfirmModal" class="modal-overlay" @click="closeModal">
       <view class="modal-content" @click.stop>
         <view class="modal-header">
-          <text class="modal-title">⚠ 确认注销账号</text>
+          <text class="modal-title">确认注销账号</text>
           <text class="modal-close" @click="closeModal">×</text>
         </view>
         <view class="modal-body">
           <text class="modal-warning">此操作不可逆，请确认您真的要注销账号</text>
           <view class="input-section">
             <text class="input-label">请输入"确认注销"以继续：</text>
-            <input class="confirm-input" v-model="confirmText" placeholder="请输入：确认注销" />
+            <input class="confirm-input" v-model="confirmText" placeholder="请输入：确认注销" placeholder-class="input-placeholder-class" />
           </view>
         </view>
         <view class="modal-footer">
           <button class="modal-btn cancel-btn" @click="closeModal">取消</button>
-          <button type="warn" class="modal-btn" @click="handleConfirmClose" :loading="loading.confirm" :disabled="loading.confirm || confirmText.trim() !== '确认注销'">
+          <button class="modal-btn danger-btn" @click="handleConfirmClose" :loading="loading.confirm" :disabled="loading.confirm || confirmText.trim() !== '确认注销'">
             确认注销
           </button>
         </view>
@@ -90,7 +97,7 @@
     <view v-if="showSuccessPage" class="success-overlay">
       <view class="success-content">
         <view class="success-icon">
-          <text class="icon">✅</text>
+          <text class="icon">✓</text>
         </view>
         <view class="success-title">账号注销成功</view>
         <view class="success-desc">
@@ -98,7 +105,7 @@
           <text class="desc-text">感谢您的使用，期待再次为您服务</text>
         </view>
         <view class="success-actions">
-          <button class="success-btn" @click="goToLogin">
+          <button class="action-btn success-btn" @click="goToLogin">
             <text class="btn-text">返回登录页面</text>
           </button>
         </view>
@@ -319,7 +326,7 @@
       statusIcon() {
         if (this.isAccountClosed) return '❌';
         if (this.isInCoolingPeriod) return '⏰';
-        return '✅';
+        return '✓';
       },
       // 状态样式类
       statusClass() {
@@ -370,57 +377,62 @@
 </script>
 
 <style lang="scss" scoped>
-  page {
-    background: #f8f8f8;
-  }
-
   .account-close-page {
-    padding: 10px;
+    min-height: calc(100vh - var(--window-bottom) - var(--window-top));
+    background-color: #f4f5f7;
+    background-image: linear-gradient(180deg, #f0f2f6 0%, #f7f8fa 100%);
+    padding: 24px 20px;
     box-sizing: border-box;
   }
 
   /* 状态卡片样式 */
   .status-card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    animation: slideInDown 0.6s ease-out;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 28px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInDown 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .status-header {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 24px;
   }
 
   .status-icon {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 10px;
-    animation: pulse 2s infinite;
+    margin-right: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 
     &.status-normal {
-      background: linear-gradient(135deg, #4caf50, #45a049);
+      background: linear-gradient(135deg, #e8fdf5 0%, #c1f6e2 100%);
+      color: #00c68e;
+      box-shadow: 0 6px 16px rgba(0, 198, 142, 0.2);
     }
 
     &.status-cooling {
-      background: linear-gradient(135deg, #ff9800, #f57c00);
+      background: linear-gradient(135deg, #fff4e5 0%, #ffe1bc 100%);
+      color: #ff8c00;
+      box-shadow: 0 6px 16px rgba(255, 140, 0, 0.2);
     }
 
     &.status-closed {
-      background: linear-gradient(135deg, #f44336, #d32f2f);
+      background: linear-gradient(135deg, #ffebec 0%, #ffd1d4 100%);
+      color: #ff4d4f;
+      box-shadow: 0 6px 16px rgba(255, 77, 79, 0.2);
     }
 
     .icon {
-      font-size: 20px;
-      color: white;
+      font-size: 28px;
     }
   }
 
@@ -429,140 +441,186 @@
   }
 
   .status-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1d2129;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
   }
 
   .status-desc {
-    font-size: 13px;
-    color: #666;
-    line-height: 1.4;
+    font-size: 14px;
+    color: #86909c;
+    line-height: 1.5;
   }
 
   /* 倒计时样式 */
   .countdown-section {
-    background: rgba(255, 152, 0, 0.1);
-    border-radius: 7.5px;
-    padding: 15px;
-    border-left: 3px solid #ff9800;
+    background: #fdfafa;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255, 140, 0, 0.1);
   }
 
   .countdown-label {
-    font-size: 12px;
-    color: #ff9800;
-    margin-bottom: 7.5px;
+    font-size: 13px;
+    color: #ff8c00;
+    margin-bottom: 12px;
     font-weight: 500;
   }
 
   .countdown-display {
-    text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
 
   .countdown-time {
-    font-size: 18px;
-    font-weight: bold;
-    color: #ff9800;
-    text-shadow: 0 1px 2px rgba(255, 152, 0, 0.3);
+    font-size: 20px;
+    font-weight: 700;
+    color: #ff8c00;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
   }
 
   .progress-bar {
-    height: 4px;
-    background: rgba(255, 152, 0, 0.2);
-    border-radius: 2px;
+    height: 8px;
+    background: rgba(255, 140, 0, 0.1);
+    border-radius: 4px;
     overflow: hidden;
   }
 
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #ff9800, #ffc107);
-    border-radius: 2px;
-    transition: width 0.3s ease;
-    animation: progressGlow 2s ease-in-out infinite alternate;
+    background: linear-gradient(90deg, #ffb259, #ff8c00);
+    border-radius: 4px;
+    width: var(--progress-width, 0%);
+    transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   /* 操作按钮区域 */
   .action-section {
-    margin-bottom: 15px;
+    margin-bottom: 30px;
+    padding: 0 4px;
   }
 
   .action-btn {
     width: 100%;
-    height: 50px;
-    border-radius: 10px;
+    height: 56px;
+    border-radius: 28px;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
-    font-size: 15px;
-    font-weight: bold;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    margin-bottom: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    letter-spacing: 0.5px;
 
     &:not(:disabled):active {
-      transform: translateY(1px);
+      transform: scale(0.96);
+    }
+
+    &::after {
+      border: none;
+    }
+  }
+
+  .warn-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ff3b3b);
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(255, 59, 59, 0.25);
+
+    .disabled {
+      background: #e5e6eb;
+      color: #b5b7c0;
+      box-shadow: none;
     }
   }
 
   .success-btn {
-    background: #4caf50;
-    color: white;
+    background: #19be6b;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 179, 131, 0.25);
 
-    &:not(:disabled):hover {
-      background: #388e3c;
+    .disabled {
+      background: #e5e6eb;
+      color: #b5b7c0;
+      box-shadow: none;
     }
+  }
 
-    &:disabled {
-      background: #bdbdbd;
-      color: #757575;
+  .outline-warn-btn {
+    background: #ffffff;
+    color: #ff3b3b;
+    border: 1.5px solid #ff3b3b;
+    box-shadow: 0 4px 12px rgba(255, 59, 59, 0.08);
+
+    .disabled {
+      border: 1.5px solid #b5b7c0;
+      border-color: #e5e6eb;
+      color: #b5b7c0;
+      box-shadow: none;
     }
   }
 
   .btn-text {
-    font-size: 15px;
+    font-size: 17px;
     color: inherit;
   }
 
   /* 温馨提示区域 */
   .tips-section {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 12.5px rgba(0, 0, 0, 0.08);
-    animation: slideInUp 0.6s ease-out 0.2s both;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.02);
+    animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both;
   }
 
   .tips-header {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
 
   .tips-icon {
-    font-size: 16px;
-    margin-right: 7.5px;
+    font-size: 18px;
+    margin-right: 8px;
   }
 
   .tips-title {
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1d2129;
   }
 
   .tips-content {
     .tips-item {
       display: block;
-      font-size: 13px;
-      color: #666;
-      line-height: 1.6;
-      margin-bottom: 5px;
-      padding-left: 5px;
+      font-size: 14px;
+      color: #4e5969;
+      line-height: 1.8;
+      margin-bottom: 10px;
+      position: relative;
+      padding-left: 14px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 9px;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #c9cdd4;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 
@@ -573,7 +631,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -582,125 +641,151 @@
   }
 
   .modal-content {
-    background: white;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 300px;
-    max-height: 80%;
+    background: #ffffff;
+    border-radius: 24px;
+    width: 85%;
+    max-width: 340px;
     overflow: hidden;
-    animation: slideInScale 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: popIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
   }
 
   .modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 20px;
-    border-bottom: 0.5px solid #eee;
-    background: linear-gradient(135deg, #f44336, #d32f2f);
-    color: white;
+    padding: 24px 24px 16px;
   }
 
   .modal-title {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 19px;
+    font-weight: 600;
+    color: #1d2129;
   }
 
   .modal-close {
-    font-size: 20px;
+    font-size: 24px;
+    color: #86909c;
     cursor: pointer;
-    opacity: 0.8;
-    transition: opacity 0.2s ease;
+    line-height: 1;
+    transition: color 0.2s ease;
+    padding: 4px;
 
     &:hover {
-      opacity: 1;
+      color: #1d2129;
     }
   }
 
   .modal-body {
-    padding: 20px;
+    padding: 0 24px 24px;
   }
 
   .modal-warning {
     font-size: 14px;
-    color: #f44336;
-    text-align: center;
-    margin-bottom: 15px;
-    line-height: 1.5;
+    color: #ff4d4f;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    display: block;
+    background: #fff0f0;
+    padding: 14px 16px;
+    border-radius: 12px;
   }
 
   .input-section {
     .input-label {
       display: block;
-      font-size: 13px;
-      color: #333;
-      margin-bottom: 7.5px;
+      font-size: 15px;
+      color: #1d2129;
+      margin-bottom: 12px;
+      font-weight: 500;
     }
 
     .confirm-input {
       width: 100%;
-      height: 40px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 0 10px;
-      font-size: 14px;
+      height: 52px;
+      background: #f7f8fa;
+      border: 1.5px solid transparent;
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 16px;
+      color: #1d2129;
       box-sizing: border-box;
-      transition: border-color 0.3s ease;
+      transition: all 0.3s ease;
 
       &:focus {
-        border-color: #f44336;
+        background: #ffffff;
+        border-color: #ff4d4f;
+        box-shadow: 0 0 0 4px rgba(255, 77, 79, 0.1);
         outline: none;
       }
+    }
+
+    .input-placeholder-class {
+      color: #c9cdd4;
     }
   }
 
   .modal-footer {
     display: flex;
-    padding: 15px 20px;
-    gap: 10px;
-    background: #f8f8f8;
+    padding: 16px 24px 24px;
+    gap: 16px;
   }
 
   .modal-btn {
     flex: 1;
-    height: 40px;
-    line-height: 40px;
-    border-radius: 5px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 25px;
     border: none;
-    font-size: 14px;
-    font-weight: bold;
-    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    padding: 0;
+    margin: 0;
+
+    &::after {
+      border: none;
+    }
+
+    &:not(:disabled):active {
+      transform: scale(0.96);
+    }
   }
 
   .cancel-btn {
-    background: #f5f5f5;
-    color: #666;
+    background: #f2f3f5;
+    color: #4e5969;
+  }
 
-    &:not(:disabled):hover {
-      background: #e0e0e0;
+  .danger-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ff3b3b);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(255, 59, 59, 0.2);
+
+    &:disabled {
+      background: #e5e6eb;
+      color: #b5b7c0;
+      box-shadow: none;
     }
   }
 
   /* 动画效果 */
-  @keyframes slideInDown {
+  @keyframes fadeInDown {
     from {
       opacity: 0;
-      transform: translateY(-25px);
+      transform: translateY(-20px);
     }
-
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 
-  @keyframes slideInUp {
+  @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(25px);
+      transform: translateY(20px);
     }
-
     to {
       opacity: 1;
       transform: translateY(0);
@@ -711,42 +796,19 @@
     from {
       opacity: 0;
     }
-
     to {
       opacity: 1;
     }
   }
 
-  @keyframes slideInScale {
+  @keyframes popIn {
     from {
       opacity: 0;
-      transform: scale(0.8) translateY(-25px);
+      transform: scale(0.9) translateY(10px);
     }
-
     to {
       opacity: 1;
       transform: scale(1) translateY(0);
-    }
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      transform: scale(1);
-    }
-
-    50% {
-      transform: scale(1.05);
-    }
-  }
-
-  @keyframes progressGlow {
-    0% {
-      box-shadow: 0 0 2.5px rgba(255, 152, 0, 0.5);
-    }
-
-    100% {
-      box-shadow: 0 0 10px rgba(255, 152, 0, 0.8);
     }
   }
 
@@ -757,222 +819,110 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(6px);
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10000;
-    animation: fadeIn 0.5s ease;
+    animation: fadeIn 0.4s ease;
   }
 
   .success-content {
-    background: white;
-    border-radius: 15px;
-    width: 85%;
-    max-width: 320px;
+    width: 100%;
     padding: 40px 30px;
     text-align: center;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 
     .success-icon {
-      width: 80px;
-      height: 80px;
+      width: 88px;
+      height: 88px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #4caf50, #45a049);
+      background: linear-gradient(135deg, #e8fdf5 0%, #c1f6e2 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 25px;
-      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+      margin: 0 auto 36px;
+      animation: popIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 12px 32px rgba(0, 198, 142, 0.15);
 
       .icon {
         font-size: 40px;
-        color: white;
+        color: #00c68e;
       }
     }
 
     .success-title {
-      font-size: 22px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 15px;
-      animation: fadeInUp 0.8s ease-out 0.2s both;
+      font-size: 26px;
+      font-weight: 700;
+      color: #1d2129;
+      margin-bottom: 16px;
+      animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both;
     }
 
     .success-desc {
-      margin-bottom: 30px;
-      animation: fadeInUp 0.8s ease-out 0.4s both;
+      margin-bottom: 56px;
+      animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both;
 
       .desc-text {
         display: block;
-        font-size: 15px;
-        color: #666;
+        font-size: 16px;
+        color: #86909c;
         line-height: 1.6;
-        margin-bottom: 8px;
       }
     }
 
     .success-actions {
-      animation: fadeInUp 0.8s ease-out 0.6s both;
-    }
-
-    .success-btn {
-      width: 100%;
-      height: 50px;
-      background: linear-gradient(135deg, #4caf50, #45a049);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3);
-      position: relative;
-      overflow: hidden;
-      animation: successPulse 2s infinite;
-
-      &:active {
-        transform: translateY(1px);
-        box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4);
-      }
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s ease;
-      }
-
-      &:hover::before {
-        left: 100%;
-      }
-
-      .btn-text {
-        font-size: 16px;
-        color: inherit;
-      }
-    }
-  }
-
-  /* 成功页面动画 */
-  @keyframes successSlideIn {
-    from {
-      opacity: 0;
-      transform: scale(0.7) translateY(-50px);
-    }
-
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-
-  @keyframes successPulse {
-    0%,
-    100% {
-      transform: scale(1);
-      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
-    }
-
-    50% {
-      transform: scale(1.02);
-      box-shadow: 0 12px 25px rgba(76, 175, 80, 0.5);
-    }
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
+      animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
     }
   }
 
   /* 响应式适配 */
   @media screen and (max-width: 375px) {
     .account-close-page {
-      padding: 7.5px;
+      padding: 16px;
     }
 
     .status-card {
-      padding: 15px;
+      padding: 20px;
     }
 
     .status-icon {
-      width: 30px;
-      height: 30px;
+      width: 52px;
+      height: 52px;
+      margin-right: 16px;
 
       .icon {
-        font-size: 15px;
+        font-size: 24px;
       }
     }
 
     .status-title {
-      font-size: 14px;
-    }
-
-    .status-desc {
-      font-size: 12px;
+      font-size: 18px;
     }
 
     .action-btn {
-      height: 45px;
-      font-size: 14px;
+      height: 52px;
+      font-size: 16px;
     }
 
-    .btn-text {
-      font-size: 14px;
-    }
-
-    /* 成功页面响应式 */
     .success-content {
-      width: 90%;
-      padding: 30px 20px;
+      padding: 20px;
     }
 
     .success-icon {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 20px;
+      width: 76px;
+      height: 76px;
 
       .icon {
-        font-size: 30px;
+        font-size: 32px;
       }
     }
 
     .success-title {
-      font-size: 18px;
-      margin-bottom: 12px;
+      font-size: 24px;
     }
 
-    .success-desc {
-      margin-bottom: 25px;
-
-      .desc-text {
-        font-size: 14px;
-        margin-bottom: 6px;
-      }
-    }
-
-    .success-btn {
-      height: 45px;
-      font-size: 15px;
-
-      .btn-text {
-        font-size: 15px;
-      }
+    .tips-section {
+      padding: 20px;
     }
   }
 </style>
