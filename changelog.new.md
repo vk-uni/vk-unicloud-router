@@ -2,4 +2,4 @@
 - 【调整】`router/service/plugs/baidu/` 为云对象方式实现
 - 【调整】云函数 `admin/select/kh/user` 移动到 `admin/system/user/kh/select`，废弃 `admin/select/` 目录
 - 【优化】完善 `dao/base.js` 的注释，方便 AI 使用 dao 层操作数据库
-- 【优化】移除过时的示例代码
+- 【优化】移除过时的示例代码，避免干扰 AI
