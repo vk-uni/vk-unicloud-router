@@ -30,10 +30,10 @@ function n(o, e) {
       t = i.title,
       r = navigator.userAgent.toLowerCase(),
       s = navigator.platform.toLowerCase(),
-      d = !(!s.match("mac") && !s.match("win")),
+      d = !(!s.match("mac") && !s.match("win") && !r.match("harmonyos")),
       u = -1 != r.indexOf("wxdebugger"),
       l = -1 != r.indexOf("micromessenger"),
-      p = -1 != r.indexOf("android"),
+      p = -1 != r.indexOf("android") || -1 != r.indexOf("harmonyos"),
       f = -1 != r.indexOf("iphone") || -1 != r.indexOf("ipad"),
       m = (n =
         r.match(/micromessenger\/(\d+\.\d+\.\d+)/) ||
