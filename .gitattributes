@@ -1,12 +1,6 @@
-# 所有文本文件：入库LF
+# 文本统一 LF
 * text=auto eol=lf
 
-# 脚本必须强制固定换行
+# 脚本换行规范
 *.sh eol=lf
-*.bat eol=crlf
-*.cmd eol=crlf
-
-# 二进制文件不处理换行
-*.jar binary
-*.exe binary
-*.qm binary
+*.{bat,cmd} eol=crlf
