@@ -132,7 +132,7 @@ module.exports = {
       util
     );
 
-    if (currentAppUser) {
+    if (currentAppUser && currentAppUser._id !== userInfo._id) {
       return { code: 1, msg: `当前${providerName}号已绑定其他账号，请先解绑` };
     }
 
@@ -196,20 +196,53 @@ module.exports = {
     }
 
     // 定义openid和unionid存在userInfo的哪个字段中
+    let openidData = userInfo[`${provider}_openid`];
     let fieldInfo = {};
-    if (!appid || Object.keys(userInfo[`${provider}_openid`]).length <= 2) {
+    if (!appid) {
+      // 如果不传appid，则解绑所有
       fieldInfo = {
         [`${provider}_openid`]: _.remove(),
         [`${provider}_unionid`]: _.remove(),
       };
     } else {
       // 找到对应appid的key
-      let key = Object.keys(userInfo[`${provider}_openid`]).find((item) => {
-        return item.indexOf(appid) > -1;
+      let openidKeys = Object.keys(openidData);
+      let key = openidKeys.find((item) => {
+        return item.indexOf(`_${appid}`) > -1;
       });
-      fieldInfo = {
-        [`${provider}_openid.${key}`]: _.remove(),
-      };
+      if (vk.pubfn.isNull(key)) {
+        return { code: 1, msg: `当前账号未绑定${providerName}，无需解绑` };
+      }
+      // 从key中获取platform
+      let platform = key.substring(0, key.length - appid.length - 1);
+      // 当前平台是否还有其他appid的key
+      let hasOtherPlatformAppidKey = openidKeys.some((item) => {
+        return item !== key && item.indexOf(`${platform}_`) === 0;
+      });
+      let needUnbindPlatform = !hasOtherPlatformAppidKey && openidData[platform];
+      let removeKeyList = [key];
+      // 如果解绑后当前平台没有其他appid的key了，则平台也解绑
+      if (needUnbindPlatform) {
+        removeKeyList.push(platform);
+      }
+      // 计算解绑后还剩下的openid的key
+      let remainOpenidKeys = openidKeys.filter((item) => {
+        return removeKeyList.indexOf(item) === -1;
+      });
+      // 如果解绑后没有openid了，则unionid也解绑；如果解绑后还有其他openid，则unionid不解绑
+      if (remainOpenidKeys.length === 0) {
+        fieldInfo = {
+          [`${provider}_openid`]: _.remove(),
+          [`${provider}_unionid`]: _.remove(),
+        };
+      } else {
+        fieldInfo = {
+          [`${provider}_openid.${key}`]: _.remove(),
+        };
+        if (needUnbindPlatform) {
+          fieldInfo[`${provider}_openid.${platform}`] = _.remove();
+        }
+      }
     }
 
     let num = await vk.daoCenter.userDao.updateById({
