@@ -51,9 +51,28 @@ pubfn.jsonToQueryString = queryStringUtil.jsonToQueryString;
  */
 pubfn.queryStringToJson = queryStringUtil.queryStringToJson;
 /**
- * 设置剪贴板
+ * 设置系统剪贴板的内容
+ * 此API支持通过 vk.setClipboardData 直接调用
+vk.setClipboardData({
+  data: "要复制的文本",
+  success: () => {
+    vk.toast("复制成功");
+  }
+});
  */
 pubfn.setClipboardData = setClipboardData;
+/**
+ * 获取系统剪贴板内容
+ * 此API支持通过 vk.getClipboardData 直接调用
+vk.getClipboardData({
+  success: (res) => {
+    console.log(res.data);
+  }
+});
+ */
+pubfn.getClipboardData = (obj) => {
+  uni.getClipboardData(obj);
+};
 
 /**
  * 休眠，等待（单位毫秒）

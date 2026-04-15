@@ -37,29 +37,29 @@
 module.exports = {
   // ==================== 项目业务表 ====================
   // 新增表标记点（请勿删除此行注释，自动化建Dao工具需要）
-  test: 'vk-test', // 测试表
+  test: "vk-test", // 测试表
 
   // ==================== vk框架内置表 ====================
-  user: 'uni-id-users', // 用户表
-  role: 'uni-id-roles', // 角色表
-  permission: 'uni-id-permissions', // 权限表
-  menu: 'opendb-admin-menus', // 菜单表
-  appList: 'opendb-app-list', // 应用表
-  appVersions: 'opendb-app-versions', // 应用版本表
-  openData: 'opendb-open-data', // 开放数据表
-  tempData: 'opendb-tempdata', // 临时数据表
-  verifyCodes: 'opendb-verify-codes', // 验证码表
-  loginLog: 'uni-id-log', // 用户登录日志表
-  adminLog: 'opendb-admin-log', // admin操作日志表
-  errorLog: 'vk-error-log', // 错误日志表
-  globalData: 'vk-global-data', // 系统全局参数表
-  components: 'vk-components-dynamic', // 动态数据组件表
-  file: 'vk-files', // 素材表
-  fileCategories: 'vk-files-categories', // 素材分类表
-  payOrder: 'vk-pay-orders', // vk-pay支付订单表
-  payConfig: 'vk-pay-config', // vk-pay支付配置表
-  wsConnection: 'vk-ws-connection', // WebSocket连接表
+  user: "uni-id-users", // 用户表
+  role: "uni-id-roles", // 角色表
+  permission: "uni-id-permissions", // 权限表
+  menu: "opendb-admin-menus", // 菜单表
+  appList: "opendb-app-list", // 应用表
+  appVersions: "opendb-app-versions", // 应用版本表
+  openData: "opendb-open-data", // 开放数据表
+  tempData: "opendb-tempdata", // 临时数据表
+  verifyCodes: "opendb-verify-codes", // 验证码表
+  loginLog: "uni-id-log", // 用户登录日志表
+  adminLog: "opendb-admin-log", // admin操作日志表
+  errorLog: "vk-error-log", // 错误日志表
+  globalData: "vk-global-data", // 系统全局参数表
+  components: "vk-components-dynamic", // 动态数据组件表
+  file: "vk-files", // 素材表
+  fileCategories: "vk-files-categories", // 素材分类表
+  payOrder: "vk-pay-orders", // vk-pay支付订单表
+  payConfig: "vk-pay-config", // vk-pay支付配置表
+  wsConnection: "vk-ws-connection", // WebSocket连接表
 
   // ==================== 插件表 ====================
-  luckyDraw: 'vk-lucky-draw-activity', // 抽奖活动表
+  luckyDraw: "vk-lucky-draw-activity", // 抽奖活动表
 };

@@ -111,6 +111,11 @@ const vk = {
   // 设置应用当前语言
   setLocale: pubfn.setLocale,
 
+  // 设置系统剪贴板的内容
+  setClipboardData: pubfn.setClipboardData,
+  // 获取系统剪贴板内容
+  getClipboardData: pubfn.getClipboardData,
+
   // 本地持久缓存
   ...localStorage,
   // 本地会话缓存
