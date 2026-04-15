@@ -1,5 +1,1 @@
-- 【重要】项目使用 `Prettier` 进行统一代码格式化 [传送门](https://vkdoc.fsq.pub/client/codeFormat.html)
-- 【调整】`router/service/plugs/baidu/` 为云对象方式实现
-- 【调整】云函数 `admin/select/kh/user` 移动到 `admin/system/user/kh/select`，废弃 `admin/select/` 目录
-- 【优化】完善 `dao/base.js` 的注释，方便 AI 使用 dao 层操作数据库
-- 【优化】移除过时的示例代码，避免干扰 AI
+- 【优化】三方授权登录绑定和解绑逻辑
