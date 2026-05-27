@@ -36,3 +36,4 @@ pnpm-lock.yaml
 manifest.json
 static/
 changelog.md
+changelog.new.md
