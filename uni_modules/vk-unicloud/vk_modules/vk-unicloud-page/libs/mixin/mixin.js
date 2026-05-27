@@ -14,13 +14,24 @@ export default {
       // 检测是否可以分享(小程序专属)
       this.vk.navigate.checkAllowShare({ url });
       // 检测是否需要登录，只有首次启动的页面才需要检测，其他页面通过 vk.navigateTo 跳转前会自动判断。
-      if (isOnLaunch && !this.vk.checkToken() && getCurrentPages().length == 1) {
+      if (isOnLaunch) {
         isOnLaunch = false; // 重新标记为非首次页面
-        const currentPage = this.vk.pubfn.getCurrentPage() || {};
-        let pagePath = currentPage.pagePath || `/${currentPage.route}` || url;
-        let fullPath = currentPage.fullPath;
-        let options = currentPage.options;
-        this.vk.pubfn.checkLogin({ url: pagePath, fullPath, options, isOnLaunch: true }); // 检测是否需要登录
+        if (this.vk.checkToken()) {
+          // 检测页面是否有权限访问
+          if (!this.vk.checkCurrentPagePermission()) {
+            // 跳403页面
+            this.vk.navigateTo403();
+            return;
+          }
+        } else {
+          if (getCurrentPages().length == 1) {
+            const currentPage = this.vk.pubfn.getCurrentPage() || {};
+            let pagePath = currentPage.pagePath || `/${currentPage.route}` || url;
+            let fullPath = currentPage.fullPath;
+            let options = currentPage.options;
+            this.vk.pubfn.checkLogin({ url: pagePath, fullPath, options, isOnLaunch: true }); // 检测是否需要登录
+          }
+        }
       }
     }
   },

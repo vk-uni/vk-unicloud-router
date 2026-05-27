@@ -47,7 +47,7 @@ util.navigateTo = function (obj) {
   lastNavigate = { url: obj.url, time };
   util.checkNeedLogin({
     url: obj.url,
-    success: function (res) {
+    success: (res) => {
       if (res.needLogin) {
         obj.url = vk.pubfn.getPageFullPath(obj.url);
         vk.navigate.setOriginalPage(obj);
@@ -291,6 +291,18 @@ util.navigateToLogin = function (obj = {}) {
 };
 
 /**
+ * 跳转到权限不足页面
+ * vk.navigateTo403();
+ */
+util.navigateTo403 = function (obj = {}) {
+  let vk = uni.vk;
+  let { mode = 'redirectTo' } = obj;
+  if (config.noPermission && config.noPermission.url) {
+    vk[mode](config.noPermission.url);
+  }
+};
+
+/**
  * 检测是否满足条件(内部方法)
  util.checkWildcardTest({
 	 url:url,
@@ -363,11 +375,53 @@ util.checkNeedLogin = function (obj) {
       }
     }
   }
-  success({
-    url,
-    needLogin,
-    pageNeedLogin,
-  });
+  if (typeof success === 'function') {
+    success({
+      url,
+      needLogin,
+      pageNeedLogin,
+    });
+  }
+  return pageNeedLogin;
+};
+
+// 检查当前页面是否有菜单权限（处理直接 URL 访问场景）
+util.checkCurrentPagePermission = function (obj = {}) {
+  let vk = uni.vk;
+  let currentPage = vk.pubfn.getCurrentPage();
+  let pagePath = '/' + (currentPage.route || '');
+  if (obj.url) {
+    pagePath = vk.pubfn.getPageFullPath(obj.url);
+  }
+  // 403 页面自身不做权限检查（防止无限重定向）
+  if (config.noPermission && config.noPermission.url) {
+    let noPermissionPath = vk.pubfn.getPageFullPath(config.noPermission.url);
+    if (pagePath === noPermissionPath) {
+      return true;
+    }
+  }
+  // 检查是否需要菜单权限检查
+  if (!config.noPermission) {
+    // 如果没有 403 页面，则直接放行
+    return true;
+  }
+  let pagesRule = config.checkPermissionPages;
+  if (pagesRule) {
+    let res = util.checkWildcardTest({ url: pagePath, pagesRule });
+    if (!res.key) return true; // 该页面不需要检查菜单权限，直接放行
+  } else {
+    // 如果不存在 checkPermissionPages 则直接放行
+    return true;
+  }
+  // 如果页面不需要登录，则不需要检查菜单权限
+  let pageNeedLogin = util.checkNeedLogin({ url: pagePath });
+  if (!pageNeedLogin) return true;
+  let menuList = vk.getVuex('$app.menuList') || [];
+  let hasPermission = menuList.some((item) => item.url && item.url.split('?')[0] === pagePath);
+  if (!hasPermission) {
+    return false;
+  }
+  return true;
 };
 
 // 获取?前面的地址

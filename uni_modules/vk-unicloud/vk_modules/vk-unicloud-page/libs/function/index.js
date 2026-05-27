@@ -2052,10 +2052,11 @@ pubfn.getPlatform = function () {
 pubfn.getCurrentPage = function () {
   let res = {};
   let pages = getCurrentPages();
-  let page = pages[pages.length - 1];
-  if (page.route.indexOf('/') == 0) page.route = page.route.substring(1);
-  let pagePath = `/${page.route}`;
-  let fullPath = `/${page.route}`;
+  let page = pages[pages.length - 1] || {};
+  let route = page.route || "";
+  if (route.indexOf('/') == 0) route = route.substring(1);
+  let pagePath = `/${route}`;
+  let fullPath = `/${route}`;
   let options = page.options;
   if (page.$page) {
     if (typeof page.$page.fullPath !== 'undefined') {
@@ -2068,7 +2069,7 @@ pubfn.getCurrentPage = function () {
   res.fullPath = fullPath;
   res.pagePath = pagePath;
   res.options = options;
-  res.route = page.route;
+  res.route = route;
   res.$vm = page.$vm;
   return res;
 };
@@ -2078,11 +2079,12 @@ pubfn.getCurrentPage = function () {
  */
 pubfn.getCurrentPageRoute = function (removeSlash) {
   let pages = getCurrentPages();
-  let page = pages[pages.length - 1];
+  let page = pages[pages.length - 1] || {};
+  let route = page.route || "";
   if (removeSlash) {
-    return page.route;
+    return route;
   } else {
-    return '/' + page.route;
+    return '/' + route;
   }
 };
 /**

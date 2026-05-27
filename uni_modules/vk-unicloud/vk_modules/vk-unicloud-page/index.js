@@ -85,10 +85,14 @@ const vk = {
   navigateToHome: navigate.navigateToHome,
   // 跳转到登录页
   navigateToLogin: navigate.navigateToLogin,
+  // 跳转到403页面
+  navigateTo403: navigate.navigateTo403,
   // 跳转到小程序
   navigateToMiniProgram: navigate.navigateToMiniProgram,
   // 跳转到抽奖小程序
   navigateToLuckyDraw: navigate.navigateToLuckyDraw,
+  // 检查当前页面是否有菜单权限（处理直接 URL 访问场景，仅给admin端使用）
+  checkCurrentPagePermission: navigate.checkCurrentPagePermission,
   // 触发全局的自定义事件，附加参数都会传给监听器回调函数。
   $emit: navigate.$emit,
   // 监听全局的自定义事件，事件由 uni.$emit 触发，回调函数会接收事件触发函数的传入参数。
