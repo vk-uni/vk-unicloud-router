@@ -393,6 +393,7 @@ util.checkCurrentPagePermission = function (obj = {}) {
   if (obj.url) {
     pagePath = vk.pubfn.getPageFullPath(obj.url);
   }
+  pagePath = pagePath.split('?')[0];
   // 403 页面自身不做权限检查（防止无限重定向）
   if (config.noPermission && config.noPermission.url) {
     let noPermissionPath = vk.pubfn.getPageFullPath(config.noPermission.url);
