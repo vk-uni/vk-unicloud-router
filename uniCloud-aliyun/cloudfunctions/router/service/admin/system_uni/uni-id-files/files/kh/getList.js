@@ -22,14 +22,21 @@ module.exports = {
     let whereJson = {};
     let { role = [] } = userInfo;
     let { formData = {} } = data;
-    let { category_id } = formData;
+    let { category_id, category_ids = [] } = formData;
+
     if (category_id == 'null') {
       whereJson['category_id'] = 'null'; // 这里是字符串null是为了索引生效
+    } else if (Array.isArray(category_ids) && category_ids.length > 0) {
+      whereJson['category_id'] = _.in(category_ids);
+    } else if (vk.pubfn.isNotNull(category_id)) {
+      whereJson['category_id'] = category_id;
     }
+
     if (role.indexOf('admin') === -1) {
-      // 如果不是admin角色用户，则只能查看自己上传的
+      // 如果不需要实现用户隔离，则删除掉下一行代码即可
       whereJson['user_id'] = uid;
     }
+
     res = await vk.baseDao.getTableData({
       dbName,
       data,

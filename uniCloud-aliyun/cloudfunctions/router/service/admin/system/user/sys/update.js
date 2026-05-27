@@ -21,7 +21,7 @@ module.exports = {
     let { uid } = data;
     let res = { code: 0, msg: '' };
     // 业务逻辑开始-----------------------------------------------------------
-    let { _id, nickname, gender, mobile, email, comment, allow_login_background, dcloud_appid = [], login_appid_type } = data;
+    let { _id, nickname, avatar, gender, mobile, email, comment, allow_login_background, dcloud_appid = [], login_appid_type, tags } = data;
     let mobile_confirmed;
     let email_confirmed;
     // 参数合法校验开始-----------------------------------------------------------
@@ -59,6 +59,7 @@ module.exports = {
     }
     let dataJson = {
       nickname,
+      avatar,
       gender,
       mobile,
       mobile_confirmed,
@@ -66,6 +67,7 @@ module.exports = {
       email_confirmed,
       comment,
       allow_login_background,
+      tags,
     };
     // 设置允许登录的应用列表
     if (login_appid_type && typeof uniID.setAuthorizedAppLogin === 'function') {

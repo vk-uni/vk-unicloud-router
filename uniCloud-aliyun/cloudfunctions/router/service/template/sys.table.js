@@ -41,6 +41,17 @@ const cloudObject = {
     // 业务逻辑开始-----------------------------------------------------------
     res = await vk.daoCenter.testDao.getTableData({
       data,
+      // 副表列表
+      foreignDB: [
+        {
+          dbName: dbName.user,
+          localKey: 'user_id',
+          foreignKey: '_id',
+          as: 'userInfo',
+          limit: 1,
+          fieldJson: { token: false, password: false },
+        },
+      ],
     });
     // 业务逻辑结束-----------------------------------------------------------
     return res;

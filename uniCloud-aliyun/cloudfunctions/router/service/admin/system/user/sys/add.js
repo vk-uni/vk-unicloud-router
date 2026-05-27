@@ -21,7 +21,7 @@ module.exports = {
     let { uid } = data;
     let res = { code: 0, msg: '' };
     // 业务逻辑开始-----------------------------------------------------------
-    let { username, password, nickname, gender, mobile, email, comment, allow_login_background, dcloud_appid = [], login_appid_type } = data;
+    let { username, password, nickname, avatar, gender, mobile, email, comment, allow_login_background, dcloud_appid = [], login_appid_type, tags } = data;
     if (!password) password = '234567';
     // 参数合法校验开始-----------------------------------------------------------
     let formRulesRes = await formRules.add(event);
@@ -51,6 +51,7 @@ module.exports = {
       mobile,
       email,
       authorizedApp: dcloud_appid,
+      tags,
     });
     if (addUserRes.code !== 0 || !addUserRes.uid) {
       return addUserRes;
@@ -68,6 +69,7 @@ module.exports = {
 
     // 用户其他信息
     let dataJson = {
+      avatar,
       nickname,
       gender,
       comment,

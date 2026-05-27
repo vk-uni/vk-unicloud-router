@@ -31,7 +31,7 @@ module.exports = {
     } else if (vk.pubfn.test(url, 'video')) {
       type = 'video';
     } else if (vk.pubfn.test(url, 'audio')) {
-      type = 'video'; // 这里audio也分类为video
+      type = 'audio';
     }
 
     if (vk.pubfn.isNull(original_name)) original_name = url;

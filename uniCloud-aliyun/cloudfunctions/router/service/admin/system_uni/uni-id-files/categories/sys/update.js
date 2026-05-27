@@ -18,14 +18,47 @@ module.exports = {
     let { uid } = data;
     let res = { code: 0, msg: '' };
     // 业务逻辑开始-----------------------------------------------------------
-    let { _id, name, description, sort } = data;
+    let { _id, name, description, sort, parent_id = '' } = data;
     // 参数非空检测
+    if (vk.pubfn.isNull(_id)) {
+      return { code: -1, msg: '_id不能为空' };
+    }
     if (vk.pubfn.isNull(name)) {
       return { code: -1, msg: '名称不能为空' };
     }
+    if (parent_id === _id) {
+      return { code: -1, msg: '父分组不能选择自己' };
+    }
     let dbName = 'vk-files-categories';
 
-    // 检测data_id是否已存在
+    if (vk.pubfn.isNotNull(parent_id)) {
+      // 检查父分组是否存在
+      let parentInfo = await vk.baseDao.findById({
+        dbName,
+        id: parent_id,
+        fieldJson: { _id: 1 },
+      });
+      if (!parentInfo) {
+        return { code: -1, msg: '父分组不存在' };
+      }
+      // 逐级向上检查，防止循环引用
+      let currentId = parent_id;
+      while (vk.pubfn.isNotNull(currentId)) {
+        if (currentId === _id) {
+          return { code: -1, msg: '父分组不能选择当前分组或其子分组' };
+        }
+        let info = await vk.baseDao.findById({
+          dbName,
+          id: currentId,
+          fieldJson: { parent_id: 1 },
+        });
+        currentId = info ? info.parent_id : '';
+      }
+    } else {
+      parent_id = '';
+    }
+
+    // 检测name是否已存在
     let num = await vk.baseDao.count({
       dbName,
       whereJson: {
@@ -43,6 +76,7 @@ module.exports = {
       dataJson: {
         name,
         description,
+        parent_id,
         sort,
       },
     });

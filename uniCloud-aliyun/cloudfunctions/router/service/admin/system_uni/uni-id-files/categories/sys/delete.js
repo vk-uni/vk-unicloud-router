@@ -20,6 +20,15 @@ module.exports = {
       return { code: -1, msg: '_id不能为空' };
     }
     let dbName = 'vk-files-categories';
+    let childCount = await vk.baseDao.count({
+      dbName,
+      whereJson: {
+        parent_id: _id,
+      },
+    });
+    if (childCount > 0) {
+      return { code: -1, msg: '请先删除或移动子分组后再删除当前分组' };
+    }
     await vk.baseDao.deleteById({
       dbName,
       id: _id,

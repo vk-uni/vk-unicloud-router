@@ -14,11 +14,11 @@ module.exports = {
    */
   main: async (event) => {
     let { data = {}, userInfo, util, filterResponse, originalParam } = event;
-    let { customUtil, uniID, config, pubFun, vk, db, _ } = util;
+    let { customUtil, uniID, config, pubFun, vk, db, _, $ } = util;
     let { uid } = data;
     let res = { code: 0, msg: '' };
     // 业务逻辑开始-----------------------------------------------------------
-    let { dcloud_appid, appids } = data.formData || {};
+    let { dcloud_appid, appids, searchvalue } = data.formData || {};
     let whereJson = {};
     if (dcloud_appid) {
       if (dcloud_appid === '___empty-array___') {
@@ -30,6 +30,24 @@ module.exports = {
       } else {
         whereJson['dcloud_appid'] = _.or(_.eq(dcloud_appid), _.exists(false));
       }
+    }
+    if (searchvalue) {
+      // 支持根据ID精确搜索、用户名、昵称、手机号模糊搜索
+      // 转义正则特殊字符
+      let regStr = searchvalue.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+      let regexp = new RegExp(regStr, 'i');
+      whereJson = _.and(
+        whereJson,
+        _.or(
+          {
+            _id: _.eq(searchvalue),
+          },
+          { username: regexp },
+          { nickname: regexp },
+          { mobile: regexp },
+          { email: regexp }
+        )
+      );
     }
     let dbName = 'uni-id-users';
     res = await vk.baseDao.getTableData({
@@ -45,6 +63,21 @@ module.exports = {
           foreignKey: 'appid',
           localKeyType: 'array',
           as: 'appList',
+          limit: 500,
+        },
+        {
+          dbName: 'uni-id-users',
+          localKey: $.arrayElemAt(['$inviter_uid', 0]), // 主表外键字段名
+          foreignKey: '_id', // 副表外键字段名
+          as: 'inviterUserInfo',
+          limit: 1, // 当limit = 1时，以对象形式返回，否则以数组形式返回
+        },
+        {
+          dbName: 'uni-id-roles',
+          localKey: 'role',
+          foreignKey: 'role_id',
+          localKeyType: 'array',
+          as: 'roleList',
           limit: 500,
         },
       ],

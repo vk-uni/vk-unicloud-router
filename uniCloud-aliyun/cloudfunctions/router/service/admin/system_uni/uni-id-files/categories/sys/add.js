@@ -16,12 +16,23 @@ module.exports = {
     let { uid } = data;
     let res = { code: 0, msg: '' };
     // 业务逻辑开始-----------------------------------------------------------
-    let { name, description, sort } = data;
+    let { name, description, sort, parent_id = '' } = data;
     // 参数非空检测
     if (vk.pubfn.isNull(name)) {
       return { code: -1, msg: '名称不能为空' };
     }
     let dbName = 'vk-files-categories';
+    if (vk.pubfn.isNotNull(parent_id)) {
+      let parentNum = await vk.baseDao.count({
+        dbName,
+        whereJson: { _id: parent_id },
+      });
+      if (parentNum === 0) {
+        return { code: -1, msg: '父分组不存在' };
+      }
+    } else {
+      parent_id = '';
+    }
     // 检测key是否已存在
     let num = await vk.baseDao.count({
       dbName,
@@ -38,6 +49,7 @@ module.exports = {
       dataJson: {
         name,
         description,
+        parent_id,
         sort,
       },
     });

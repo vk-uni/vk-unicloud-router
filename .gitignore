@@ -17,6 +17,12 @@ router.param.json
 .vite
 package-lock.json
 
+# claude
+.claude/rules/env.md
+.claude/skills/vk-read-doc/.last-update
+.claude/skills/vk-read-doc/doc-index.md
+.claude/settings.local.json
 
 # python
 *.pyc
+/uniCloud-tcb/database/*.jql

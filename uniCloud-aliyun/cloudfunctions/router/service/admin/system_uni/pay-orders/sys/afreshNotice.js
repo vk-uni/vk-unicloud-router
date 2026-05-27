@@ -18,13 +18,6 @@ module.exports = {
 
     let dbName = 'vk-pay-orders';
 
-    // 获取异步回调配置
-    let spaceId = originalParam.context.SPACEINFO.spaceId; // 服务空间ID
-    let currentNotifyUrl = getNotifyUrl(config, spaceId);
-    if (!currentNotifyUrl || currentNotifyUrl.indexOf('http') !== 0) {
-      return { code: -1, msg: '请先配置正确的异步回调URL，参考配置文档：https://vkdoc.fsq.pub/vk-uni-pay/config.html' };
-    }
-
     // 获取订单信息
     let orderInfo = await vk.baseDao.findById({
       dbName,
@@ -46,16 +39,23 @@ module.exports = {
         user_order_success: _.remove(),
       },
     });
-
     if (!updateNum) {
       return { code: -1, msg: '订单状态错误' };
     }
 
-    let { original_data, out_trade_no } = orderInfo;
+    let { original_data, out_trade_no, notify_url } = orderInfo;
+    if (!notify_url) {
+      // 获取异步回调配置
+      let spaceId = originalParam.context.SPACEINFO.spaceId; // 服务空间ID
+      notify_url = getNotifyUrl(config, spaceId);
+      if (!notify_url || notify_url.indexOf('http') !== 0) {
+        return { code: -1, msg: '请先配置正确的异步回调URL，参考配置文档：https://vkdoc.fsq.pub/vk-uni-pay/config.html' };
+      }
+    }
     try {
       // 执行回调
       let requestRes = await vk.request({
-        url: `${currentNotifyUrl}${original_data.path}`,
+        url: `${notify_url}${original_data.path}`,
         method: 'POST',
         dataType: 'text',
         header: original_data.headers,

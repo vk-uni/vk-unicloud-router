@@ -27,6 +27,7 @@
  * @property {string} payOrder - vk-pay支付订单表
  * @property {string} payConfig - vk-pay支付配置表
  * @property {string} wsConnection - WebSocket连接表
+ * @property {string} userTag - 用户标签表
  * @property {string} luckyDraw - 抽奖活动表
  */
 
@@ -59,6 +60,7 @@ module.exports = {
   payOrder: "vk-pay-orders", // vk-pay支付订单表
   payConfig: "vk-pay-config", // vk-pay支付配置表
   wsConnection: "vk-ws-connection", // WebSocket连接表
+  userTag: "vk-user-tag", // 用户标签表
 
   // ==================== 插件表 ====================
   luckyDraw: "vk-lucky-draw-activity", // 抽奖活动表

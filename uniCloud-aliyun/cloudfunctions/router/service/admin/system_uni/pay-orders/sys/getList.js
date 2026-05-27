@@ -22,6 +22,17 @@ module.exports = {
     res = await vk.baseDao.getTableData({
       dbName,
       data,
+      // 副表列表
+      foreignDB: [
+        {
+          dbName: 'uni-id-users',
+          localKey: 'user_id',
+          foreignKey: '_id',
+          as: 'userInfo',
+          limit: 1,
+          fieldJson: { token: false, password: false },
+        },
+      ],
     });
     return res;
   },
