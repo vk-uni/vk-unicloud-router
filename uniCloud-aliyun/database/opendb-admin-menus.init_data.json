@@ -127,7 +127,7 @@
   {
     "_id": "system-uni-vk-pay-orders",
     "sort": 4,
-    "url": "/pages_plugs/system_uni/vk-pay-orders",
+    "url": "/pages_plugs/system_uni/vk-pay-orders/list",
     "_add_time": 1596416400000,
     "enable": true,
     "icon": "",

@@ -62,5 +62,9 @@
   {
     "IndexName": "last_login_date",
     "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "last_login_date", "Direction": "-1", "Type": "long" }], "MgoIsUnique": false }
+  },
+  {
+    "IndexName": "tags",
+    "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "tags", "Direction": "1", "Type": "array" }], "MgoIsUnique": false }
   }
 ]

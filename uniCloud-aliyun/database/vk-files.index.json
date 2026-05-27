@@ -26,5 +26,9 @@
   {
     "IndexName": "category_id",
     "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "category_id", "Direction": "1" }], "MgoIsUnique": false }
+  },
+  {
+    "IndexName": "size",
+    "MgoKeySchema": { "MgoIndexKeys": [{ "Name": "size", "Direction": "1", "Type": "long" }], "MgoIsUnique": false }
   }
 ]

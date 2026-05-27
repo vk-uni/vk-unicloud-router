@@ -18,6 +18,11 @@
       "title": "类别描述",
       "bsonType": "string"
     },
+    "parent_id": {
+      "title": "父级分类ID",
+      "bsonType": "string",
+      "defaultValue": ""
+    },
     "sort": {
       "title": "排序值",
       "bsonType": "int",
