@@ -1,7 +1,3 @@
-## 2.23.2（2026-04-15）
-- 【优化】三方授权登录绑定和解绑逻辑
-
-* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.23.1（2026-03-20）
 - 【重要】项目使用 `Prettier` 进行统一代码格式化 [传送门](https://vkdoc.fsq.pub/client/codeFormat.html)
 - 【调整】`router/service/plugs/baidu/` 为云对象方式实现

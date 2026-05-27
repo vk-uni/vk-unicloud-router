@@ -336,7 +336,7 @@ pubfn.test = function (str, type = '', allowEmpty = false) {
       return new RegExp(/\.(mp4|mpg|mpeg|dat|asf|avi|rm|rmvb|mov|wmv|flv|mkv|m3u8|3gp)$/).test(newStr);
     case 'audio': //是否音频格式
       newStr = str.split('?')[0].toLowerCase();
-      return new RegExp(/\.(mp3)$/).test(newStr);
+      return new RegExp(/\.(mp3|wav|ogg|flac|aac|wma|m4a|ape|amr|mid|midi|opus)$/).test(newStr);
     default:
       return true;
   }
