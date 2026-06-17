@@ -48,7 +48,7 @@ module.exports = {
       return verifyCodeRes;
     }
     // 解绑前先判断下新邮箱是否已存在
-    let dcloud_appid = originalParam.context.appId;
+    let dcloud_appid = originalParam.context.APPID;
     let num = await vk.daoCenter.userDao.count({
       email,
       dcloud_appid: _.or(_.eq(dcloud_appid), _.exists(false)),

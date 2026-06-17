@@ -20,8 +20,8 @@ module.exports = {
    * @param {String} msg 详细信息
    */
   main: async (event) => {
-    let { data = {}, util } = event;
-    let { uniID, config } = util;
+    let { data = {}, userInfo, util, originalParam } = event;
+    let { uniID, config, pubFun, vk, db, _ } = util;
     let { email, type, serviceType = 'qq', checkUserExist = false } = data;
     let res = { code: 0, msg: 'ok' };
     // 业务逻辑开始-----------------------------------------------------------
@@ -36,7 +36,7 @@ module.exports = {
     if (vk.pubfn.isNull(type)) return { code: -1, msg: 'type不能为空' };
 
     if (checkUserExist) {
-      let dcloud_appid = originalParam.context.appId;
+      let dcloud_appid = originalParam.context.APPID;
       // 检测邮箱对应的账号是否存在
       let num = await vk.daoCenter.userDao.count({
         email,

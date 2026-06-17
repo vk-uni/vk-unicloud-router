@@ -47,7 +47,7 @@ module.exports = {
       return verifyCodeRes;
     }
     // 解绑前先判断下新手机号是否已存在
-    let dcloud_appid = originalParam.context.appId;
+    let dcloud_appid = originalParam.context.APPID;
     let num = await vk.daoCenter.userDao.count({
       mobile,
       dcloud_appid: _.or(_.eq(dcloud_appid), _.exists(false)),

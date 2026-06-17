@@ -9,6 +9,19 @@
   ],
   "subPackages": [
     {
+      "root": "pages/error",
+      "pages": [
+        {
+          "path": "404",
+          "style": {
+            "navigationStyle": "custom",
+            "navigationBarTextStyle": "black",
+            "navigationBarTitleText": "404"
+          }
+        }
+      ]
+    },
+    {
       "root": "pages_template",
       "pages": [
         {

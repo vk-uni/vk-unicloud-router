@@ -1485,11 +1485,36 @@ pubfn.numStr = function (n, needSymbol = false) {
   return str;
 };
 /**
+ * 千分位分隔符格式化
+ * @param {String|Number} num 数字或数字字符串
+ * @return {String} 格式化后的字符串
+ * vk.pubfn.thousandSeparator(1234567); // "1,234,567"
+ */
+pubfn.thousandSeparator = function (num) {
+  if (pubfn.isNull(num)) {
+    return num;
+  }
+  num = String(num);
+  let parts = num.split('.');
+  let intPart = parts[0];
+  let decPart = parts[1] ? '.' + parts[1] : '';
+  let reg = new RegExp('(\\d)(?=(\\d{3})+$)', 'g');
+  intPart = intPart.replace(reg, '$1,');
+  return intPart + decPart;
+};
+/**
  * 金额显示过滤器（已分为单位，将100 转成 1）
  * @param {Number} money 金额
  * vk.pubfn.priceFilter(money);
+ * vk.pubfn.priceFilter(money, { format: 'thousandSeparator'} );
  */
-pubfn.priceFilter = function (money, defaultValue = '') {
+pubfn.priceFilter = function (money, options = {}) {
+  if (typeof options === 'string') {
+    options = {
+      defaultValue: options,
+    };
+  }
+  let { defaultValue = '', format } = options;
   if (pubfn.isNull(money)) {
     return defaultValue;
   }
@@ -1499,7 +1524,11 @@ pubfn.priceFilter = function (money, defaultValue = '') {
   if (typeof money == 'string') {
     money = parseFloat(money);
   }
-  return (money / 100).toFixed(2);
+  money = (money / 100).toFixed(2);
+  if (format === 'thousandSeparator') {
+    money = pubfn.thousandSeparator(money);
+  }
+  return money;
 };
 // 金额过滤器 - 只显示小数点左边
 pubfn.priceLeftFilter = function (n) {
@@ -1664,13 +1693,13 @@ pubfn.objectKeySort = function (obj) {
 };
 
 /**
- * 转义正则文本，使 * 变成 \* 等
- * @param {Object} obj 需要排序对象
- * 代码示例
- * text = vk.pubfn.escapeRegExp(text);
+ * 转义正则特殊字符
+ * @param {String} text 需要转义的文本
+ * @return {String} 转义后的字符串
+ * vk.pubfn.escapeRegExp('test.com'); // "test\\.com"
  */
 pubfn.escapeRegExp = function (text) {
-  return text.replace(new RegExp('[.*+?^${}()|[\\]\\\\]', 'g'), '\\$&');
+  return String(text).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 };
 
 // 以下是前端专属API-----------------------------------------------------------
@@ -2053,7 +2082,7 @@ pubfn.getCurrentPage = function () {
   let res = {};
   let pages = getCurrentPages();
   let page = pages[pages.length - 1] || {};
-  let route = page.route || "";
+  let route = page.route || '';
   if (route.indexOf('/') == 0) route = route.substring(1);
   let pagePath = `/${route}`;
   let fullPath = `/${route}`;
@@ -2080,7 +2109,7 @@ pubfn.getCurrentPage = function () {
 pubfn.getCurrentPageRoute = function (removeSlash) {
   let pages = getCurrentPages();
   let page = pages[pages.length - 1] || {};
-  let route = page.route || "";
+  let route = page.route || '';
   if (removeSlash) {
     return route;
   } else {

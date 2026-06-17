@@ -87,6 +87,8 @@ const vk = {
   navigateToLogin: navigate.navigateToLogin,
   // 跳转到403页面
   navigateTo403: navigate.navigateTo403,
+  // 跳转到404页面
+  navigateTo404: navigate.navigateTo404,
   // 跳转到小程序
   navigateToMiniProgram: navigate.navigateToMiniProgram,
   // 跳转到抽奖小程序

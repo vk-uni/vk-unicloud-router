@@ -3,6 +3,7 @@
  */
 // #ifdef VUE2
 let config;
+let pagesJson;
 try {
   config = require('@/app.config.js');
   if (typeof config.default === 'object') {
@@ -11,10 +12,19 @@ try {
 } catch (e) {
   config = {};
 }
+try {
+  pagesJson = require('@/pages.json');
+  if (typeof pagesJson.default === 'object') {
+    pagesJson = pagesJson.default;
+  }
+} catch (e) {
+  pagesJson = {};
+}
 // #endif
 
 // #ifdef VUE3
 import config from '@/app.config.js';
+import pagesJson from '@/pages.json';
 // #endif
 
 const util = {};
@@ -45,6 +55,10 @@ util.navigateTo = function (obj) {
     return false;
   }
   lastNavigate = { url: obj.url, time };
+  if (!obj.__vkNavigateTo404 && !util.checkPageExists({ url: obj.url })) {
+    vk.navigateTo404();
+    return false;
+  }
   util.checkNeedLogin({
     url: obj.url,
     success: (res) => {
@@ -111,9 +125,13 @@ util._navigateTo = function (obj) {
     fail: function (err) {
       if (err.errMsg.indexOf('not found') > -1) {
         let vk = uni.vk;
-        let errUrl = vk.pubfn.getPageFullPath(url);
-        vk.toast(`页面 ${errUrl} 不存在`, 'none');
         console.error(err);
+        if (!obj.__vkNavigateTo404) {
+          vk.navigateTo404();
+        } else {
+          let errUrl = vk.pubfn.getPageFullPath(url);
+          vk.toast(`页面 ${errUrl} 不存在`, 'none');
+        }
         return false;
       }
       uni.switchTab({
@@ -303,6 +321,22 @@ util.navigateTo403 = function (obj = {}) {
 };
 
 /**
+ * 跳转到404页面
+ * vk.navigateTo404();
+ */
+util.navigateTo404 = function (obj = {}) {
+  let vk = uni.vk;
+  let { mode = 'redirectTo' } = obj;
+  if (config.error && config.error.url) {
+    vk[mode]({
+      ...obj,
+      url: config.error.url,
+      __vkNavigateTo404: true,
+    });
+  }
+};
+
+/**
  * 检测是否满足条件(内部方法)
  util.checkWildcardTest({
 	 url:url,
@@ -385,6 +419,58 @@ util.checkNeedLogin = function (obj) {
   return pageNeedLogin;
 };
 
+// 检测页面是否已在 pages.json 的 pages 或 subPackages/subpackages 中注册
+util.checkPageExists = function (obj = {}) {
+  let vk = uni.vk;
+  let { url } = obj;
+  if (vk.pubfn.isNull(url)) return true;
+  let pagePath = util.normalizePagePath(vk.pubfn.getPageFullPath(url));
+  if (vk.pubfn.isNull(pagePath)) return true;
+  let pageList = util.getRegisteredPageList();
+  if (!pageList.length) return true;
+  return pageList.indexOf(pagePath) > -1;
+};
+
+// 检测 pages.json 中注册的页面，pages.json 的注释由 uni-app 编译器处理
+util.getRegisteredPageList = function () {
+  let list = [];
+  const addPage = (page, root) => {
+    if (typeof page === 'string') {
+      list.push(util.normalizePagePath([root, page].filter((item) => item).join('/')));
+    } else if (page && typeof page === 'object') {
+      list.push(util.normalizePagePath([root, page.path || page.pagePath].filter((item) => item).join('/')));
+    }
+  };
+  const addPages = (pages, root) => {
+    if (Array.isArray(pages)) {
+      pages.forEach((page) => addPage(page, root));
+    } else if (pages && typeof pages === 'object') {
+      Object.keys(pages).forEach((page) => addPage(page, root));
+    }
+  };
+
+  addPages(pagesJson.pages);
+  let subPackages = pagesJson.subPackages || pagesJson.subpackages || [];
+  if (Array.isArray(subPackages)) {
+    subPackages.forEach((subPackage) => {
+      if (subPackage && typeof subPackage === 'object') {
+        addPages(subPackage.pages, subPackage.root);
+      }
+    });
+  }
+
+  return list.filter((page, index) => page && list.indexOf(page) === index);
+};
+
+util.normalizePagePath = function (path) {
+  if (typeof path !== 'string') return '';
+  return path
+    .split('?')[0]
+    .split('#')[0]
+    .replace(/^\/+/, '')
+    .replace(/\.html$/, '');
+};
+
 // 检查当前页面是否有菜单权限（处理直接 URL 访问场景）
 util.checkCurrentPagePermission = function (obj = {}) {
   let vk = uni.vk;
@@ -394,6 +480,10 @@ util.checkCurrentPagePermission = function (obj = {}) {
     pagePath = vk.pubfn.getPageFullPath(obj.url);
   }
   pagePath = pagePath.split('?')[0];
+  if (!util.checkPageExists({ url: pagePath })) {
+    vk.navigateTo404();
+    return true;
+  }
   // 403 页面自身不做权限检查（防止无限重定向）
   if (config.noPermission && config.noPermission.url) {
     let noPermissionPath = vk.pubfn.getPageFullPath(config.noPermission.url);

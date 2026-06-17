@@ -34,7 +34,7 @@ module.exports = {
     if (searchvalue) {
       // 支持根据ID精确搜索、用户名、昵称、手机号模糊搜索
       // 转义正则特殊字符
-      let regStr = searchvalue.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+      let regStr = vk.pubfn.escapeRegExp(searchvalue);
       let regexp = new RegExp(regStr, 'i');
       whereJson = _.and(
         whereJson,

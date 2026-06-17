@@ -30,7 +30,7 @@ module.exports = {
     }
 
     if (checkUserExist) {
-      let dcloud_appid = originalParam.context.appId;
+      let dcloud_appid = originalParam.context.APPID;
       // 检测手机号对应的账号是否存在
       let num = await vk.daoCenter.userDao.count({
         mobile,

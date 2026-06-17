@@ -90,6 +90,8 @@ function getConfig() {
       if (cloudStorageConfig.groupUserId && typeof vk.getVuex === 'function') {
         let userInfo = vk.getVuex('$user.userInfo');
         if (vk.pubfn.isNotNull(userInfo) && userInfo._id) {
+          // 复制配置对象，避免直接修改 Vuex 中的状态
+          cloudStorageConfig = vk.pubfn.copyObject(cloudStorageConfig);
           cloudStorageConfig.dirname += `/${userInfo._id}`;
         }
       }

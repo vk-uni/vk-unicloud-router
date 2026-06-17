@@ -1,3 +1,6 @@
+// 涉及的表名
+const dbName = require('../../../../../dao/config.js');
+
 module.exports = {
   /**
    * vk-pay支付插件支付订单查询
@@ -18,10 +21,24 @@ module.exports = {
     let { uid } = data;
     let res = { code: 0, msg: '' };
     // 业务逻辑开始-----------------------------------------------------------
-    let dbName = 'vk-pay-orders';
+    let { formData = {} } = data;
+    let { status } = formData;
+    let whereJson = {};
+    if (vk.pubfn.isNotNull(status)) {
+      if (status === 'paid-success') {
+        // 已支付（含退款）
+        whereJson.status = _.in([1, 2, 3]);
+      } else if (status === 'refunded') {
+        // 已支付（含退款）
+        whereJson.status = _.in([2, 3]);
+      } else {
+        whereJson.status = Number(status);
+      }
+    }
     res = await vk.baseDao.getTableData({
-      dbName,
+      dbName: dbName.payOrder,
       data,
+      whereJson,
       // 副表列表
       foreignDB: [
         {

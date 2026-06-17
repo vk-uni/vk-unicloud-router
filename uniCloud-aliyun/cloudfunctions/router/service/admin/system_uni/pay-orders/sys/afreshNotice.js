@@ -1,4 +1,6 @@
-'use strict';
+// 涉及的表名
+const dbName = require('../../../../../dao/config.js');
+
 module.exports = {
   /**
    * 重新执行回调通知
@@ -16,11 +18,9 @@ module.exports = {
       _id, // 订单id
     } = data;
 
-    let dbName = 'vk-pay-orders';
-
     // 获取订单信息
     let orderInfo = await vk.baseDao.findById({
-      dbName,
+      dbName: dbName.payOrder,
       id: _id,
     });
     if (vk.pubfn.isNull(orderInfo)) return { code: -1, msg: '订单不存在' };
@@ -29,7 +29,7 @@ module.exports = {
 
     // 先将订单的状态改为未支付（重新回调需要）
     let updateNum = await vk.baseDao.update({
-      dbName,
+      dbName: dbName.payOrder,
       whereJson: {
         _id,
         status: 1,
@@ -64,7 +64,7 @@ module.exports = {
     } catch (err) {}
     // 再次获取订单信息，判断是否回调成功
     let payOrderInfo = await vk.baseDao.findById({
-      dbName,
+      dbName: dbName.payOrder,
       id: _id,
     });
     if (payOrderInfo.status === 1) {
@@ -79,7 +79,7 @@ module.exports = {
           whileTime += whileInterval;
           // 查询最新的订单信息
           payOrderInfo = await vk.baseDao.findById({
-            dbName,
+            dbName: dbName.payOrder,
             id: _id,
           });
         }
@@ -87,7 +87,7 @@ module.exports = {
     }
     // 还原部分信息（如支付时间不可被重新回调修改）
     await vk.baseDao.updateById({
-      dbName,
+      dbName: dbName.payOrder,
       id: _id,
       dataJson: {
         status: orderInfo.status,
