@@ -15,7 +15,7 @@ export default {
   },
   // 404 Not Found 错误页面路径
   error: {
-    url: '/pages/error/404/404',
+    url: '/pages/error/404',
   },
   // 账户注销页面
   closeAccount: {
