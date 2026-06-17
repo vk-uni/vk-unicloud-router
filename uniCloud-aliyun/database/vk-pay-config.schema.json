@@ -7,6 +7,10 @@
       "bsonType": "string",
       "description": "商家id（自己定义好谁是谁就行，不可修改）位数只要不是24位就没问题"
     },
+    "name": {
+      "title": "商家名称",
+      "bsonType": "string"
+    },
     "wxpay": {
       "title": "微信支付配置",
       "bsonType": "object"

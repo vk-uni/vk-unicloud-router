@@ -24,19 +24,39 @@
         { "value": "vkspay_app-plus", "text": "VksPay个人支付 - App" },
         { "value": "wxpay-virtual_mp-weixin", "text": "微信官方虚拟支付 - 微信小程序" },
         { "value": "douyin_mp-toutiao", "text": "抖音支付 - 抖音小程序" },
-        { "value": "huawei_app-plus", "text": "华为支付 - App" },
+        { "value": "huawei_app-harmony", "text": "华为支付 - App" },
         { "value": "huawei_mp-harmony", "text": "华为支付 - 元服务" }
       ]
     },
     "platform": {
       "title": "平台",
       "bsonType": "string",
-      "description": "uni老版本平台 h5、mp-weixin、mp-alipau、app-plus等"
+      "description": "uni老版本平台 h5、mp-weixin、mp-alipay、app-plus等",
+      "enum": [
+        { "value": "h5", "text": "H5" },
+        { "value": "h5-weixin", "text": "微信公众号" },
+        { "value": "mweb", "text": "手机外部浏览器H5" },
+        { "value": "mp-weixin", "text": "微信小程序" },
+        { "value": "mp-alipay", "text": "支付宝小程序" },
+        { "value": "mp-toutiao", "text": "抖音小程序" },
+        { "value": "mp-harmony", "text": "鸿蒙元服务" },
+        { "value": "app-plus", "text": "App" },
+        { "value": "app-harmony", "text": "鸿蒙App" }
+      ]
     },
     "uni_platform": {
       "title": "uni新版本平台",
       "bsonType": "string",
-      "description": "uni新版本平台 web、mp-weixin、mp-alipay、app等"
+      "description": "uni新版本平台 web、mp-weixin、mp-alipay、app等",
+      "enum": [
+        { "value": "web", "text": "Web（H5）" },
+        { "value": "mp-weixin", "text": "微信小程序" },
+        { "value": "mp-alipay", "text": "支付宝小程序" },
+        { "value": "mp-toutiao", "text": "抖音小程序" },
+        { "value": "mp-harmony", "text": "鸿蒙元服务" },
+        { "value": "app", "text": "App" },
+        { "value": "app-harmony", "text": "鸿蒙App" }
+      ]
     },
     "status": {
       "title": "支付状态",
