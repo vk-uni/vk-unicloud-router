@@ -23,6 +23,12 @@ package-lock.json
 .claude/skills/vk-read-doc/doc-index.md
 .claude/settings.local.json
 
+# agents
+.agents/rules/env.md
+.agents/skills/vk-read-doc/.last-update
+.agents/skills/vk-read-doc/doc-index.md
+.agents/settings.local.json
+
 # python
 *.pyc
 /uniCloud-tcb/database/*.jql
