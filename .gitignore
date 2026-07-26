@@ -1,28 +1,27 @@
-# Mac
+# macOS
 .DS_Store
-**/.DS_Store
 
-# vim/vi
+# Vim
 *.swp
 
-# JavaScript
+# Dependencies
 node_modules/
-.node_modules/
-.eslintcache
+
+# Build output
 unpackage/
-.DS_Storer
-router.param.json
-.vscode
-.hbuilderx
-.vite
-package-lock.json
 
-# agents
+# Tool caches
+.vite/
+.eslintcache
+
+# Editor settings
+.vscode/
+.hbuilderx/
+
+# AI agents
+**/common/scripts/
 **/rules/env.md
-**/skills/vk-read-doc/.last-update
-**/skills/vk-read-doc/doc-index.md
+**/rules/vk-*
+**/skills/vk-*
+**/settings.json
 **/settings.local.json
-
-# python
-*.pyc
-/uniCloud-tcb/database/*.jql
