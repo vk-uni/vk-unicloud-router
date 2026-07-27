@@ -1,3 +1,7 @@
+## 2.25.1（2026-07-27）
+- 【重要】临时移除 `"runtime": "Nodejs18"` 配置，以便兼容 `HBuilderX 5.15` 版本
+- 【重要】增加定时任务周月及 cron 调度支持，并设置默认时区为 UTC+8（北京时间）
+- 【新增】增加文件选择并上传接口 `vk.chooseAndUploadFile`，支持批量上传 [传送门](https://vkdoc.fsq.pub/client/pages/chooseAndUploadFile.html)
 ## 2.25.0（2026-06-17）
 - 【新增】支付收入统计（聚合查询版本），支持趋势图、平台/支付方式/订单类型下钻分析、退款统计、转化漏斗等
 - 【新增】用户统计云对象（`admin/system_uni/sys.stats`），提供注册用户统计、登录用户统计、新增用户趋势图、登录用户趋势图等接口
