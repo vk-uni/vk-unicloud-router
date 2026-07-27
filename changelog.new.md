@@ -1,3 +1,3 @@
 - 【重要】临时移除 `"runtime": "Nodejs18"` 配置，以便兼容 `HBuilderX 5.15` 版本
-- 【新增】增加定时任务周月及 cron 调度支持
+- 【重要】增加定时任务周月及 cron 调度支持，并设置默认时区为 UTC+8（北京时间）
 - 【新增】增加文件选择并上传接口 `vk.chooseAndUploadFile`，支持批量上传 [传送门](https://vkdoc.fsq.pub/client/pages/chooseAndUploadFile.html)
