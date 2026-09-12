@@ -12,7 +12,7 @@ const urlList = [
 
 // 生成regExp规则
 let regExp = urlList.map((item, index) => {
-  return `^${item.url}$`;
+  return `^${item.url.replace(/\./g, '\\.')}$`;
 });
 
 module.exports = [
