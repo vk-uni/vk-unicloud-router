@@ -5,6 +5,7 @@ module.exports = {
    * @url admin/system/user/sys/update 前端调用的url参数地址
    * data 请求参数 说明
    * @param {String} _id 		用户ID
+   * @param {String} username 用户名，可选；不传则保留，空字符串则清空
    * @param {String} nickname 		昵称
    * @param {String} gender 			性别
    * @param {Boolean} mobile 		手机号
@@ -21,7 +22,7 @@ module.exports = {
     let { uid } = data;
     let res = { code: 0, msg: '' };
     // 业务逻辑开始-----------------------------------------------------------
-    let { _id, nickname, avatar, gender, mobile, email, comment, allow_login_background, dcloud_appid = [], login_appid_type, tags } = data;
+    let { _id, username, nickname, avatar, gender, mobile, email, comment, allow_login_background, dcloud_appid = [], login_appid_type, tags } = data;
     let mobile_confirmed;
     let email_confirmed;
     // 参数合法校验开始-----------------------------------------------------------
@@ -32,6 +33,18 @@ module.exports = {
     // 参数合法校验结束-----------------------------------------------------------
 
     let dbName = 'uni-id-users';
+
+    // 检测username，空字符串表示清空，不参与重名检查
+    if (username) {
+      let num = await vk.baseDao.count({
+        dbName,
+        whereJson: {
+          username,
+          _id: _.neq(_id),
+        },
+      });
+      if (num > 0) return { code: -1, msg: `用户名【${username}】已注册!` };
+    }
 
     // 检测mobile
     if (mobile) {
@@ -69,6 +82,10 @@ module.exports = {
       allow_login_background,
       tags,
     };
+    // 仅在提交username时更新，清空时移除字段
+    if (typeof username !== 'undefined') {
+      dataJson.username = username === '' ? _.remove() : username;
+    }
     // 设置允许登录的应用列表
     if (login_appid_type && typeof uniID.setAuthorizedAppLogin === 'function') {
       let setAuthorizedAppLoginRes = await uniID.setAuthorizedAppLogin({
