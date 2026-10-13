@@ -31,12 +31,6 @@
           }
         },
         {
-          "path": "db/list/list",
-          "style": {
-            "navigationBarTitleText": "列表加载演示"
-          }
-        },
-        {
           "path": "uni-id/index/index",
           "style": {
             "navigationBarTitleText": "【开箱即用】vk-uniCloud-router - 云函数路由模式 - uniCloud开发框架 - 已集成uni-id"
