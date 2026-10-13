@@ -1,7 +1,7 @@
 <template>
   <view class="content">
     <view style="text-align: center">
-      <u-avatar :src="avatar" v-if="avatar" size="140"></u-avatar>
+      <image :src="avatar" v-if="avatar" size="140"></image>
     </view>
     <button type="default" @click="setAvatar">直接设置头像</button>
     <button type="default" @click="uploadAvatar">上传到云储存(并设置为头像)</button>
