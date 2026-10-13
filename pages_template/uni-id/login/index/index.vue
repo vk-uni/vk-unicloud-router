@@ -22,12 +22,14 @@
       <view class="login-icon-view">
         <!-- #ifdef MP-WEIXIN -->
         <view class="login-icon-item">
-          <u-icon name="weixin-fill" @click="login_weixin" size="80" color="#19be6b"></u-icon>
+          <!-- 如未使用 uView组件库，请自行替换图标组件 -->
+          <!-- <u-icon name="weixin-fill" @click="login_weixin" size="80" color="#19be6b"></u-icon> -->
         </view>
         <!-- #endif -->
         <!-- #ifdef APP-PLUS -->
         <view class="login-icon-item">
-          <u-icon name="weixin-fill" @click="login_weixin" size="80" color="#19be6b"></u-icon>
+          <!-- 如未使用 uView组件库，请自行替换图标组件 -->
+          <!-- <u-icon name="weixin-fill" @click="login_weixin" size="80" color="#19be6b"></u-icon> -->
         </view>
         <!-- #endif -->
       </view>
