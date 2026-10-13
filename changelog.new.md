@@ -1,3 +1,11 @@
-- 【重要】恢复 `"runtime": "Nodejs18"` 配置，注意：此配置不兼容 `HBuilderX 5.15` 版本，请尽快升级到 HBuilderX 最新版
-- 【重要】修复定时任务在部分情况下可能不运行的问题
-- 【优化】定时任务日志优化，打印本次要执行的任务列表和本次不执行的任务列表
+- 【优化】三方登录逻辑细节
+- 【优化】前后端公共函数，修复 `vk.pubfn.toDecimal` 小数舍入、时间处理等问题
+
+**特别注意：本次更新需要替换框架内置文件**
+
+- 替换文件 `router/dao/base.js`
+- 替换文件 `router/service/user/util/loginUtil.js`、`router/service/user/util/loginLog.js`
+- 替换文件 `router/middleware/modules/addAdminLog.js`、`router/middleware/modules/registerInitFilter.js`
+- 使用新增错误日志模块时，补入文件 `store/modules/$error.js`
+
+以上文件如有自定义逻辑，请合并更新，保留自己的业务代码。
