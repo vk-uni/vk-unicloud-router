@@ -1516,6 +1516,8 @@ pubfn.throttle = throttle;
  * 对象转url参数
  * @param {*} data,对象
  * @param {*} isPrefix,是否自动加上"?"
+ * @param {String} arrayFormat,数组格式：indices、brackets、repeat、comma
+ * @param {Object} options,可选配置：encode编码参数，keepEmpty保留空字符串，均默认false
  * 此函数参考uView
  * vk.pubfn.queryParams(json);
  */
@@ -2249,13 +2251,10 @@ pubfn.getCurrentPage = function () {
   let pagePath = `/${route}`;
   let fullPath = `/${route}`;
   let options = page.options;
-  if (page.$page) {
-    if (typeof page.$page.fullPath !== 'undefined') {
-      fullPath = page.$page.fullPath;
-    } else if (typeof options === 'object') {
-      let optionsStr = pubfn.queryParams(options);
-      fullPath = pagePath + optionsStr;
-    }
+  if (page.$page && typeof page.$page.fullPath !== 'undefined') {
+    fullPath = page.$page.fullPath;
+  } else if (options !== null && typeof options === 'object') {
+    fullPath = pagePath + pubfn.queryParams(options, true, 'brackets', { encode: true, keepEmpty: true });
   }
   res.fullPath = fullPath;
   res.pagePath = pagePath;

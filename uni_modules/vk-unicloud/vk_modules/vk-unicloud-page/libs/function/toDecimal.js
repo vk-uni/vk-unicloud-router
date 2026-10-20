@@ -71,6 +71,7 @@ function increment(text) {
  *
  * 支持：
  * - 有限数字、十进制数字字符串、科学计数法。
+ * - null、undefined、空字符串和纯空白字符串返回 0，仍需通过精度校验。
  * - 正精度、零精度、负精度。
  * - 保留负零，不使用浮点乘除缩放、EPSILON 或 toFixed。
  *
@@ -79,7 +80,7 @@ function increment(text) {
  * - 返回值仍受 Number 表示精度限制，不能保留末尾的 0。
  * - 非法参数、输入溢出、舍入结果溢出均抛出异常。
  *
- * @param {number|string} val 原值
+ * @param {number|string|null|undefined} val 原值
  * @param {number|string} [precision=0] 精度，必须是安全整数；-2 表示舍入到百位
  * @returns {number}
  *
@@ -100,6 +101,10 @@ function toDecimal(val, precision = 0) {
 
   if (!Number.isSafeInteger(precision)) {
     throw new RangeError('precision 必须是安全整数');
+  }
+
+  if (val === null || val === undefined || (typeof val === 'string' && val.trim() === '')) {
+    return 0;
   }
 
   if (typeof val !== 'number' && typeof val !== 'string') {
