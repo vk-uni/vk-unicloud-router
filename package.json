@@ -58,7 +58,7 @@
       "client": {
         "uni-app": {
           "vue": {
-            "vue2": "x",
+            "vue2": "√",
             "vue3": "√"
           },
           "web": {
