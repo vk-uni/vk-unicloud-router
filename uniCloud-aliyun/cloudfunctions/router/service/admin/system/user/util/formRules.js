@@ -40,14 +40,9 @@ class Util {
     let { vk } = util;
     let res = { code: 0, msg: '' };
 
-    if (typeof data.username !== 'undefined' && typeof data.username !== 'string') {
-      return { code: -1, msg: '用户名必须是字符串' };
-    }
-
     // 验证规则开始 -----------------------------------------------------------
     let rules = {
       _id: [{ required: true, message: '用户ID不能为空', trigger: 'blur' }],
-      username: [{ validator: vk.pubfn.validator('username'), message: '用户名以字母开头，长度在2~32之间，只能包含字母、数字、下划线和短横线', trigger: 'blur' }],
       nickname: [
         { required: true, message: '昵称为必填字段', trigger: 'blur' },
         { min: 2, max: 20, message: '昵称长度在 2 到 20 个字符', trigger: 'blur' },
