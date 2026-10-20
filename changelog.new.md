@@ -1,8 +1,3 @@
-- 【优化】三方登录逻辑细节问题
-- 【优化】前后端公共函数细节问题
-
-**特别注意：本次更新需要替换框架内置文件**
-
-- 替换目录 `router/service/user/`
-- 替换文件 `router/dao/base.js`
-- 替换文件 `router/middleware/modules/addAdminLog.js`、`router/middleware/modules/registerInitFilter.js`
+- 【修复】`toDecimal` 处理空值时报错的问题，空值统一返回 `0`
+- 【修复】批量导入菜单时忽略重复标识失效、覆盖导入丢失内置权限的问题
+- 【修复】支付订单筛选、用户价值排行及跨期退款统计异常
