@@ -1241,13 +1241,21 @@ pubfn.objectKeySort = function (obj) {
 };
 
 /**
- * 转义正则特殊字符
+ * 转义正则特殊字符，供 JavaScript 和数据库 PCRE 使用
+ * 非 ASCII 空白保留原字符；U+2028/U+2029 传数据库时应使用原始字符串，避免 RegExp.source 自动生成 Unicode 转义。
  * @param {String} text 需要转义的文本
  * @return {String} 转义后的字符串
  * vk.pubfn.escapeRegExp('test.com'); // "test\\.com"
  */
 pubfn.escapeRegExp = function (text) {
-  return String(text).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, (char) => (/[.*+?^${}()|[\]\\]/.test(char) ? '\\' + char : '\\u' + char.charCodeAt(0).toString(16).padStart(4, '0')));
+  return String(text).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, (char) => {
+    if (/[.*+?^${}()|[\]\\]/.test(char)) {
+      return '\\' + char;
+    }
+    // JavaScript 和数据库 PCRE 均支持两位十六进制转义，PCRE 默认不支持 Unicode 转义。
+    const charCode = char.charCodeAt(0);
+    return charCode <= 0xff ? '\\x' + charCode.toString(16).padStart(2, '0') : char;
+  });
 };
 /**
  * 判断文件url是否在指定后缀名数组内
