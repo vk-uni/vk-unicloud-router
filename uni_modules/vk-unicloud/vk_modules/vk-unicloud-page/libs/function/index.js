@@ -18,6 +18,8 @@ import treeUtil from './treeUtil.js';
 import queryStringUtil from './queryStringUtil.js';
 // 十进制舍入
 import toDecimal from './toDecimal.js';
+// 深度合并
+import deepMerge from './deepMerge.js';
 
 const pubfn = {};
 
@@ -412,6 +414,9 @@ pubfn.deepClone = function (obj) {
   }
   return o;
 };
+
+// 深度合并：普通对象递归合并，数组整体覆盖。
+pubfn.deepMerge = deepMerge;
 
 /**
  * 表单自动填充数据

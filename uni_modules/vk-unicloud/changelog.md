@@ -1,3 +1,8 @@
+## 2.26.3（2026-10-25）
+- 【新增】前后端统一提供 `vk.pubfn.deepMerge`：普通对象递归合并，数组整体覆盖，保留显式 `null` 等覆盖值 [传送门](https://vkdoc.fsq.pub/client/jsapi.html#deepmerge)
+- 【优化】`vk.callFunction` 和 `vk.request` 注入全局请求参数时，使用新对象承接浅合并结果，避免直接修改参与合并的全局参数对象 [传送门](https://vkdoc.fsq.pub/client/pages/updateRequestGlobalParam.html#mode2-merge)
+
+* 完整框架项目地址：`https://ext.dcloud.net.cn/plugin?id=2204`[点击查看](https://ext.dcloud.net.cn/plugin?id=2204)
 ## 2.26.2（2026-10-24）
 - 【修复】`vk.pubfn.escapeRegExp` 的数据库 PCRE 兼容性问题，避免搜索内容含空格、连字符等字符时正则查询报错
 

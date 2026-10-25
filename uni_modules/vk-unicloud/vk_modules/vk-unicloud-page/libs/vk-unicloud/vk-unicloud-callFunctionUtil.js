@@ -356,7 +356,7 @@ class CallFunctionUtil {
             for (let i = 0; i < customDate.regExp.length; i++) {
               let regExp = new RegExp(customDate.regExp[i]);
               if (regExp.test(url)) {
-                obj.data = Object.assign(customDate.data, obj.data);
+                obj.data = mergeRequestData(customDate.data, obj.data);
                 break;
               }
             }
@@ -364,7 +364,7 @@ class CallFunctionUtil {
             // 字符串形式
             let regExp = new RegExp(customDate.regExp);
             if (regExp.test(url)) {
-              obj.data = Object.assign(customDate.data, obj.data);
+              obj.data = mergeRequestData(customDate.data, obj.data);
             }
           }
         }
@@ -373,9 +373,9 @@ class CallFunctionUtil {
       let customDate = that.getRequestGlobalParam(globalParamName);
       if (customDate && JSON.stringify(customDate) !== '{}') {
         if (customDate.regExp) {
-          obj.data = Object.assign(customDate.data, obj.data); // 新版本
+          obj.data = mergeRequestData(customDate.data, obj.data); // 新版本
         } else {
-          obj.data = Object.assign(customDate, obj.data); // 兼容旧版本
+          obj.data = mergeRequestData(customDate, obj.data); // 兼容旧版本
         }
       }
       // 注入自定义全局参数结束-----------------------------------------------------------
@@ -1427,6 +1427,11 @@ class CallFunctionUtil {
       this.callFunction(obj).then(resolve).catch(reject);
     }
   }
+}
+
+// 浅合并全局参数，请求参数优先，不修改传入对象。
+function mergeRequestData(defaultData, requestData) {
+  return Object.assign({}, defaultData, requestData);
 }
 
 function hideRequestLoading(params, Logger) {

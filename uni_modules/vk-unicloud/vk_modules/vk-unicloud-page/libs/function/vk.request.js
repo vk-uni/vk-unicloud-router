@@ -76,7 +76,7 @@ requestUtil.request = function (obj = {}) {
         for (let i = 0; i < customDate.regExp.length; i++) {
           let regExp = new RegExp(customDate.regExp[i]);
           if (regExp.test(obj.url)) {
-            obj.data = Object.assign(customDate.data, obj.data);
+            obj.data = mergeRequestData(customDate.data, obj.data);
             break;
           }
         }
@@ -84,7 +84,7 @@ requestUtil.request = function (obj = {}) {
         // 字符串形式
         let regExp = new RegExp(customDate.regExp);
         if (regExp.test(obj.url)) {
-          obj.data = Object.assign(customDate.data, obj.data);
+          obj.data = mergeRequestData(customDate.data, obj.data);
         }
       }
     }
@@ -93,9 +93,9 @@ requestUtil.request = function (obj = {}) {
   let customDate = requestUtil.getRequestGlobalParam(obj.globalParamName);
   if (canMergeData && customDate && JSON.stringify(customDate) !== '{}') {
     if (customDate.regExp) {
-      obj.data = Object.assign(customDate.data, obj.data); // 新版本
+      obj.data = mergeRequestData(customDate.data, obj.data); // 新版本
     } else {
-      obj.data = Object.assign(customDate, obj.data); // 兼容旧版本
+      obj.data = mergeRequestData(customDate, obj.data); // 兼容旧版本
     }
   }
   // 注入自定义全局参数结束-----------------------------------------------------------
@@ -266,13 +266,18 @@ requestUtil.request = function (obj = {}) {
   promiseAction.catch((error) => {});
   return promiseAction;
 };
+// 浅合并全局参数，请求参数优先，不修改传入对象。
+function mergeRequestData(defaultData, requestData) {
+  return Object.assign({}, defaultData, requestData);
+}
+
 // 请求成功回调
 function requestSuccess(obj = {}) {
   let vk = uni.vk;
   let config = requestUtil.config;
   let { res = {}, params, Logger, resolve, reject } = obj;
   let { title, needOriginalRes, dataType, errorCodeName, errorMsgName, success, loading, responseType } = params;
-  let data = res.data ?? {};
+  let data = res.data === null || typeof res.data === 'undefined' ? {} : res.data;
   if (responseType !== 'arraybuffer') {
     if (vk.pubfn.isNotNullAll(errorCodeName, data[errorCodeName])) {
       data.code = data[errorCodeName];
