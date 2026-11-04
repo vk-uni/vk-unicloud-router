@@ -20,6 +20,9 @@ import queryStringUtil from './queryStringUtil.js';
 import toDecimal from './toDecimal.js';
 // 深度合并
 import deepMerge from './deepMerge.js';
+// #ifdef APP-PLUS
+import base64ToFileApp from './base64ToFileApp.js';
+// #endif
 
 const pubfn = {};
 
@@ -2210,7 +2213,7 @@ pubfn.getPageFullPath = function (url) {
  */
 pubfn.getPlatform = function () {
   let platform;
-  // #ifdef APP-PLUS || APP-NVUE || APP-PLUS-NVUE
+  // #ifdef APP
   platform = 'app-plus';
   // #endif
   // #ifdef WEB
@@ -2252,7 +2255,7 @@ pubfn.getPlatform = function () {
  * pagePath 当前打开页面的路径（不含参数）
  * options  当前打开页面的参数
  * route    当前打开页面路由地址
- * $vm      当前打开页面的vue实例
+ * $vm      当前打开页面的vue实例；script setup 页面需通过 defineExpose 暴露跨页面访问的成员
  * vk.pubfn.getCurrentPage();
  */
 pubfn.getCurrentPage = function () {
@@ -2262,18 +2265,30 @@ pubfn.getCurrentPage = function () {
   let route = page.route || '';
   if (route.indexOf('/') == 0) route = route.substring(1);
   let pagePath = `/${route}`;
-  let fullPath = `/${route}`;
+  let fullPath;
   let options = page.options;
+  // #ifndef UNI-APP-X
   if (page.$page && typeof page.$page.fullPath !== 'undefined') {
     fullPath = page.$page.fullPath;
-  } else if (options !== null && typeof options === 'object') {
-    fullPath = pagePath + pubfn.queryParams(options, true, 'brackets', { encode: true, keepEmpty: true });
+  }
+  // #endif
+  // uni-app x 根据 UniPage 的 route 和 options 构建路径，普通 uni-app 也使用此兜底。
+  if (typeof fullPath === 'undefined') {
+    fullPath = pagePath;
+    if (options !== null && typeof options === 'object') {
+      fullPath += pubfn.queryParams(options, true, 'brackets', { encode: true, keepEmpty: true });
+    }
   }
   res.fullPath = fullPath;
   res.pagePath = pagePath;
   res.options = options;
   res.route = route;
+  // #ifdef UNI-APP-X
+  res.$vm = page.vm;
+  // #endif
+  // #ifndef UNI-APP-X
   res.$vm = page.$vm;
+  // #endif
   return res;
 };
 /**
@@ -2353,6 +2368,42 @@ pubfn.fileToBase64 = function (obj = {}) {
     // if(obj.success) obj.success(base64);
     // if(obj.complete) obj.complete(base64);
     // resolve(base64);
+    // #endif
+    // #ifdef (UNI-APP-X || APP-HARMONY) && APP
+    uni.getFileSystemManager().readFile({
+      filePath: filePath,
+      encoding: 'base64',
+      success: function (res) {
+        let mime = typeof file === 'object' ? file.type : undefined;
+        if (typeof mime !== 'string' || mime.indexOf('/') === -1) {
+          let mimeTypes = {
+            jpg: 'image/jpeg',
+            jpeg: 'image/jpeg',
+            jfif: 'image/jpeg',
+            png: 'image/png',
+            gif: 'image/gif',
+            webp: 'image/webp',
+            bmp: 'image/bmp',
+            svg: 'image/svg+xml',
+            heic: 'image/heic',
+            heif: 'image/heif',
+            pdf: 'application/pdf',
+            txt: 'text/plain',
+          };
+          mime = mimeTypes[pubfn.getFileSuffix(filePath)];
+          if (typeof mime !== 'string') mime = 'application/octet-stream';
+        }
+        let base64 = 'data:' + mime + ';base64,' + res.data;
+        if (obj.success) obj.success(base64);
+        if (obj.complete) obj.complete(base64);
+        resolve(base64);
+      },
+      fail: function (err) {
+        if (obj.fail) obj.fail(err);
+        if (obj.complete) obj.complete(err);
+        reject(err);
+      },
+    });
     // #endif
     // #ifdef APP-PLUS
     plus.io.resolveLocalFileSystemURL(
@@ -2462,39 +2513,37 @@ pubfn.base64ToFile = function (obj = {}) {
     if (obj.complete) obj.complete(file);
     resolve(file);
     // #endif
+    // #ifdef (UNI-APP-X || APP-HARMONY) && APP
+    savePath = uni.env.USER_DATA_PATH + '/' + filePath;
+    uni.getFileSystemManager().writeFile({
+      filePath: savePath,
+      data: base64Data,
+      encoding: 'base64',
+      success: function () {
+        let file = {
+          path: savePath,
+          lastModifiedDate: new Date(),
+          name: filePath,
+        };
+        if (obj.success) obj.success(file);
+        if (obj.complete) obj.complete(file);
+        resolve(file);
+      },
+      fail: function (err) {
+        if (obj.fail) obj.fail(err);
+        if (obj.complete) obj.complete(err);
+        reject(err);
+      },
+    });
+    // #endif
     // #ifdef APP-PLUS
-    let fileName = filePath;
-    let basePath = '_doc';
-    let dirPath = 'vk_temp';
-    savePath = basePath + '/' + dirPath + '/' + fileName;
-    let bitmap = new plus.nativeObj.Bitmap(fileName);
-    bitmap.loadBase64Data(
-      base64,
-      function () {
-        bitmap.save(
-          savePath,
-          {},
-          function () {
-            bitmap.clear();
-            let file = {
-              path: savePath,
-              lastModifiedDate: new Date(),
-              name: filePath,
-            };
-            if (obj.success) obj.success(file);
-            if (obj.complete) obj.complete(file);
-            resolve(file);
-          },
-          function (error) {
-            bitmap.clear();
-            if (obj.fail) obj.fail(error);
-            if (obj.complete) obj.complete(error);
-            reject(error);
-          }
-        );
+    base64ToFileApp({ base64Data, filePath }).then(
+      function (file) {
+        if (obj.success) obj.success(file);
+        if (obj.complete) obj.complete(file);
+        resolve(file);
       },
       function (error) {
-        bitmap.clear();
         if (obj.fail) obj.fail(error);
         if (obj.complete) obj.complete(error);
         reject(error);
@@ -2508,6 +2557,7 @@ pubfn.base64ToFile = function (obj = {}) {
  vk.pubfn.base64toBlob(base64);
  */
 pubfn.base64toBlob = function (base64) {
+  // #ifdef WEB
   let arr = base64.split(',');
   let mime = arr[0].match(/:(.*?);/)[1];
   let bstr = atob(arr[1]);
@@ -2517,16 +2567,25 @@ pubfn.base64toBlob = function (base64) {
     u8arr[n] = bstr.charCodeAt(n);
   }
   return new Blob([u8arr], { type: mime });
+  // #endif
+  // #ifndef WEB
+  throw new Error('base64toBlob only supports WEB');
+  // #endif
 };
 /**
  * //将blob转换为file
  vk.pubfn.blobToFile(base64);
  */
 pubfn.blobToFile = function (blob, fileName) {
+  // #ifdef WEB
   blob.lastModifiedDate = new Date();
   blob.name = fileName;
   blob.path = URL.createObjectURL(blob);
   return blob;
+  // #endif
+  // #ifndef WEB
+  throw new Error('blobToFile only supports WEB');
+  // #endif
 };
 
 /**
@@ -2603,6 +2662,10 @@ pubfn.checkLogin = function (obj = {}) {
  * @param {Object} path
  */
 pubfn.getLocalFilePath = function (path) {
+  // #ifdef UNI-APP-X
+  return path;
+  // #endif
+  // #ifndef UNI-APP-X
   if (path.indexOf('_www') === 0 || path.indexOf('_doc') === 0 || path.indexOf('_documents') === 0 || path.indexOf('_downloads') === 0) {
     return path;
   }
@@ -2621,6 +2684,7 @@ pubfn.getLocalFilePath = function (path) {
     }
   }
   return '_www/' + path;
+  // #endif
 };
 
 /**
@@ -2669,7 +2733,9 @@ pubfn.getLocaleObject = function () {
  * 设置当前应用语言
  */
 pubfn.setLocale = function (...e) {
-  return uni.setLocale(...e);
+  if (typeof uni.setLocale === 'function') {
+    return uni.setLocale(...e);
+  }
 };
 
 /**

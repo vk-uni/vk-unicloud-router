@@ -276,7 +276,7 @@ function requestSuccess(obj = {}) {
   let vk = uni.vk;
   let config = requestUtil.config;
   let { res = {}, params, Logger, resolve, reject } = obj;
-  let { title, needOriginalRes, dataType, errorCodeName, errorMsgName, success, loading, responseType } = params;
+  let { title, needOriginalRes, dataType, errorCodeName, errorMsgName, success, responseType } = params;
   let data = res.data === null || typeof res.data === 'undefined' ? {} : res.data;
   if (responseType !== 'arraybuffer') {
     if (vk.pubfn.isNotNullAll(errorCodeName, data[errorCodeName])) {
@@ -292,7 +292,7 @@ function requestSuccess(obj = {}) {
     if (config.debug) Logger.result = typeof data == 'object' ? vk.pubfn.copyObject(data) : data;
     if ([1301, 1302, 30201, 30202, 30203, 30204].indexOf(data.code) > -1 && String(data.msg || '').indexOf('token') > -1) {
       if (title) vk.hideLoading();
-      if (loading) {
+      if (Logger.loading) {
         vk.setLoading(false, Logger.loading);
         Logger.loading = null;
       }
@@ -325,7 +325,7 @@ function requestSuccess(obj = {}) {
     if (data.userInfo && data.needUpdateUserInfo) vk.callFunctionUtil.updateUserInfo(data);
   }
   if (title) vk.hideLoading();
-  if (loading) {
+  if (Logger.loading) {
     vk.setLoading(false, Logger.loading);
     Logger.loading = null;
   }
@@ -338,7 +338,7 @@ function requestFail(obj = {}) {
   let vk = uni.vk;
   let config = requestUtil.config;
   let { res = {}, params, Logger, reject } = obj;
-  let { title, needAlert, fail, loading } = params;
+  let { title, needAlert, fail } = params;
   if (typeof needAlert === 'undefined') {
     needAlert = typeof fail === 'function' ? false : true;
   }
@@ -357,7 +357,7 @@ function requestFail(obj = {}) {
   }
   if (config.debug) Logger.error = res;
   if (title) vk.hideLoading();
-  if (loading) {
+  if (Logger.loading) {
     vk.setLoading(false, Logger.loading);
     Logger.loading = null;
   }

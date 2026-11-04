@@ -6,7 +6,7 @@ class CloudStorage {
     this.counterNum = 0;
   }
 
-  uploadFile(obj = {}) {
+  async uploadFile(obj = {}) {
     let {
       filePath,
       fileType,
@@ -26,14 +26,21 @@ class CloudStorage {
     let fileName = fileNameObj.fileFullName;
     let formData = vk.pubfn.copyObject(cloudStorageConfig.uploadData);
     formData['key'] = fileName; // 存储在oss的文件路径
-    // Base64 文件由 uni.uploadFile 直接处理，避免重复添加 file 表单域
+    // 仅普通文件路径设置 name 表单字段
     if (filePath.indexOf(';base64,') === -1) {
       formData['name'] = filePath;
     }
+    let uploadFilePath = filePath;
+    // #ifdef APP
+    if (filePath.startsWith('data:') && filePath.indexOf(';base64,') !== -1) {
+      const localFile = await vk.pubfn.base64ToFile({ base64: filePath });
+      uploadFilePath = localFile.path;
+    }
+    // #endif
     return new Promise((resolve, reject) => {
       let uploadTask = uni.uploadFile({
         url: cloudStorageConfig.action,
-        filePath,
+        filePath: uploadFilePath,
         fileType,
         name,
         header,
@@ -68,6 +75,33 @@ class CloudStorage {
             });
         }
       });
+    }).finally(async () => {
+      // #ifdef APP
+      // 仅清理本次 Base64 转换生成的文件
+      if (uploadFilePath !== filePath) {
+        try {
+          // #ifdef UNI-APP-X || APP-HARMONY
+          await new Promise((resolve, reject) => {
+            uni.getFileSystemManager().unlink({
+              filePath: uploadFilePath,
+              success: resolve,
+              fail: reject,
+            });
+          });
+          // #endif
+          // #ifdef APP-PLUS
+          const entry = await new Promise((resolve, reject) => {
+            plus.io.resolveLocalFileSystemURL(uploadFilePath, resolve, reject);
+          });
+          await new Promise((resolve, reject) => {
+            entry.remove(resolve, reject);
+          });
+          // #endif
+        } catch (err) {
+          console.warn('清理上传临时文件失败:', err);
+        }
+      }
+      // #endif
     });
   }
 }

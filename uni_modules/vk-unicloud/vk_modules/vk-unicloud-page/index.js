@@ -215,7 +215,8 @@ vk.install = (Vue, config) => {
   }
 };
 
-// vk旧版实例初始化（为了兼容旧版，此函数还需要保留）
+// #ifndef UNI-APP-X
+// vk旧版实例初始化（为了兼容旧版，此函数还需要保留，此函数不再进行后续改动）
 vk.init = function (obj = {}) {
   let {
     Vue, // Vue实例
@@ -237,5 +238,6 @@ vk.init = function (obj = {}) {
   // 重写 console.log
   Vue.use(consoleLog);
 };
+// #endif
 
 export default vk;

@@ -649,9 +649,6 @@ vk.navigateToLuckyDraw({
  */
 util.navigateToLuckyDraw = function (obj = {}) {
   let vk = uni.vk;
-  // #ifndef APP-PLUS || MP-WEIXIN || WEB
-  vk.alert('请在微信小程序中打开');
-  // #endif
   const mpConfig = {
     appid: 'wx2c55b235ad6553e3', // 抽奖服务小程序的appid（请勿修改）
     ghId: 'gh_fbd003114768', // 抽奖服务小程序的原始ID（请勿修改）
@@ -676,6 +673,14 @@ util.navigateToLuckyDraw = function (obj = {}) {
     if (typeof fail === 'function') fail(err);
     if (typeof complete === 'function') complete(err);
   };
+  // #ifndef APP-PLUS || MP-WEIXIN || WEB
+  vk.alert('当前环境暂不支持跳转抽奖小程序，请在微信小程序中打开');
+  failCallback({
+    errMsg: 'navigateToMiniProgram:fail 当前环境暂不支持跳转抽奖小程序',
+  });
+  return;
+  // #endif
+
   // #ifdef WEB
   let pathArr = path.split('?');
   let page = pathArr[0];

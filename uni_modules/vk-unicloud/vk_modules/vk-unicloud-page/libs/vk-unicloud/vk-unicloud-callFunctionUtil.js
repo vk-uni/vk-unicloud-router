@@ -267,6 +267,7 @@ class CallFunctionUtil {
             // 此处代码是为了防止首页启动时检测和正常检测冲突-----------------------------------------------------------
             uni.navigateTo({
               url: config.login.url,
+              // #ifndef UNI-APP-X
               events: {
                 // 监听登录成功后的事件
                 loginSuccess: (data) => {
@@ -290,6 +291,7 @@ class CallFunctionUtil {
                   }
                 },
               },
+              // #endif
             });
           } else {
             if (params.needAlert) {
@@ -688,7 +690,7 @@ class CallFunctionUtil {
     /**
      * 选择文件并直接上传 vk.chooseAndUploadFile
      * 文档：[https://vkdoc.fsq.pub/client/pages/chooseAndUploadFile.html](https://vkdoc.fsq.pub/client/pages/chooseAndUploadFile.html)
-     * @param {String} 	obj.type										文件类型，image（图片）、video（视频）、all（任意文件，仅H5和微信小程序支持）（必填）
+     * @param {String} 	obj.type										文件类型，image（图片）、video（视频）、all（任意文件，支持H5、微信小程序和uni-app x蒸汽模式App）（必填）
      * @param {String} 	obj.title										上传时的loading提示语
      * @param {Number} 	obj.count										最多可选择的文件数量，type为image时默认9，type为all时默认100（type为video时无效，一次只能选1个）
      * @param {Array} 	obj.extension								文件扩展名过滤（部分平台支持）
@@ -1074,7 +1076,7 @@ class CallFunctionUtil {
       errMsg = globalErrorCode['cloudfunction-network-unauthorized'];
       sysErr = true;
       needAlert = false;
-      // #ifdef APP-PLUS
+      // #ifdef APP
       vk.pubfn.debounce(
         () => {
           vk.alert(errMsg, '提示', '确定', () => {
@@ -1247,7 +1249,9 @@ class CallFunctionUtil {
           count: count || 9,
           sizeType,
           sourceType,
+          // #ifndef APP
           extension,
+          // #endif
           success: (res) => resolve(that.normalizeChooseFileRes(res, 'image')),
           fail: reject,
         });
@@ -1256,13 +1260,17 @@ class CallFunctionUtil {
           camera,
           maxDuration,
           sourceType,
+          // #ifndef APP
           extension,
+          // #endif
+          // #ifndef UNI-APP-X && APP-HARMONY
           compressed: typeof compressed === 'undefined' ? true : compressed,
+          // #endif
           success: (res) => resolve(that.normalizeChooseFileRes(res, 'video')),
           fail: reject,
         });
       } else if (type === 'all') {
-        // #ifdef H5
+        // #ifdef H5 || (APP && VUE3-VAPOR)
         uni.chooseFile({
           count: count || 100,
           type: 'all',
@@ -1280,8 +1288,8 @@ class CallFunctionUtil {
           fail: reject,
         });
         // #endif
-        // #ifndef H5 || MP-WEIXIN
-        reject({ errMsg: 'chooseAndUploadFile:fail 当前平台不支持 type:"all"，仅 H5 和微信小程序支持选择任意文件' });
+        // #ifndef H5 || MP-WEIXIN || (APP && VUE3-VAPOR)
+        reject({ errMsg: 'chooseAndUploadFile:fail 当前平台不支持 type:"all"，仅 H5、微信小程序和 uni-app x 蒸汽模式 App 支持选择任意文件' });
         // #endif
       }
     });
@@ -1438,7 +1446,7 @@ function hideRequestLoading(params, Logger) {
   if (Logger.loadingFinished) return;
   Logger.loadingFinished = true;
   if (params.title) vk.hideLoading('request');
-  if (params.loading) {
+  if (Logger.loading) {
     vk.setLoading(false, Logger.loading);
     Logger.loading = null;
   }
