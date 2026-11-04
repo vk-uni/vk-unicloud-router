@@ -1,3 +1,6 @@
+## 待发布
+- 【修复】云端 `vk.request` 的 `retryCount` 表示额外重试次数：默认 `0` 不重试，`1` 最多请求 `2` 次，`2` 最多请求 `3` 次 [传送门](https://vkdoc.fsq.pub/client/jsapi.html#requestcloud)
+
 ## 2.26.3（2026-10-25）
 - 【新增】前后端统一提供 `vk.pubfn.deepMerge`：普通对象递归合并，数组整体覆盖，保留显式 `null` 等覆盖值 [传送门](https://vkdoc.fsq.pub/client/jsapi.html#deepmerge)
 - 【优化】`vk.callFunction` 和 `vk.request` 注入全局请求参数时，使用新对象承接浅合并结果，避免直接修改参与合并的全局参数对象 [传送门](https://vkdoc.fsq.pub/client/pages/updateRequestGlobalParam.html#mode2-merge)
