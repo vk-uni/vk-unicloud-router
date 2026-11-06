@@ -5,6 +5,12 @@ let lastToLoginTime = 0;
 
 import cloudStorage from '../../libs/cloud-storage/index.js';
 
+function hasUserStore() {
+  if (typeof vk.setVuex !== 'function') return false;
+  if (typeof vk.getVuexStore !== 'function') return true;
+  return Object.prototype.hasOwnProperty.call(vk.getVuexStore().state, '$user');
+}
+
 class CallFunctionUtil {
   constructor() {
     // 注意：此处的配置会被项目根目录的 app.config.js 覆盖，无需修改此处的配置
@@ -116,8 +122,8 @@ class CallFunctionUtil {
     this.updateUserInfo = (res = {}) => {
       let config = this.config;
       let { userInfo = {} } = res;
-      if (typeof vk.setVuex === 'function') {
-        // 有安装vuex则使用vuex
+      if (hasUserStore()) {
+        // 已绑定用户状态则更新状态，否则使用本地缓存
         vk.setVuex('$user.userInfo', userInfo);
       } else {
         // 否则使用本地缓存
@@ -129,8 +135,8 @@ class CallFunctionUtil {
     this.deleteUserInfo = (res = {}) => {
       let { log = true } = res;
       let config = this.config;
-      if (typeof vk.setVuex === 'function') {
-        // 有安装vuex则使用vuex
+      if (hasUserStore()) {
+        // 只清理实际绑定的用户状态
         vk.setVuex('$user.userInfo', {});
         vk.setVuex('$user.permission', []);
         vk.removeStorageSync(config.uniIdUserInfoKeyName);

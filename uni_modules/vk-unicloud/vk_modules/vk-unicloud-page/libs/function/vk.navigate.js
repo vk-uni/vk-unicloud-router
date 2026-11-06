@@ -246,16 +246,23 @@ util.originalTo = function () {
   util.redirectTo(originalPage);
 };
 
+function hasAppStore() {
+  const vk = uni.vk;
+  if (typeof vk.getVuex !== 'function') return false;
+  if (typeof vk.getVuexStore !== 'function') return true;
+  return Object.prototype.hasOwnProperty.call(vk.getVuexStore().state, '$app');
+}
+
 /**
  * 获取登录前的页面
  * vk.navigate.getOriginalPage();
  */
 util.getOriginalPage = function () {
-  if (typeof uni.vk.getVuex === 'function') {
-    // 有安装vuex则使用vuex
+  if (hasAppStore()) {
+    // 已绑定 $app 模块则使用状态管理
     return uni.vk.getVuex('$app.originalPage');
   } else {
-    // 未安装则使用本地缓存
+    // 未绑定 $app 模块则使用本地缓存
     return uni.vk.getStorageSync('vk.navigate.originalPage');
   }
 };
@@ -267,11 +274,11 @@ util.getOriginalPage = function () {
 util.setOriginalPage = function (originalPage) {
   if (originalPage === null) originalPage = '';
   uni.vk.navigate.originalPage = originalPage; // 兼容老版本
-  if (typeof uni.vk.getVuex === 'function') {
-    // 有安装vuex则使用vuex
+  if (hasAppStore()) {
+    // 已绑定 $app 模块则使用状态管理
     return uni.vk.setVuex('$app.originalPage', originalPage);
   } else {
-    // 未安装则使用本地缓存
+    // 未绑定 $app 模块则使用本地缓存
     return uni.vk.setStorageSync('vk.navigate.originalPage', originalPage);
   }
 };
