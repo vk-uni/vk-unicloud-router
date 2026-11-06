@@ -1,5 +1,12 @@
 ## 待发布
+- 【重要】支持 uni-app x 蒸汽模式
 - 【修复】云端 `vk.request` 的 `retryCount` 表示额外重试次数：默认 `0` 不重试，`1` 最多请求 `2` 次，`2` 最多请求 `3` 次 [传送门](https://vkdoc.fsq.pub/client/jsapi.html#requestcloud)
+- 【修复】App 端 Base64 文件转换及上传的兼容性问题
+- 【修复】`vk.callFunction`、`vk.request` 在 loading 绑定失败时，状态清理异常的问题
+- 【新增】uni-app x 使用 Pinia 进行状态管理，并继续保留 `vk.getVuex`、`vk.setVuex` 等调用方式
+- 【新增】验证码组件 `vk-data-verification-code` 支持 uni-app x 蒸汽模式
+- 【调整】uni-app x 的自定义 loading 需使用对象模式，需显式传入响应式状态对象
+- 【调整】uni-app x 登录失效重新登录后，不再自动执行原页面的 `onLoad` 或 `init`，页面刷新逻辑需自行处理
 
 ## 2.26.3（2026-10-25）
 - 【新增】前后端统一提供 `vk.pubfn.deepMerge`：普通对象递归合并，数组整体覆盖，保留显式 `null` 等覆盖值 [传送门](https://vkdoc.fsq.pub/client/jsapi.html#deepmerge)
