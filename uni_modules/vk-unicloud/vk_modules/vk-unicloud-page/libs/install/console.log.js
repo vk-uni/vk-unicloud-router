@@ -1,7 +1,6 @@
 const originalLog = console.log;
 let debug = process.env.NODE_ENV !== 'production';
-const install = (Vue) => {
-  let vk = Vue.prototype ? Vue.prototype.vk : Vue.config.globalProperties.vk;
+const consoleLog = (vk) => {
   if (vk) {
     vk.log = originalLog;
     if (typeof vk.getConfig === 'function') {
@@ -38,6 +37,4 @@ const install = (Vue) => {
   }
 };
 
-export default {
-  install,
-};
+export default consoleLog;

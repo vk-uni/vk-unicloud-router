@@ -2122,7 +2122,7 @@ pubfn.getListData = function (obj = {}) {
     }
   }
   在页面初始化方法中执行下面的函数
-  this.vk.pubfn.getComponentsDynamicData({
+  vk.pubfn.getComponentsDynamicData({
     that : this,
     ids : ["notice-bar-01","index-swiper-01"]
   });
