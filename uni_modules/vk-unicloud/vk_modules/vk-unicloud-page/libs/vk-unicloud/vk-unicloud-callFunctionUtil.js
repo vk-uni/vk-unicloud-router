@@ -273,7 +273,6 @@ class CallFunctionUtil {
             // 此处代码是为了防止首页启动时检测和正常检测冲突-----------------------------------------------------------
             uni.navigateTo({
               url: config.login.url,
-              // #ifndef UNI-APP-X
               events: {
                 // 监听登录成功后的事件
                 loginSuccess: (data) => {
@@ -281,6 +280,19 @@ class CallFunctionUtil {
                   let pages = getCurrentPages();
                   if (pages.length >= num) {
                     let that = pages[pages.length - num];
+
+                    // #ifdef UNI-APP-X
+                    // 蒸汽模式的 onLoad 回调保存在页面内部实例中。
+                    const hooks = that.vm?.$?.onLoad;
+                    if (Array.isArray(hooks)) {
+                      const options = that.options;
+                      for (const hook of hooks.slice()) {
+                        hook(options);
+                      }
+                    }
+                    // #endif
+
+                    // #ifndef UNI-APP-X
                     if (typeof that.onLoad == 'function') {
                       // 重新执行页面onLoad函数
                       that.onLoad(that.options);
@@ -291,13 +303,14 @@ class CallFunctionUtil {
                       // 重新执行一次云函数调用（还是让用户自己点比较好）
                       // callFunction(params);
                     }
+                    // #endif
+
                   } else {
                     // 重新执行一次云函数调用（还是让用户自己点比较好）
                     // callFunction(params);
                   }
                 },
               },
-              // #endif
             });
           } else {
             if (params.needAlert) {
