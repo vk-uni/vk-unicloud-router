@@ -87,6 +87,18 @@ const cloudObject = {
     return res;
   },
   /**
+   * sleep函数，延迟执行
+   * @url template/pub.db.sleep 前端调用的url参数地址
+   */
+  sleep: async function (data) {
+    let res = { code: 0, msg: '' };
+    let { uid } = this.getClientInfo(); // 获取客户端信息
+    // 业务逻辑开始-----------------------------------------------------------
+    await vk.pubfn.sleep(200);
+    // 业务逻辑结束-----------------------------------------------------------
+    return res;
+  },
+  /**
    * 模板函数
    * @url template/pub.db.test 前端调用的url参数地址
    */
