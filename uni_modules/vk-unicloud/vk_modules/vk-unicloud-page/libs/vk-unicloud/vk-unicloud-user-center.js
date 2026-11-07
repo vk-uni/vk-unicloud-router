@@ -464,6 +464,10 @@ export default {
    * @param {String} tokenExpired		token过期时间
    */
   loginByUniverify(obj = {}) {
+    // #ifndef UNI-APP-X
+
+    // uni-app x 如果不加这个条件编译会导致必须去申请开通一键登录，否则就无法打包编译，因此这里默认是不编译到 uni-app x，如需要一键登录则去掉这个条件编译
+
     addLoading(obj, 'login');
     if (typeof obj.needAlert === 'undefined') obj.needAlert = true;
     // #ifdef APP
@@ -475,12 +479,8 @@ export default {
         univerifyStyle: {
           fullScreen: univerifyStyle.fullScreen,
           backgroundColor: univerifyStyle.backgroundColor,
-          logoPath: uni.vk.pubfn.isNotNull(univerifyStyle.logoPath)
-            ? univerifyStyle.logoPath
-            : univerifyStyle.icon?.path,
-          loginBtnText: uni.vk.pubfn.isNotNull(univerifyStyle.loginBtnText)
-            ? univerifyStyle.loginBtnText
-            : univerifyStyle.authButton?.title,
+          logoPath: uni.vk.pubfn.isNotNull(univerifyStyle.logoPath) ? univerifyStyle.logoPath : univerifyStyle.icon?.path,
+          loginBtnText: uni.vk.pubfn.isNotNull(univerifyStyle.loginBtnText) ? univerifyStyle.loginBtnText : univerifyStyle.authButton?.title,
         },
         // #endif
         // #ifndef APP-HARMONY || UNI-APP-X
@@ -525,6 +525,8 @@ export default {
     // #endif
     // #ifndef APP
     uni.vk.toast('请在APP中使用本机号码一键登录', 'none');
+    // #endif
+
     // #endif
   },
 

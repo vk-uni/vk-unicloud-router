@@ -260,7 +260,7 @@ export default {
     }
     let title = a;
     let icon = 'none';
-    let image = '';
+    let image;
     let mask = false;
     let duration = 1500;
     let fn;
