@@ -4,23 +4,25 @@
 
 ## 序
 
-##### 如果你热爱编程，想快速入门云开发，欢迎使用`vk-unicloud`系列开发框架
+**如果你热爱编程，想快速入门云开发，欢迎使用 `vk-unicloud` 开发框架**
 
-##### 无需转变开发习惯，0 成本上手云开发。
+无需转变开发习惯，0 成本上手云开发。
 
-##### 框架内置了众多 API、工具包，为你的业务扫平障碍。使你的项目刚起步进度就是 50%（微信登录、短信、验证码、缓存、生成小程序码等等）
+框架内置了众多 API、工具包，为你的业务扫平障碍。使你的项目刚起步进度就是 50%（微信登录、短信、验证码、缓存、生成小程序码等等）
 
-##### 从此你又 get 一个新技能，只需用 js，轻松搞定前后台整体业务。
+**从此你又 get 一个新技能，只需用 js，轻松搞定前后台整体业务。**
 
-##### 完整框架项目地址：
+**框架项目地址：**
 
-##### `client端`框架地址： [https://ext.dcloud.net.cn/plugin?id=2204](https://ext.dcloud.net.cn/plugin?id=2204)
+`client端`框架地址： [https://ext.dcloud.net.cn/plugin?name=vk-cloud-router](https://ext.dcloud.net.cn/plugin?name=vk-cloud-router)
 
-##### `admin端`框架地址：[https://ext.dcloud.net.cn/plugin?id=5043](https://ext.dcloud.net.cn/plugin?name=vk-unicloud-admin)
+`client端` uni-app x 蒸汽模式： [https://ext.dcloud.net.cn/plugin?name=vk-cloud-router-x](https://ext.dcloud.net.cn/plugin?name=vk-cloud-router-x)
 
-##### `client端`框架文档：[点击查看](https://vkdoc.fsq.pub/client/)
+`admin端`框架地址：[https://ext.dcloud.net.cn/plugin?name=vk-unicloud-admin](https://ext.dcloud.net.cn/plugin?name=vk-unicloud-admin)
 
-##### `admin端`框架文档：[点击查看](https://vkdoc.fsq.pub/admin/)
+`client端`框架文档：[点击查看](https://vkdoc.fsq.pub/client/)
+
+`admin端`框架文档：[点击查看](https://vkdoc.fsq.pub/admin/)
 
 ## 主要功能 以及 对开发者的价值
 
@@ -49,9 +51,9 @@
 - 6.2、同时方便其他用户使用 `unicloud` 插件发布者发布的前后端一体插件，只需要导入一个云函数即可。
   (如导入一个社区插件，可能要导入几十个云函数，而使用此云函数路由后，只需导入一个云函数，且已集成 `uni-id`，打通账号体系)。
 
-#### 7、在 `uni-id` 基础上升级为 `vk.userCenter` 用户中心 API 通过 this.vk.userCenter 即可调用 [传送门](https://vkdoc.fsq.pub/client/vk.userCenter.html)
+#### 7、在 `uni-id` 基础上升级为 `vk.userCenter` 用户中心 API 通过 `vk.userCenter` 即可调用 [传送门](https://vkdoc.fsq.pub/client/vk.userCenter.html)
 
-#### 8、封装 `uni.callFunction` 和 `uni.request` 使之合二为一 通过 this.vk.callFunction 调用
+#### 8、封装 `uni.callFunction` 和 `uni.request` 使之合二为一 通过 `vk.callFunction` 调用
 
 #### 9、`vk.baseDao` 数据库 API，使小白也能轻松上手对数据库的调用。 [传送门](https://vkdoc.fsq.pub/client/uniCloud/db/api.html)
 
@@ -107,9 +109,9 @@
 
 打开 `uniCloud/cloudfunctions` 目录
 
-#### 前置工作：修改云函数全局配置文件（用到微信登录的必须要配置）[微信小程序配置详细教程](https://vkdoc.fsq.pub/client/question/q12.html)
+**前置工作：**修改云函数全局配置文件（用到微信登录的必须要配置）[微信小程序配置详细教程](https://vkdoc.fsq.pub/client/question/q12.html)
 
-#### 注意：
+**注意：**
 
 - 1、开发微信小程序和 APP 微信登录需要额外配置 manifest.json 以及 uniCloud/cloudfunctions/common/uni-config-center/uni-id/config.json 这 2 个配置文件，且改动配置后需要重新上传 公共模块 和 router 函数。
 - 2、若你的电脑没有安装 Node.js，则无法使用 npm 命令。
@@ -118,7 +120,7 @@
 
 查看 `uni-id/config.json` 代码格式 [点击查看](https://vkdoc.fsq.pub/client/uniCloud/config/uni-id.html)
 
-#### 正式安装
+**正式安装**
 
 直接右键`uniCloud`目录 点击 `运行云服务空间初始化向导` 即可
 
@@ -442,7 +444,7 @@ return {
 };
 ```
 
-## this.vk.callFunction 函数的参数说明
+## vk.callFunction 函数的参数说明
 
 ```js
 /**
@@ -462,7 +464,7 @@ return {
 ## 前端调用云函数示例
 
 ```js
-this.vk.callFunction({
+vk.callFunction({
   url: 'user/kh/setAvatar',
   title: '请求中...',
   data: {
@@ -474,29 +476,9 @@ this.vk.callFunction({
 });
 ```
 
-## 云函数 url 化方式调用云函数示例
-
-[点击查看『云函数 url 化』方式调用云函数示例](https://vkdoc.fsq.pub/client/pages/callFunctionForUrl.html)
-
-## 前端非法 token 拦截器
-
-[点击查看『前端非法 token 拦截器』](https://vkdoc.fsq.pub/client/pages/interceptor1.html)
-
 ## vk.baseDao 数据库 API
 
 [点击查看『vk.baseDao』数据库 API](https://vkdoc.fsq.pub/client/uniCloud/db/api.html)
-
-## 设置全局请求参数
-
-[点击查看『设置全局请求参数』](https://vkdoc.fsq.pub/client/pages/updateRequestGlobalParam.html)
-
-## 列表渲染前后端一体模板
-
-[点击查看『列表渲染』前后端一体模板](https://vkdoc.fsq.pub/client/pages/list.html)
-
-## 商品 SKU 选择器组件
-
-[点击查看『商品 SKU 选择器组件』](https://gitee.com/vk-uni/vk-uni-cloud-router/wikis/pages?sort_id=2912199&doc_id=975983)
 
 ## 如何切换 正式环境 和 开发环境
 
