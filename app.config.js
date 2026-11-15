@@ -49,7 +49,12 @@ export default {
      * 在无需登录的页面上执行kh或sys函数，也会自动判断是否登录，未登录会自动跳登录页面，登录成功后会自动返回本来要跳转的页面。
      */
     mode: 2,
-    list: ['/pages_template/*', '/pages/login/*', '/pages/index/*', '/pages/error/*'],
+    list: [
+      '/pages_template/*', // 此处的*代表包含所有子目录和子页面
+      '/pages/login/*',
+      '/pages/index/*',
+      '/pages/error/*',
+    ],
   },
   // 需要检查是否可以分享的页面列表(仅小程序有效)
   checkSharePages: {
@@ -61,7 +66,11 @@ export default {
      */
     mode: 0,
     menus: ['shareAppMessage'], // ['shareAppMessage', 'shareTimeline'], // menus内的数组可多选，shareAppMessage 转发给朋友，shareTimeline 分享到朋友圈，需要mode为1或2才会生效
-    list: ['/pages/index/*', '/pages/goods/*', '/pages_template/*'],
+    list: [
+      '/pages/index/*', // 此处的*代表包含所有子目录和子页面
+      '/pages/goods/*',
+      '/pages_template/*',
+    ],
   },
   // 需要检查是否哪些请求需要加密通信
   checkEncryptRequest: {
