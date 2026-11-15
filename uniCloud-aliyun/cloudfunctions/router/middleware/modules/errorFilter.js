@@ -24,6 +24,7 @@ module.exports = [
 
       // 此处无需再打印异常信息，因为框架会自动打印异常信息
       // 可以在此处对异常进行统一处理，如保存到数据库或redis等等
+      // 异常时，接口敏感信息可能会存入异常日志，此为正确逻辑，错误日志默认仅管理员可查看，避免泄露敏感信息
 
       let needAdd = true; // 是否需要保存到数据库，可自行选择开关
       let isCloudRun = originalParam.context.RUNTIME_ENV === 'cloud'; // 是否云端运行，RUNTIME_ENV参数需升级到HBX4.29及以上版本才有值
